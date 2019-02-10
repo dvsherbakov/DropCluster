@@ -73,6 +73,7 @@
             this.tbPoint2 = new System.Windows.Forms.TextBox();
             this.tbPoint1 = new System.Windows.Forms.TextBox();
             this.tpArea = new System.Windows.Forms.TabPage();
+            this.lbAvgRad = new System.Windows.Forms.Label();
             this.btAreaClear = new System.Windows.Forms.Button();
             this.tbRadCount = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
@@ -150,6 +151,7 @@
             this.pbOnePict.Location = new System.Drawing.Point(3, 3);
             this.pbOnePict.Name = "pbOnePict";
             this.pbOnePict.Size = new System.Drawing.Size(759, 605);
+            this.pbOnePict.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pbOnePict.TabIndex = 0;
             this.pbOnePict.TabStop = false;
             this.pbOnePict.Click += new System.EventHandler(this.PbOnePict_Click);
@@ -591,6 +593,7 @@
             // 
             // tpArea
             // 
+            this.tpArea.Controls.Add(this.lbAvgRad);
             this.tpArea.Controls.Add(this.btAreaClear);
             this.tpArea.Controls.Add(this.tbRadCount);
             this.tpArea.Controls.Add(this.label12);
@@ -605,9 +608,18 @@
             this.tpArea.Text = "Область";
             this.tpArea.UseVisualStyleBackColor = true;
             // 
+            // lbAvgRad
+            // 
+            this.lbAvgRad.AutoSize = true;
+            this.lbAvgRad.Location = new System.Drawing.Point(519, 224);
+            this.lbAvgRad.Name = "lbAvgRad";
+            this.lbAvgRad.Size = new System.Drawing.Size(114, 17);
+            this.lbAvgRad.TabIndex = 7;
+            this.lbAvgRad.Text = "Средний радиус";
+            // 
             // btAreaClear
             // 
-            this.btAreaClear.Location = new System.Drawing.Point(141, 213);
+            this.btAreaClear.Location = new System.Drawing.Point(133, 211);
             this.btAreaClear.Name = "btAreaClear";
             this.btAreaClear.Size = new System.Drawing.Size(100, 25);
             this.btAreaClear.TabIndex = 6;
@@ -827,6 +839,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FmMain_FormClosing);
             this.tabPage2.ResumeLayout(false);
             this.tlpMaster.ResumeLayout(false);
+            this.tlpMaster.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOnePict)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
@@ -922,6 +935,7 @@
         private System.Windows.Forms.TextBox tbRadCount;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button btAreaClear;
+        private System.Windows.Forms.Label lbAvgRad;
     }
 }
 

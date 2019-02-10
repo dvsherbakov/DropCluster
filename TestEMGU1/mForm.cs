@@ -11,6 +11,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Emgu.CV.Aruco;
 using Emgu.CV.Cuda;
+using System.Reflection;
 
 namespace TestEMGU1
 {
@@ -82,7 +83,7 @@ namespace TestEMGU1
             using (var sw = new StreamWriter(dirName + @"\stat.lst"))
             {
                 foreach (var t in strList.OrderBy(x=>x))
-                    sw.WriteLine(t);
+                    sw.WriteLine(t.Replace(',','.'));
             }
         }
 
@@ -202,8 +203,15 @@ namespace TestEMGU1
                 param2, minRadius, maxRadius);
 
             var circleImage = img.Copy(); //CopyBlank();
-            _yScale = pbOnePict.Size.Height / (float)circleImage.Bitmap.Size.Height;
-            _xScale = pbOnePict.Size.Width / (float)circleImage.Bitmap.Size.Width;
+            pbOnePict.SizeMode = PictureBoxSizeMode.Zoom;
+            pbOnePict.Image = circleImage.Bitmap;
+            var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle",
+                System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Instance);
+            var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
+            _yScale = rectangle.Height / (float)circleImage.Bitmap.Size.Height;
+            _xScale = rectangle.Width / (float)circleImage.Bitmap.Size.Width;
             //foreach (var circle in circles.OrderByDescending(x => x.Radius))
             for (var i =0; i< circles.Length; i++)
             {
@@ -216,8 +224,7 @@ namespace TestEMGU1
                 _listCircles.Add(new PointListItem(i, fPt));             
             }
 
-            pbOnePict.SizeMode = PictureBoxSizeMode.Zoom;
-            pbOnePict.Image = circleImage.Bitmap;
+            
         }
 
         private static double Angle_point(PointF a,PointF b, PointF c)
@@ -309,7 +316,7 @@ namespace TestEMGU1
             {
                 foreach (ListViewItem item in listView1.Items)
                 {
-                    sw.WriteLine(SubItemToString(item));
+                    sw.WriteLine(SubItemToString(item).Replace(',', '.'));
                 }
             }
             sw.Close();
@@ -318,11 +325,17 @@ namespace TestEMGU1
         private void PbOnePict_Click(object sender, EventArgs e)
         {
             var t = (MouseEventArgs)e;
+            var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle",
+                System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Instance);
+            var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
+           
             if (cbAngles.Checked)
             {
                 if (t.Button == MouseButtons.Left)
                 {
-                    var cp = new PointF(t.X, t.Y);
+                    var cp = new PointF(t.X-rectangle.X , t.Y);
                     var et = _listCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
                     if (et == null) return;
                     switch (MouseClickNo)
@@ -353,7 +366,7 @@ namespace TestEMGU1
                 
                 if (t.Button == MouseButtons.Left)
                 {
-                    var cp = new PointF(t.X, t.Y);
+                    var cp = new PointF(t.X-rectangle.X, t.Y);
                     var et = _listCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
                     if (et == null) return;
                     polygon.Add(circles[et.Id()].Center);
@@ -381,6 +394,7 @@ namespace TestEMGU1
                         var fi = new FileInfo(tbSingleFile.Text);
                         lvItem.SubItems.Add(fi.Name);
                         lvArea.Items.Add(lvItem);
+                        
                     }
                     var pi = new PointInArea();
                     for (var i = 0; i < circles.Length; i++)
@@ -400,7 +414,7 @@ namespace TestEMGU1
                     }
 
                     PrepareLinks(_clickedPoint.Select(c => new PointListItem(c, circles[c].Center)).ToList());
-
+                    lbAvgRad.Text = $@"Средний радиус: {_clickedPoint.Select(c => circles[c].Radius).ToList().Average(x => x):F5}";
                     polygon.Clear();
                     _clickedPoint.Clear();
                 }
@@ -513,8 +527,21 @@ namespace TestEMGU1
             {
                 foreach (ListViewItem item in lvArea.Items)
                 {
-                    sw.WriteLine(SubItemToString(item));
+                    sw.WriteLine(SubItemToString(item).Replace(',', '.'));
                 }
+                sw.WriteLine(lbAvgRad.Text.Replace(',', '.'));
+            }
+            sw.Close();
+
+            filePath = fi.DirectoryName + @"\res_links_" + DateTime.Now.ToShortDateString() + "_.txt";
+            
+            using (sw = new StreamWriter(filePath))
+            {
+                foreach (string item in lbLinks.Items)
+                {
+                    sw.WriteLine(item.Replace(',', '.'));
+                }
+                
             }
             sw.Close();
         }
@@ -530,7 +557,7 @@ namespace TestEMGU1
                 sw.WriteLine(headerStr);
                 foreach (ListViewItem item in lvGrade.Items)
                 {
-                    sw.WriteLine(SubItemToString(item));
+                    sw.WriteLine(SubItemToString(item).Replace(',', '.'));
                 }
             }
             sw.Close();
