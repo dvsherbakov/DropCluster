@@ -254,28 +254,36 @@ namespace TestEMGU1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var p1 = int.Parse(tbPoint1.Text);
-            var p2 = int.Parse(tbPoint2.Text);
-            var p3 = int.Parse(tbPoint3.Text);
+            var p1 = 0;
+            var p2 = 0;
+            var p3 = 0;
 
-            var angle = Angle_point(circles[p1].Center, circles[p2].Center, circles[p3].Center);
-            angle = angle * 180 / Math.PI;
-            if (angle > 180)
+            try
             {
-                angle = 360 - angle;
+                p1 = int.Parse(tbPoint1.Text);
+                p2 = int.Parse(tbPoint2.Text);
+                p3 = int.Parse(tbPoint3.Text);
             }
-            var fi = new FileInfo(tbSingleFile.Text);
-            var lvItem = new ListViewItem(fi.Name);
-            lvItem.SubItems.Add(p1.ToString());
-            lvItem.SubItems.Add(circles[p1].Radius.ToString("F3"));
-            lvItem.SubItems.Add( p2.ToString());
-            lvItem.SubItems.Add(circles[p2].Radius.ToString("F3"));
-            lvItem.SubItems.Add( p3.ToString());
-            lvItem.SubItems.Add(circles[p3].Radius.ToString("F3"));
-            lvItem.SubItems.Add( angle.ToString("F8"));
+            finally
+            {
+                var angle = Angle_point(circles[p1].Center, circles[p2].Center, circles[p3].Center);
+                angle = angle * 180 / Math.PI;
+                if (angle > 180)
+                {
+                    angle = 360 - angle;
+                }
+                var fi = new FileInfo(tbSingleFile.Text);
+                var lvItem = new ListViewItem(fi.Name);
+                lvItem.SubItems.Add(p1.ToString());
+                lvItem.SubItems.Add(circles[p1].Radius.ToString("F3"));
+                lvItem.SubItems.Add(p2.ToString());
+                lvItem.SubItems.Add(circles[p2].Radius.ToString("F3"));
+                lvItem.SubItems.Add(p3.ToString());
+                lvItem.SubItems.Add(circles[p3].Radius.ToString("F3"));
+                lvItem.SubItems.Add(angle.ToString("F8"));
 
-            listView1.Items.Add(lvItem);
-
+                listView1.Items.Add(lvItem);
+            }
             tbPoint1.Text = "";
             tbPoint2.Text = "";
             tbPoint3.Text = "";
