@@ -60,7 +60,7 @@ namespace TestEMGU1
 
             if (fInfo.Directory == null) return;
             var dirName = fInfo.Directory.FullName;
-           // listBox2.Items.Clear();
+            // listBox2.Items.Clear();
             var d = new DirectoryInfo(dirName); //Assuming Test is your Folder
 
             var files = d.GetFiles("c_*.jpg");
@@ -71,19 +71,19 @@ namespace TestEMGU1
             progressBar1.Maximum = files.Length;
             var strList = new List<string>();
             var dropCount = tbDropCount.Value;
-            Parallel.ForEach (files.OrderBy(x => x.Name), file => 
+            Parallel.ForEach(files.OrderBy(x => x.Name), file =>
             {
                 if (IsStop) return;
                 var lst = PreparePicture(file.FullName, dropCount);
-                Invoke( new AddMessageDelegate(IncValue));
+                Invoke(new AddMessageDelegate(IncValue));
                 var tstr = lst.Aggregate("", (current, t) => current + t.Radius() + ":");
                 strList.Add(file.Name + ":" + tstr);
             });
 
             using (var sw = new StreamWriter(dirName + @"\stat.lst"))
             {
-                foreach (var t in strList.OrderBy(x=>x))
-                    sw.WriteLine(t.Replace(',','.'));
+                foreach (var t in strList.OrderBy(x => x))
+                    sw.WriteLine(t.Replace(',', '.'));
             }
         }
 
@@ -107,9 +107,9 @@ namespace TestEMGU1
             var uimage = new UMat();
 
             CvInvoke.CvtColor(img, uimage, ColorConversion.Bgr2Gray);
-            
+
             circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, 15, 75, 40, 25, 85);
-            
+
             var circleImage = img.Copy(); //CopyBlank();
 
             foreach (var circle in circles.OrderByDescending(x => x.Radius).Take(dropCount))
@@ -120,7 +120,7 @@ namespace TestEMGU1
             var f = new FileInfo(filename);
             var fn = f.DirectoryName + @"\c_" + f.Name;
             circleImage.Save(fn);
-           
+
             return lst;
         }
 
@@ -183,7 +183,7 @@ namespace TestEMGU1
         private void TestPicture(string filename)
         {
             //var lst = new List<BallElement>();
-            
+
 
             var bmp = new Bitmap(filename);
             _listCircles.Clear();
@@ -197,9 +197,9 @@ namespace TestEMGU1
             var param2 = tbCurvature.Value;
             var minRadius = tbMinRadius.Value;
             var maxRadius = tbMaxRadius.Value;
-            
 
-            circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, minDist, param1, 
+
+            circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, minDist, param1,
                 param2, minRadius, maxRadius);
 
             var circleImage = img.Copy(); //CopyBlank();
@@ -213,21 +213,21 @@ namespace TestEMGU1
             _yScale = rectangle.Height / (float)circleImage.Bitmap.Size.Height;
             _xScale = rectangle.Width / (float)circleImage.Bitmap.Size.Width;
             //foreach (var circle in circles.OrderByDescending(x => x.Radius))
-            for (var i =0; i< circles.Length; i++)
+            for (var i = 0; i < circles.Length; i++)
             {
                 var circle = circles[i];
                 circleImage.Draw(circle, new Bgr(Color.Brown), 2);
                 //public virtual void Draw(string message, Point bottomLeft, FontFace fontFace, double fontScale, TColor color, int thickness = 1, LineType lineType = LineType.EightConnected, bool bottomLeftOrigin = false)
 
-                circleImage.Draw(i.ToString(), new Point((int)circle.Center.X, (int)circle.Center.Y),FontFace.HersheyComplex, 2.0, new Bgr(Color.Brown));
+                circleImage.Draw(i.ToString(), new Point((int)circle.Center.X, (int)circle.Center.Y), FontFace.HersheyComplex, 2.0, new Bgr(Color.Brown));
                 var fPt = new PointF(circle.Center.X * _xScale, circle.Center.Y * _yScale);
-                _listCircles.Add(new PointListItem(i, fPt));             
+                _listCircles.Add(new PointListItem(i, fPt));
             }
 
-            
+
         }
 
-        private static double Angle_point(PointF a,PointF b, PointF c)
+        private static double Angle_point(PointF a, PointF b, PointF c)
 
         {
             double x1 = a.X - b.X, x2 = c.X - b.X;
@@ -254,10 +254,7 @@ namespace TestEMGU1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var p1 = 0;
-            var p2 = 0;
-            var p3 = 0;
-
+            int p1 = 0; int p2 = 0; int p3 = 0;
             try
             {
                 p1 = int.Parse(tbPoint1.Text);
@@ -318,7 +315,7 @@ namespace TestEMGU1
         private void BtSaveToFile_Click(object sender, EventArgs e)
         {
             var fi = new FileInfo(tbSingleFile.Text);
-            var filePath = fi.DirectoryName + @"\result_"+DateTime.Now.ToShortDateString()+ "_.txt";
+            var filePath = fi.DirectoryName + @"\result_" + DateTime.Now.ToShortDateString() + "_.txt";
             StreamWriter sw;
             using (sw = new StreamWriter(filePath))
             {
@@ -338,12 +335,12 @@ namespace TestEMGU1
                 System.Reflection.BindingFlags.NonPublic |
                 System.Reflection.BindingFlags.Instance);
             var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
-           
+
             if (cbAngles.Checked)
             {
                 if (t.Button == MouseButtons.Left)
                 {
-                    var cp = new PointF(t.X-rectangle.X , t.Y);
+                    var cp = new PointF(t.X - rectangle.X, t.Y);
                     var et = _listCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
                     if (et == null) return;
                     switch (MouseClickNo)
@@ -371,10 +368,10 @@ namespace TestEMGU1
             }
             else
             {
-                
+
                 if (t.Button == MouseButtons.Left)
                 {
-                    var cp = new PointF(t.X-rectangle.X, t.Y);
+                    var cp = new PointF(t.X - rectangle.X, t.Y);
                     var et = _listCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
                     if (et == null) return;
                     polygon.Add(circles[et.Id()].Center);
@@ -386,7 +383,7 @@ namespace TestEMGU1
                     {
                         for (var i = 1; i < polygon.Count; i++)
                         {
-                            g.DrawLine(Pens.Blue, new PointF(polygon[i].X*_xScale, polygon[i].Y * _yScale), new PointF(polygon[i-1].X * _xScale, polygon[i-1].Y * _yScale));
+                            g.DrawLine(Pens.Blue, new PointF(polygon[i].X * _xScale, polygon[i].Y * _yScale), new PointF(polygon[i - 1].X * _xScale, polygon[i - 1].Y * _yScale));
                         }
                         g.DrawLine(Pens.Blue, new PointF(polygon[0].X * _xScale, polygon[0].Y * _yScale), new PointF(polygon[polygon.Count - 1].X * _xScale, polygon[polygon.Count - 1].Y * _yScale));
                     }
@@ -402,7 +399,7 @@ namespace TestEMGU1
                         var fi = new FileInfo(tbSingleFile.Text);
                         lvItem.SubItems.Add(fi.Name);
                         lvArea.Items.Add(lvItem);
-                        
+
                     }
                     var pi = new PointInArea();
                     for (var i = 0; i < circles.Length; i++)
@@ -434,7 +431,7 @@ namespace TestEMGU1
             var listPoints = lst as IList<PointListItem> ?? lst.ToList();
             var summ = listPoints.Sum(it => circles[it.Id()].Radius);
             var rc = float.Parse(tbRadCount.Text);
-            var avg = (summ / listPoints.Count)*rc;
+            var avg = (summ / listPoints.Count) * rc;
             var lnkCount = 0;
             var lnkAvg = 0.0d;
             while (listPoints.Count > 1)
@@ -464,9 +461,9 @@ namespace TestEMGU1
         private void FillGradeList()
         {
             var aList = new Dictionary<int, double>();
-            for  (var i = 0; i< listView1.Items.Count; i++)
+            for (var i = 0; i < listView1.Items.Count; i++)
             {
-                aList.Add(i, double.Parse(listView1.Items[i].SubItems[7].Text));
+                aList.Add(i, double.Parse(listView1.Items[i].SubItems[7].Text.Replace('.', ',')));
             }
 
             lvGrade.Items.Clear();
@@ -475,11 +472,14 @@ namespace TestEMGU1
             chart1.Series[0].Points.Clear();
             var lvItem = new ListViewItem(@"#");
 
-            for (var i = 90; i <= 180; i += trackBarGrade.Value)
+            var coef = 180 / 128.0;
+            var hcoef = coef / 2.0;
+
+            for (var i = 90.0; i <= 180; i += trackBarGrade.Value / coef)
             {
                 var i1 = i;
-                var t = aList.Count(x => x.Value >= i1 && x.Value < i1 + trackBarGrade.Value);
-                lvGrade.Columns.Add(i.ToString(),40);
+                var t = aList.Count(x => x.Value >= i1 - trackBarGrade.Value / hcoef && x.Value < i1 + trackBarGrade.Value / hcoef);
+                lvGrade.Columns.Add(i.ToString(), 40);
                 lvItem.SubItems.Add(t.ToString());
                 chart1.Series[0].Points.AddXY(i1, t);
             }
@@ -490,7 +490,7 @@ namespace TestEMGU1
 
         private void BtLoad_Click(object sender, EventArgs e)
         {
-            var fd = new OpenFileDialog {Filter = @"Файлы txt|*.txt"};
+            var fd = new OpenFileDialog { Filter = @"Файлы txt|*.txt" };
             if (fd.ShowDialog() != DialogResult.OK) return;
             var filePath = fd.FileName;
             StreamReader sr;
@@ -542,14 +542,14 @@ namespace TestEMGU1
             sw.Close();
 
             filePath = fi.DirectoryName + @"\res_links_" + DateTime.Now.ToShortDateString() + "_.txt";
-            
+
             using (sw = new StreamWriter(filePath))
             {
                 foreach (string item in lbLinks.Items)
                 {
                     sw.WriteLine(item.Replace(',', '.'));
                 }
-                
+
             }
             sw.Close();
         }
