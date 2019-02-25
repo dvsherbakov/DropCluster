@@ -155,6 +155,7 @@
             this.pbOnePict.TabIndex = 0;
             this.pbOnePict.TabStop = false;
             this.pbOnePict.Click += new System.EventHandler(this.PbOnePict_Click);
+            this.pbOnePict.Paint += new System.Windows.Forms.PaintEventHandler(this.pbOnePict_Paint);
             // 
             // tableLayoutPanel2
             // 

@@ -25,6 +25,7 @@ namespace TestEMGU1
         private float _yScale;
         private float _xScale;
         private readonly List<int> _clickedPoint = new List<int>();
+        private PointF[] canArea = new PointF[0];
 
         public FmMain()
         {
@@ -383,10 +384,12 @@ namespace TestEMGU1
                     {
                         for (var i = 1; i < polygon.Count; i++)
                         {
-                            g.DrawLine(Pens.Blue, new PointF(polygon[i].X * _xScale, polygon[i].Y * _yScale), new PointF(polygon[i - 1].X * _xScale, polygon[i - 1].Y * _yScale));
+                            g.DrawLine(Pens.Blue, new PointF(polygon[i].X * _xScale+ rectangle.X, polygon[i].Y * _yScale), new PointF(polygon[i - 1].X * _xScale+ rectangle.X, polygon[i - 1].Y * _yScale));
                         }
-                        g.DrawLine(Pens.Blue, new PointF(polygon[0].X * _xScale, polygon[0].Y * _yScale), new PointF(polygon[polygon.Count - 1].X * _xScale, polygon[polygon.Count - 1].Y * _yScale));
+                        g.DrawLine(Pens.Blue, new PointF(polygon[0].X * _xScale+ rectangle.X, polygon[0].Y * _yScale), new PointF(polygon[polygon.Count - 1].X * _xScale+ rectangle.X, polygon[polygon.Count - 1].Y * _yScale));
                     }
+
+                    canArea = polygon.ToArray();
 
                     foreach (var cp in _clickedPoint)
                     {
@@ -605,6 +608,22 @@ namespace TestEMGU1
         private void Label6_Click(object sender, EventArgs e)
         {
             tbMaxRadius.Value = 65;
+        }
+
+        private void pbOnePict_Paint(object sender, PaintEventArgs e)
+        {
+            if (canArea.Length < 3) return;
+            var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle",
+                System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Instance);
+            var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
+
+            for (var i = 1; i < canArea.Length; i++)
+            {
+                e.Graphics.DrawLine(Pens.Blue, new PointF(canArea[i].X * _xScale + rectangle.X, canArea[i].Y * _yScale), new PointF(canArea[i - 1].X * _xScale + rectangle.X, canArea[i - 1].Y * _yScale));
+            }
+            e.Graphics.DrawLine(Pens.Blue, new PointF(canArea[0].X * _xScale + rectangle.X, canArea[0].Y * _yScale), new PointF(canArea[canArea.Length - 1].X * _xScale + rectangle.X, canArea[canArea.Length - 1].Y * _yScale));
         }
     }
 }
