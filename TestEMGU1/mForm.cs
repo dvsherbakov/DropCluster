@@ -9,8 +9,6 @@ using Emgu.CV.Structure;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Emgu.CV.Aruco;
-using Emgu.CV.Cuda;
 using System.Reflection;
 
 namespace TestEMGU1
@@ -206,10 +204,7 @@ namespace TestEMGU1
             var circleImage = img.Copy(); //CopyBlank();
             pbOnePict.SizeMode = PictureBoxSizeMode.Zoom;
             pbOnePict.Image = circleImage.Bitmap;
-            var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle",
-                BindingFlags.Public |
-                BindingFlags.NonPublic |
-                BindingFlags.Instance);
+            var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
             _yScale = rectangle.Height / (float)circleImage.Bitmap.Size.Height;
             _xScale = rectangle.Width / (float)circleImage.Bitmap.Size.Width;
@@ -224,8 +219,6 @@ namespace TestEMGU1
                 var fPt = new PointF(circle.Center.X * _xScale, circle.Center.Y * _yScale);
                 _listCircles.Add(new PointListItem(i, fPt));
             }
-
-
         }
 
         private static double Angle_point(PointF a, PointF b, PointF c)
@@ -513,7 +506,6 @@ namespace TestEMGU1
                     lvItem.SubItems.Add(sl[5]);
                     lvItem.SubItems.Add(sl[6]);
                     lvItem.SubItems.Add(sl[7]);
-
                     listView1.Items.Add(lvItem);
                 }
             }
@@ -545,14 +537,12 @@ namespace TestEMGU1
             sw.Close();
 
             filePath = fi.DirectoryName + @"\res_links_" + DateTime.Now.ToShortDateString() + "_.txt";
-
             using (sw = new StreamWriter(filePath))
             {
                 foreach (string item in lbLinks.Items)
                 {
                     sw.WriteLine(item.Replace(',', '.'));
                 }
-
             }
             sw.Close();
         }
@@ -613,10 +603,7 @@ namespace TestEMGU1
         private void pbOnePict_Paint(object sender, PaintEventArgs e)
         {
             if (canArea.Length < 3) return;
-            var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle",
-                System.Reflection.BindingFlags.Public |
-                System.Reflection.BindingFlags.NonPublic |
-                System.Reflection.BindingFlags.Instance);
+            var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
 
             for (var i = 1; i < canArea.Length; i++)
