@@ -395,7 +395,7 @@ namespace TestEMGU1
                         for (var i = 0; i < _circles.Length; i++)
                         {
                             var cir = _circles[i];
-                            var ts = pi.IsPointInside(_polygon.ToArray(), cir.Center);
+                            var ts = PointInArea.IsPointInside(_polygon.ToArray(), cir.Center);
                             if (!ts) continue;
                             if (_clickedPoint.Any(x => x == i)) continue;
                             var lvItem = new ListViewItem(i.ToString());
@@ -416,14 +416,27 @@ namespace TestEMGU1
                         _clickedPoint.Clear();
                     } else if (cbChains.Checked)
                     {
+                        if (_clickedPoint.Count <= 2) return;
+                        var chItem = new ListViewItem(lvChains.Items.Count.ToString());
+                        chItem.SubItems.Add(fi.Name);
+                        var pList = _clickedPoint[0].ToString();
+                        var avgR = 0.0d;
                         for (var i = 1; i < _clickedPoint.Count; i++)
                         {
                             var itm = _clickedPoint[i];
-                            var chItem = new ListViewItem(i.ToString());
-                            chItem.SubItems.Add(fi.Name);
-
-                            lvChains.Items.Add(chItem);
+                            var pItm = _clickedPoint[i - 1];
+                            var cti = new PointListItem(i, _circles[itm].Center);
+                            avgR += cti.GetDistance(_circles[pItm].Center);
+                            pList += ", " + itm;
                         }
+                        chItem.SubItems.Add(pList);
+                        chItem.SubItems.Add(_clickedPoint.Count.ToString());
+                        chItem.SubItems.Add((avgR / _clickedPoint.Count).ToString("F5"));
+                        var lR = (new PointListItem(0, _circles[_clickedPoint[0]].Center)).GetDistance(_circles[_clickedPoint[_clickedPoint.Count-1]].Center);
+                        chItem.SubItems.Add(lR.ToString("F5"));
+                        lvChains.Items.Add(chItem);
+                        _polygon.Clear();
+                        _clickedPoint.Clear();
                     }
                 }
             }
