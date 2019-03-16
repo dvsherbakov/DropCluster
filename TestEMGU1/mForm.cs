@@ -207,9 +207,9 @@ namespace TestEMGU1
             pbOnePict.SizeMode = PictureBoxSizeMode.Zoom;
             pbOnePict.Image = circleImage.Bitmap;
             var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle",
-                System.Reflection.BindingFlags.Public |
-                System.Reflection.BindingFlags.NonPublic |
-                System.Reflection.BindingFlags.Instance);
+                BindingFlags.Public |
+                BindingFlags.NonPublic |
+                BindingFlags.Instance);
             var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
             _yScale = rectangle.Height / (float)circleImage.Bitmap.Size.Height;
             _xScale = rectangle.Width / (float)circleImage.Bitmap.Size.Width;
@@ -255,16 +255,16 @@ namespace TestEMGU1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            int p1 = 0; int p2 = 0; int p3 = 0;
+            var point1 = 0; var point2 = 0; var point3 = 0;
             try
             {
-                p1 = int.Parse(tbPoint1.Text);
-                p2 = int.Parse(tbPoint2.Text);
-                p3 = int.Parse(tbPoint3.Text);
+                point1 = int.Parse(tbPoint1.Text);
+                point2 = int.Parse(tbPoint2.Text);
+                point3 = int.Parse(tbPoint3.Text);
             }
             finally
             {
-                var angle = Angle_point(circles[p1].Center, circles[p2].Center, circles[p3].Center);
+                var angle = Angle_point(circles[point1].Center, circles[point2].Center, circles[point3].Center);
                 angle = angle * 180 / Math.PI;
                 if (angle > 180)
                 {
@@ -272,12 +272,12 @@ namespace TestEMGU1
                 }
                 var fi = new FileInfo(tbSingleFile.Text);
                 var lvItem = new ListViewItem(fi.Name);
-                lvItem.SubItems.Add(p1.ToString());
-                lvItem.SubItems.Add(circles[p1].Radius.ToString("F3"));
-                lvItem.SubItems.Add(p2.ToString());
-                lvItem.SubItems.Add(circles[p2].Radius.ToString("F3"));
-                lvItem.SubItems.Add(p3.ToString());
-                lvItem.SubItems.Add(circles[p3].Radius.ToString("F3"));
+                lvItem.SubItems.Add(point1.ToString());
+                lvItem.SubItems.Add(circles[point1].Radius.ToString("F3"));
+                lvItem.SubItems.Add(point2.ToString());
+                lvItem.SubItems.Add(circles[point2].Radius.ToString("F3"));
+                lvItem.SubItems.Add(point3.ToString());
+                lvItem.SubItems.Add(circles[point3].Radius.ToString("F3"));
                 lvItem.SubItems.Add(angle.ToString("F8"));
 
                 listView1.Items.Add(lvItem);
@@ -332,9 +332,9 @@ namespace TestEMGU1
         {
             var t = (MouseEventArgs)e;
             var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle",
-                System.Reflection.BindingFlags.Public |
-                System.Reflection.BindingFlags.NonPublic |
-                System.Reflection.BindingFlags.Instance);
+                BindingFlags.Public |
+                BindingFlags.NonPublic |
+                BindingFlags.Instance);
             var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
 
             if (cbAngles.Checked)

@@ -97,6 +97,8 @@
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btStatSave = new System.Windows.Forms.Button();
+            this.tpChains = new System.Windows.Forms.TabPage();
+            this.cbChains = new System.Windows.Forms.CheckBox();
             this.tabPage2.SuspendLayout();
             this.tlpMaster.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOnePict)).BeginInit();
@@ -118,6 +120,7 @@
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel4.SuspendLayout();
+            this.tpChains.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage2
@@ -475,6 +478,7 @@
             this.tcMain.Controls.Add(this.tabPage2);
             this.tcMain.Controls.Add(this.tabPage1);
             this.tcMain.Controls.Add(this.tpArea);
+            this.tcMain.Controls.Add(this.tpChains);
             this.tcMain.Controls.Add(this.tabPage3);
             this.tcMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcMain.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -827,6 +831,26 @@
             this.btStatSave.UseVisualStyleBackColor = true;
             this.btStatSave.Click += new System.EventHandler(this.BtStatSave_Click);
             // 
+            // tpChains
+            // 
+            this.tpChains.Controls.Add(this.cbChains);
+            this.tpChains.Location = new System.Drawing.Point(4, 25);
+            this.tpChains.Name = "tpChains";
+            this.tpChains.Size = new System.Drawing.Size(1093, 611);
+            this.tpChains.TabIndex = 6;
+            this.tpChains.Text = "Цепочки";
+            this.tpChains.UseVisualStyleBackColor = true;
+            // 
+            // cbChains
+            // 
+            this.cbChains.AutoSize = true;
+            this.cbChains.Location = new System.Drawing.Point(9, 4);
+            this.cbChains.Name = "cbChains";
+            this.cbChains.Size = new System.Drawing.Size(218, 21);
+            this.cbChains.TabIndex = 0;
+            this.cbChains.Text = "Использовать этот алгоритм";
+            this.cbChains.UseVisualStyleBackColor = true;
+            // 
             // FmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
@@ -864,6 +888,8 @@
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.panel4.ResumeLayout(false);
+            this.tpChains.ResumeLayout(false);
+            this.tpChains.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -937,6 +963,8 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button btAreaClear;
         private System.Windows.Forms.Label lbAvgRad;
+        private System.Windows.Forms.TabPage tpChains;
+        private System.Windows.Forms.CheckBox cbChains;
     }
 }
 
