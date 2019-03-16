@@ -7,6 +7,7 @@ using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Reflection;
@@ -16,19 +17,19 @@ namespace TestEMGU1
     public partial class FmMain : Form
     {
         private bool IsStop { get; set; }
-        private CircleF[] circles;
-        private int MouseClickNo;
+        private CircleF[] _circles;
+        private int _mouseClickNo;
         private readonly List<PointListItem> _listCircles = new List<PointListItem>();
-        private readonly List<PointF> polygon = new List<PointF>();
+        private readonly List<PointF> _polygon = new List<PointF>();
         private float _yScale;
         private float _xScale;
         private readonly List<int> _clickedPoint = new List<int>();
-        private PointF[] canArea = new PointF[0];
+        private PointF[] _canArea = new PointF[0];
 
         public FmMain()
         {
             InitializeComponent();
-            MouseClickNo = 0;
+            _mouseClickNo = 0;
             Width = Properties.Settings.Default.Width;
             Height = Properties.Settings.Default.Height;
             Top = Properties.Settings.Default.Top;
@@ -107,11 +108,11 @@ namespace TestEMGU1
 
             CvInvoke.CvtColor(img, uimage, ColorConversion.Bgr2Gray);
 
-            circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, 15, 75, 40, 25, 85);
+            _circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, 15, 75, 40, 25, 85);
 
             var circleImage = img.Copy(); //CopyBlank();
 
-            foreach (var circle in circles.OrderByDescending(x => x.Radius).Take(dropCount))
+            foreach (var circle in _circles.OrderByDescending(x => x.Radius).Take(dropCount))
             {
                 circleImage.Draw(circle, new Bgr(Color.Brown), 2);
                 lst.Add(new BallElement(circle.Area, circle.Center.X, circle.Center.Y, circle.Radius));
@@ -198,20 +199,23 @@ namespace TestEMGU1
             var maxRadius = tbMaxRadius.Value;
 
 
-            circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, minDist, param1,
+            _circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, minDist, param1,
                 param2, minRadius, maxRadius);
 
             var circleImage = img.Copy(); //CopyBlank();
             pbOnePict.SizeMode = PictureBoxSizeMode.Zoom;
             pbOnePict.Image = circleImage.Bitmap;
             var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
-            _yScale = rectangle.Height / (float)circleImage.Bitmap.Size.Height;
-            _xScale = rectangle.Width / (float)circleImage.Bitmap.Size.Width;
-            //foreach (var circle in circles.OrderByDescending(x => x.Radius))
-            for (var i = 0; i < circles.Length; i++)
+            if (pInfo != null)
             {
-                var circle = circles[i];
+                var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
+                _yScale = rectangle.Height / (float)circleImage.Bitmap.Size.Height;
+                _xScale = rectangle.Width / (float)circleImage.Bitmap.Size.Width;
+            }
+            //foreach (var circle in circles.OrderByDescending(x => x.Radius))
+            for (var i = 0; i < _circles.Length; i++)
+            {
+                var circle = _circles[i];
                 circleImage.Draw(circle, new Bgr(Color.Brown), 2);
                 //public virtual void Draw(string message, Point bottomLeft, FontFace fontFace, double fontScale, TColor color, int thickness = 1, LineType lineType = LineType.EightConnected, bool bottomLeftOrigin = false)
 
@@ -222,7 +226,6 @@ namespace TestEMGU1
         }
 
         private static double Angle_point(PointF a, PointF b, PointF c)
-
         {
             double x1 = a.X - b.X, x2 = c.X - b.X;
             double y1 = a.Y - b.Y, y2 = c.Y - b.Y;
@@ -246,7 +249,7 @@ namespace TestEMGU1
             IsStop = true;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             var point1 = 0; var point2 = 0; var point3 = 0;
             try
@@ -257,7 +260,7 @@ namespace TestEMGU1
             }
             finally
             {
-                var angle = Angle_point(circles[point1].Center, circles[point2].Center, circles[point3].Center);
+                var angle = Angle_point(_circles[point1].Center, _circles[point2].Center, _circles[point3].Center);
                 angle = angle * 180 / Math.PI;
                 if (angle > 180)
                 {
@@ -266,11 +269,11 @@ namespace TestEMGU1
                 var fi = new FileInfo(tbSingleFile.Text);
                 var lvItem = new ListViewItem(fi.Name);
                 lvItem.SubItems.Add(point1.ToString());
-                lvItem.SubItems.Add(circles[point1].Radius.ToString("F3"));
+                lvItem.SubItems.Add(_circles[point1].Radius.ToString("F3"));
                 lvItem.SubItems.Add(point2.ToString());
-                lvItem.SubItems.Add(circles[point2].Radius.ToString("F3"));
+                lvItem.SubItems.Add(_circles[point2].Radius.ToString("F3"));
                 lvItem.SubItems.Add(point3.ToString());
-                lvItem.SubItems.Add(circles[point3].Radius.ToString("F3"));
+                lvItem.SubItems.Add(_circles[point3].Radius.ToString("F3"));
                 lvItem.SubItems.Add(angle.ToString("F8"));
 
                 listView1.Items.Add(lvItem);
@@ -328,8 +331,8 @@ namespace TestEMGU1
                 BindingFlags.Public |
                 BindingFlags.NonPublic |
                 BindingFlags.Instance);
+            if (pInfo == null) return;
             var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
-
             if (cbAngles.Checked)
             {
                 if (t.Button == MouseButtons.Left)
@@ -337,7 +340,7 @@ namespace TestEMGU1
                     var cp = new PointF(t.X - rectangle.X, t.Y);
                     var et = _listCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
                     if (et == null) return;
-                    switch (MouseClickNo)
+                    switch (_mouseClickNo)
                     {
                         case 0:
                             tbPoint1.Text = et.Id().ToString();
@@ -349,44 +352,43 @@ namespace TestEMGU1
                             tbPoint3.Text = et.Id().ToString();
                             break;
                         default:
-                            MouseClickNo = 0;
+                            _mouseClickNo = 0;
                             break;
                     }
-                    MouseClickNo++;
-                    if (MouseClickNo > 2) MouseClickNo = 0;
+                    _mouseClickNo++;
+                    if (_mouseClickNo > 2) _mouseClickNo = 0;
                 }
                 else
                 {
-                    button2_Click(sender, e);
+                    Button2_Click(sender, e);
                 }
             }
             else
             {
-
                 if (t.Button == MouseButtons.Left)
                 {
                     var cp = new PointF(t.X - rectangle.X, t.Y);
                     var et = _listCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
                     if (et == null) return;
-                    polygon.Add(circles[et.Id()].Center);
+                    _polygon.Add(_circles[et.Id()].Center);
                     _clickedPoint.Add(et.Id());
                 }
                 else
                 {
                     using (var g = pbOnePict.CreateGraphics())
                     {
-                        for (var i = 1; i < polygon.Count; i++)
+                        for (var i = 1; i < _polygon.Count; i++)
                         {
-                            g.DrawLine(Pens.Blue, new PointF(polygon[i].X * _xScale+ rectangle.X, polygon[i].Y * _yScale), new PointF(polygon[i - 1].X * _xScale+ rectangle.X, polygon[i - 1].Y * _yScale));
+                            g.DrawLine(Pens.Blue, new PointF(_polygon[i].X * _xScale+ rectangle.X, _polygon[i].Y * _yScale), new PointF(_polygon[i - 1].X * _xScale+ rectangle.X, _polygon[i - 1].Y * _yScale));
                         }
-                        g.DrawLine(Pens.Blue, new PointF(polygon[0].X * _xScale+ rectangle.X, polygon[0].Y * _yScale), new PointF(polygon[polygon.Count - 1].X * _xScale+ rectangle.X, polygon[polygon.Count - 1].Y * _yScale));
+                        g.DrawLine(Pens.Blue, new PointF(_polygon[0].X * _xScale+ rectangle.X, _polygon[0].Y * _yScale), new PointF(_polygon[_polygon.Count - 1].X * _xScale+ rectangle.X, _polygon[_polygon.Count - 1].Y * _yScale));
                     }
 
-                    canArea = polygon.ToArray();
+                    _canArea = _polygon.ToArray();
 
                     foreach (var cp in _clickedPoint)
                     {
-                        var cir = circles[cp];
+                        var cir = _circles[cp];
                         var lvItem = new ListViewItem(cp.ToString());
                         lvItem.SubItems.Add(cir.Radius.ToString("F6"));
                         lvItem.SubItems.Add(cir.Center.X.ToString("F6"));
@@ -395,13 +397,12 @@ namespace TestEMGU1
                         var fi = new FileInfo(tbSingleFile.Text);
                         lvItem.SubItems.Add(fi.Name);
                         lvArea.Items.Add(lvItem);
-
                     }
                     var pi = new PointInArea();
-                    for (var i = 0; i < circles.Length; i++)
+                    for (var i = 0; i < _circles.Length; i++)
                     {
-                        var cir = circles[i];
-                        var ts = pi.IsPointInside(polygon.ToArray(), cir.Center);
+                        var cir = _circles[i];
+                        var ts = pi.IsPointInside(_polygon.ToArray(), cir.Center);
                         if (!ts) continue;
                         if (_clickedPoint.Any(x => x == i)) continue;
                         var lvItem = new ListViewItem(i.ToString());
@@ -413,10 +414,9 @@ namespace TestEMGU1
                         lvItem.SubItems.Add(fi.Name);
                         lvArea.Items.Add(lvItem);
                     }
-
-                    PrepareLinks(_clickedPoint.Select(c => new PointListItem(c, circles[c].Center)).ToList());
-                    lbAvgRad.Text = $@"Средний радиус: {_clickedPoint.Select(c => circles[c].Radius).ToList().Average(x => x):F5}";
-                    polygon.Clear();
+                    PrepareLinks(_clickedPoint.Select(c => new PointListItem(c, _circles[c].Center)).ToList());
+                    lbAvgRad.Text = $@"Средний радиус: {_clickedPoint.Select(c => _circles[c].Radius).ToList().Average(x => x):F5}";
+                    _polygon.Clear();
                     _clickedPoint.Clear();
                 }
             }
@@ -425,7 +425,7 @@ namespace TestEMGU1
         private void PrepareLinks(IEnumerable<PointListItem> lst)
         {
             var listPoints = lst as IList<PointListItem> ?? lst.ToList();
-            var summ = listPoints.Sum(it => circles[it.Id()].Radius);
+            var summ = listPoints.Sum(it => _circles[it.Id()].Radius);
             var rc = float.Parse(tbRadCount.Text);
             var avg = (summ / listPoints.Count) * rc;
             var lnkCount = 0;
@@ -461,21 +461,20 @@ namespace TestEMGU1
             {
                 aList.Add(i, double.Parse(listView1.Items[i].SubItems[7].Text.Replace('.', ',')));
             }
-
             lvGrade.Items.Clear();
             lvGrade.Columns.Clear();
             lvGrade.Columns.Add(@"#");
             chart1.Series[0].Points.Clear();
             var lvItem = new ListViewItem(@"#");
 
-            var coef = 180 / 128.0;
-            var hcoef = coef / 2.0;
+            const double coef = 180 / 128.0;
+            const double hcoef = coef / 2.0;
 
             for (var i = 90.0; i <= 180; i += trackBarGrade.Value / coef)
             {
                 var i1 = i;
                 var t = aList.Count(x => x.Value >= i1 - trackBarGrade.Value / hcoef && x.Value < i1 + trackBarGrade.Value / hcoef);
-                lvGrade.Columns.Add(i.ToString(), 40);
+                lvGrade.Columns.Add(i.ToString(CultureInfo.InvariantCulture), 40);
                 lvItem.SubItems.Add(t.ToString());
                 chart1.Series[0].Points.AddXY(i1, t);
             }
@@ -602,15 +601,16 @@ namespace TestEMGU1
 
         private void pbOnePict_Paint(object sender, PaintEventArgs e)
         {
-            if (canArea.Length < 3) return;
+            if (_canArea.Length < 3) return;
             var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (pInfo == null) return;
             var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
 
-            for (var i = 1; i < canArea.Length; i++)
+            for (var i = 1; i < _canArea.Length; i++)
             {
-                e.Graphics.DrawLine(Pens.Blue, new PointF(canArea[i].X * _xScale + rectangle.X, canArea[i].Y * _yScale), new PointF(canArea[i - 1].X * _xScale + rectangle.X, canArea[i - 1].Y * _yScale));
+                e.Graphics.DrawLine(Pens.Blue, new PointF(_canArea[i].X * _xScale + rectangle.X, _canArea[i].Y * _yScale), new PointF(_canArea[i - 1].X * _xScale + rectangle.X, _canArea[i - 1].Y * _yScale));
             }
-            e.Graphics.DrawLine(Pens.Blue, new PointF(canArea[0].X * _xScale + rectangle.X, canArea[0].Y * _yScale), new PointF(canArea[canArea.Length - 1].X * _xScale + rectangle.X, canArea[canArea.Length - 1].Y * _yScale));
+            e.Graphics.DrawLine(Pens.Blue, new PointF(_canArea[0].X * _xScale + rectangle.X, _canArea[0].Y * _yScale), new PointF(_canArea[_canArea.Length - 1].X * _xScale + rectangle.X, _canArea[_canArea.Length - 1].Y * _yScale));
         }
     }
 }
