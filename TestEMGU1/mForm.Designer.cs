@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tlpMaster = new System.Windows.Forms.TableLayoutPanel();
             this.pbOnePict = new System.Windows.Forms.PictureBox();
@@ -86,6 +86,14 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cbArea = new System.Windows.Forms.CheckBox();
+            this.tpChains = new System.Windows.Forms.TabPage();
+            this.lvChains = new System.Windows.Forms.ListView();
+            this.fName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.dList = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.pCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.rList = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lDist = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cbChains = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.flpStat = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -97,8 +105,7 @@
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btStatSave = new System.Windows.Forms.Button();
-            this.tpChains = new System.Windows.Forms.TabPage();
-            this.cbChains = new System.Windows.Forms.CheckBox();
+            this.cId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage2.SuspendLayout();
             this.tlpMaster.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOnePict)).BeginInit();
@@ -112,6 +119,7 @@
             this.tcMain.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tpArea.SuspendLayout();
+            this.tpChains.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.flpStat.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -120,7 +128,6 @@
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel4.SuspendLayout();
-            this.tpChains.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage2
@@ -233,7 +240,7 @@
             this.tbGradient.Size = new System.Drawing.Size(219, 34);
             this.tbGradient.TabIndex = 1;
             this.tbGradient.Value = 130;
-            this.tbGradient.Scroll += new System.EventHandler(this.trackBar2_Scroll);
+            this.tbGradient.Scroll += new System.EventHandler(this.TrackBar2_Scroll);
             // 
             // tbCurvature
             // 
@@ -244,7 +251,7 @@
             this.tbCurvature.Size = new System.Drawing.Size(219, 34);
             this.tbCurvature.TabIndex = 2;
             this.tbCurvature.Value = 40;
-            this.tbCurvature.Scroll += new System.EventHandler(this.trackBar3_Scroll);
+            this.tbCurvature.Scroll += new System.EventHandler(this.TrackBar3_Scroll);
             // 
             // tbMinRadius
             // 
@@ -255,7 +262,7 @@
             this.tbMinRadius.Size = new System.Drawing.Size(219, 34);
             this.tbMinRadius.TabIndex = 3;
             this.tbMinRadius.Value = 25;
-            this.tbMinRadius.Scroll += new System.EventHandler(this.trackBar4_Scroll);
+            this.tbMinRadius.Scroll += new System.EventHandler(this.TrackBar4_Scroll);
             // 
             // tbMaxRadius
             // 
@@ -723,6 +730,72 @@
             this.cbArea.UseVisualStyleBackColor = true;
             this.cbArea.CheckedChanged += new System.EventHandler(this.CbArea_CheckedChanged);
             // 
+            // tpChains
+            // 
+            this.tpChains.Controls.Add(this.lvChains);
+            this.tpChains.Controls.Add(this.cbChains);
+            this.tpChains.Location = new System.Drawing.Point(4, 25);
+            this.tpChains.Name = "tpChains";
+            this.tpChains.Size = new System.Drawing.Size(1093, 611);
+            this.tpChains.TabIndex = 6;
+            this.tpChains.Text = "Цепочки";
+            this.tpChains.UseVisualStyleBackColor = true;
+            // 
+            // lvChains
+            // 
+            this.lvChains.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvChains.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.cId,
+            this.fName,
+            this.dList,
+            this.pCount,
+            this.rList,
+            this.lDist});
+            this.lvChains.Location = new System.Drawing.Point(9, 110);
+            this.lvChains.Name = "lvChains";
+            this.lvChains.Size = new System.Drawing.Size(1076, 493);
+            this.lvChains.TabIndex = 1;
+            this.lvChains.UseCompatibleStateImageBehavior = false;
+            this.lvChains.View = System.Windows.Forms.View.Details;
+            // 
+            // fName
+            // 
+            this.fName.Text = "Файл";
+            this.fName.Width = 200;
+            // 
+            // dList
+            // 
+            this.dList.Text = "Список точек";
+            this.dList.Width = 200;
+            // 
+            // pCount
+            // 
+            this.pCount.Text = "Число точек";
+            this.pCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.pCount.Width = 100;
+            // 
+            // rList
+            // 
+            this.rList.Text = "Среднее расстояние";
+            this.rList.Width = 100;
+            // 
+            // lDist
+            // 
+            this.lDist.Text = "Длинное плечо";
+            this.lDist.Width = 100;
+            // 
+            // cbChains
+            // 
+            this.cbChains.AutoSize = true;
+            this.cbChains.Location = new System.Drawing.Point(9, 4);
+            this.cbChains.Name = "cbChains";
+            this.cbChains.Size = new System.Drawing.Size(218, 21);
+            this.cbChains.TabIndex = 0;
+            this.cbChains.Text = "Использовать этот алгоритм";
+            this.cbChains.UseVisualStyleBackColor = true;
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.flpStat);
@@ -801,14 +874,14 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(1056, 325);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
@@ -831,25 +904,11 @@
             this.btStatSave.UseVisualStyleBackColor = true;
             this.btStatSave.Click += new System.EventHandler(this.BtStatSave_Click);
             // 
-            // tpChains
+            // cId
             // 
-            this.tpChains.Controls.Add(this.cbChains);
-            this.tpChains.Location = new System.Drawing.Point(4, 25);
-            this.tpChains.Name = "tpChains";
-            this.tpChains.Size = new System.Drawing.Size(1093, 611);
-            this.tpChains.TabIndex = 6;
-            this.tpChains.Text = "Цепочки";
-            this.tpChains.UseVisualStyleBackColor = true;
-            // 
-            // cbChains
-            // 
-            this.cbChains.AutoSize = true;
-            this.cbChains.Location = new System.Drawing.Point(9, 4);
-            this.cbChains.Name = "cbChains";
-            this.cbChains.Size = new System.Drawing.Size(218, 21);
-            this.cbChains.TabIndex = 0;
-            this.cbChains.Text = "Использовать этот алгоритм";
-            this.cbChains.UseVisualStyleBackColor = true;
+            this.cId.Text = "#";
+            this.cId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.cId.Width = 50;
             // 
             // FmMain
             // 
@@ -879,6 +938,8 @@
             this.tabPage1.PerformLayout();
             this.tpArea.ResumeLayout(false);
             this.tpArea.PerformLayout();
+            this.tpChains.ResumeLayout(false);
+            this.tpChains.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.flpStat.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -888,8 +949,6 @@
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.panel4.ResumeLayout(false);
-            this.tpChains.ResumeLayout(false);
-            this.tpChains.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -965,6 +1024,13 @@
         private System.Windows.Forms.Label lbAvgRad;
         private System.Windows.Forms.TabPage tpChains;
         private System.Windows.Forms.CheckBox cbChains;
+        private System.Windows.Forms.ListView lvChains;
+        private System.Windows.Forms.ColumnHeader fName;
+        private System.Windows.Forms.ColumnHeader dList;
+        private System.Windows.Forms.ColumnHeader pCount;
+        private System.Windows.Forms.ColumnHeader rList;
+        private System.Windows.Forms.ColumnHeader lDist;
+        private System.Windows.Forms.ColumnHeader cId;
     }
 }
 

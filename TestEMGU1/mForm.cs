@@ -140,8 +140,6 @@ namespace TestEMGU1
             Properties.Settings.Default.MinRadius = tbMinRadius.Value; //default 25
             Properties.Settings.Default.MaxRadius = tbMaxRadius.Value; //default 65
             Properties.Settings.Default.RadCount = tbRadCount.Text; //default 65
-
-
             Properties.Settings.Default.Save();
         }
 
@@ -160,17 +158,17 @@ namespace TestEMGU1
             label1.Text = tbMinimalDist.Value.ToString();
         }
 
-        private void trackBar2_Scroll(object sender, EventArgs e)
+        private void TrackBar2_Scroll(object sender, EventArgs e)
         {
             label2.Text = tbGradient.Value.ToString();
         }
 
-        private void trackBar3_Scroll(object sender, EventArgs e)
+        private void TrackBar3_Scroll(object sender, EventArgs e)
         {
             label3.Text = tbCurvature.Value.ToString();
         }
 
-        private void trackBar4_Scroll(object sender, EventArgs e)
+        private void TrackBar4_Scroll(object sender, EventArgs e)
         {
             label4.Text = tbMinRadius.Value.ToString();
         }
@@ -182,9 +180,6 @@ namespace TestEMGU1
 
         private void TestPicture(string filename)
         {
-            //var lst = new List<BallElement>();
-
-
             var bmp = new Bitmap(filename);
             _listCircles.Clear();
 
@@ -197,7 +192,6 @@ namespace TestEMGU1
             var param2 = tbCurvature.Value;
             var minRadius = tbMinRadius.Value;
             var maxRadius = tbMaxRadius.Value;
-
 
             _circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, minDist, param1,
                 param2, minRadius, maxRadius);
@@ -212,12 +206,10 @@ namespace TestEMGU1
                 _yScale = rectangle.Height / (float)circleImage.Bitmap.Size.Height;
                 _xScale = rectangle.Width / (float)circleImage.Bitmap.Size.Width;
             }
-            //foreach (var circle in circles.OrderByDescending(x => x.Radius))
             for (var i = 0; i < _circles.Length; i++)
             {
                 var circle = _circles[i];
                 circleImage.Draw(circle, new Bgr(Color.Brown), 2);
-                //public virtual void Draw(string message, Point bottomLeft, FontFace fontFace, double fontScale, TColor color, int thickness = 1, LineType lineType = LineType.EightConnected, bool bottomLeftOrigin = false)
 
                 circleImage.Draw(i.ToString(), new Point((int)circle.Center.X, (int)circle.Center.Y), FontFace.HersheyComplex, 2.0, new Bgr(Color.Brown));
                 var fPt = new PointF(circle.Center.X * _xScale, circle.Center.Y * _yScale);
@@ -385,39 +377,54 @@ namespace TestEMGU1
                     }
 
                     _canArea = _polygon.ToArray();
-
-                    foreach (var cp in _clickedPoint)
+                    var fi = new FileInfo(tbSingleFile.Text);
+                    if (cbArea.Checked)
                     {
-                        var cir = _circles[cp];
-                        var lvItem = new ListViewItem(cp.ToString());
-                        lvItem.SubItems.Add(cir.Radius.ToString("F6"));
-                        lvItem.SubItems.Add(cir.Center.X.ToString("F6"));
-                        lvItem.SubItems.Add(cir.Center.Y.ToString("F6"));
-
-                        var fi = new FileInfo(tbSingleFile.Text);
-                        lvItem.SubItems.Add(fi.Name);
-                        lvArea.Items.Add(lvItem);
-                    }
-                    var pi = new PointInArea();
-                    for (var i = 0; i < _circles.Length; i++)
+                        foreach (var cp in _clickedPoint)
+                        {
+                            var cir = _circles[cp];
+                            var lvItem = new ListViewItem(cp.ToString());
+                            lvItem.SubItems.Add(cir.Radius.ToString("F6"));
+                            lvItem.SubItems.Add(cir.Center.X.ToString("F6"));
+                            lvItem.SubItems.Add(cir.Center.Y.ToString("F6"));
+                            
+                            lvItem.SubItems.Add(fi.Name);
+                            lvArea.Items.Add(lvItem);
+                        }
+                        var pi = new PointInArea();
+                        for (var i = 0; i < _circles.Length; i++)
+                        {
+                            var cir = _circles[i];
+                            var ts = pi.IsPointInside(_polygon.ToArray(), cir.Center);
+                            if (!ts) continue;
+                            if (_clickedPoint.Any(x => x == i)) continue;
+                            var lvItem = new ListViewItem(i.ToString());
+                            lvItem.SubItems.Add(cir.Radius.ToString("F6"));
+                            lvItem.SubItems.Add(cir.Center.X.ToString("F6"));
+                            lvItem.SubItems.Add(cir.Center.Y.ToString("F6"));
+                            _clickedPoint.Add(i);
+                            //var fi = new FileInfo(tbSingleFile.Text);
+                            lvItem.SubItems.Add(fi.Name);
+                            lvArea.Items.Add(lvItem);
+                        }
+                        PrepareLinks(_clickedPoint.Select(c => new PointListItem(c, _circles[c].Center)).ToList());
+                        lbAvgRad.Text =
+                            $@"Средний радиус: {
+                                    _clickedPoint.Select(c => _circles[c].Radius).ToList().Average(x => x)
+                                :F5}";
+                        _polygon.Clear();
+                        _clickedPoint.Clear();
+                    } else if (cbChains.Checked)
                     {
-                        var cir = _circles[i];
-                        var ts = pi.IsPointInside(_polygon.ToArray(), cir.Center);
-                        if (!ts) continue;
-                        if (_clickedPoint.Any(x => x == i)) continue;
-                        var lvItem = new ListViewItem(i.ToString());
-                        lvItem.SubItems.Add(cir.Radius.ToString("F6"));
-                        lvItem.SubItems.Add(cir.Center.X.ToString("F6"));
-                        lvItem.SubItems.Add(cir.Center.Y.ToString("F6"));
-                        _clickedPoint.Add(i);
-                        var fi = new FileInfo(tbSingleFile.Text);
-                        lvItem.SubItems.Add(fi.Name);
-                        lvArea.Items.Add(lvItem);
+                        for (var i = 1; i < _clickedPoint.Count; i++)
+                        {
+                            var itm = _clickedPoint[i];
+                            var chItem = new ListViewItem(i.ToString());
+                            chItem.SubItems.Add(fi.Name);
+
+                            lvChains.Items.Add(chItem);
+                        }
                     }
-                    PrepareLinks(_clickedPoint.Select(c => new PointListItem(c, _circles[c].Center)).ToList());
-                    lbAvgRad.Text = $@"Средний радиус: {_clickedPoint.Select(c => _circles[c].Radius).ToList().Average(x => x):F5}";
-                    _polygon.Clear();
-                    _clickedPoint.Clear();
                 }
             }
         }
