@@ -434,6 +434,7 @@ namespace TestEMGU1
                         chItem.SubItems.Add((avgR / _clickedPoint.Count).ToString("F5"));
                         var lR = (new PointListItem(0, _circles[_clickedPoint[0]].Center)).GetDistance(_circles[_clickedPoint[_clickedPoint.Count-1]].Center);
                         chItem.SubItems.Add(lR.ToString("F5"));
+                        chItem.SubItems.Add((_polygon.Count-_polygon.Distinct().Count()).ToString());
                         lvChains.Items.Add(chItem);
                         _polygon.Clear();
                         _clickedPoint.Clear();
@@ -619,7 +620,7 @@ namespace TestEMGU1
             tbMaxRadius.Value = 65;
         }
 
-        private void pbOnePict_Paint(object sender, PaintEventArgs e)
+        private void PbOnePict_Paint(object sender, PaintEventArgs e)
         {
             if (_canArea.Length < 3) return;
             var pInfo = pbOnePict.GetType().GetProperty("ImageRectangle", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
@@ -631,6 +632,34 @@ namespace TestEMGU1
                 e.Graphics.DrawLine(Pens.Blue, new PointF(_canArea[i].X * _xScale + rectangle.X, _canArea[i].Y * _yScale), new PointF(_canArea[i - 1].X * _xScale + rectangle.X, _canArea[i - 1].Y * _yScale));
             }
             e.Graphics.DrawLine(Pens.Blue, new PointF(_canArea[0].X * _xScale + rectangle.X, _canArea[0].Y * _yScale), new PointF(_canArea[_canArea.Length - 1].X * _xScale + rectangle.X, _canArea[_canArea.Length - 1].Y * _yScale));
+        }
+
+        private void BtnChainDelete_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem eachItem in lvChains.SelectedItems)
+            {
+                lvChains.Items.Remove(eachItem);
+            }
+        }
+
+        private void BtnChainsSave_Click(object sender, EventArgs e)
+        {
+            //Save the chains
+            //ToDo
+            var fi = new FileInfo(tbSingleFile.Text);
+            var filePath = fi.DirectoryName + @"\chains_" + DateTime.Now.ToShortDateString() + "_.txt";
+            StreamWriter sw;
+            var headerStr = lvGrade.Columns.Cast<ColumnHeader>().Aggregate("", (current, hd) => current + (hd.Text + ":"));
+            using (sw = new StreamWriter(filePath))
+            {
+                sw.WriteLine(headerStr);
+                foreach (ListViewItem item in lvGrade.Items)
+                {
+                    sw.WriteLine(SubItemToString(item).Replace(',', '.'));
+                }
+            }
+            sw.Close();
+
         }
     }
 }

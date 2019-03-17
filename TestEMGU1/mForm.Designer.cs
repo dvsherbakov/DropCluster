@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tlpMaster = new System.Windows.Forms.TableLayoutPanel();
             this.pbOnePict = new System.Windows.Forms.PictureBox();
@@ -87,12 +87,15 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cbArea = new System.Windows.Forms.CheckBox();
             this.tpChains = new System.Windows.Forms.TabPage();
+            this.btnChainDelete = new System.Windows.Forms.Button();
             this.lvChains = new System.Windows.Forms.ListView();
+            this.cId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.fName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.dList = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.rList = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lDist = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cCross = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cbChains = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.flpStat = new System.Windows.Forms.FlowLayoutPanel();
@@ -105,7 +108,7 @@
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btStatSave = new System.Windows.Forms.Button();
-            this.cId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnChainsSave = new System.Windows.Forms.Button();
             this.tabPage2.SuspendLayout();
             this.tlpMaster.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOnePict)).BeginInit();
@@ -165,7 +168,7 @@
             this.pbOnePict.TabIndex = 0;
             this.pbOnePict.TabStop = false;
             this.pbOnePict.Click += new System.EventHandler(this.PbOnePict_Click);
-            this.pbOnePict.Paint += new System.Windows.Forms.PaintEventHandler(this.pbOnePict_Paint);
+            this.pbOnePict.Paint += new System.Windows.Forms.PaintEventHandler(this.PbOnePict_Paint);
             // 
             // tableLayoutPanel2
             // 
@@ -493,7 +496,7 @@
             this.tcMain.Margin = new System.Windows.Forms.Padding(4);
             this.tcMain.Name = "tcMain";
             this.tcMain.SelectedIndex = 0;
-            this.tcMain.Size = new System.Drawing.Size(1101, 640);
+            this.tcMain.Size = new System.Drawing.Size(1099, 658);
             this.tcMain.TabIndex = 6;
             // 
             // tabPage1
@@ -732,14 +735,26 @@
             // 
             // tpChains
             // 
+            this.tpChains.Controls.Add(this.btnChainsSave);
+            this.tpChains.Controls.Add(this.btnChainDelete);
             this.tpChains.Controls.Add(this.lvChains);
             this.tpChains.Controls.Add(this.cbChains);
             this.tpChains.Location = new System.Drawing.Point(4, 25);
             this.tpChains.Name = "tpChains";
-            this.tpChains.Size = new System.Drawing.Size(1093, 611);
+            this.tpChains.Size = new System.Drawing.Size(1091, 629);
             this.tpChains.TabIndex = 6;
             this.tpChains.Text = "Цепочки";
             this.tpChains.UseVisualStyleBackColor = true;
+            // 
+            // btnChainDelete
+            // 
+            this.btnChainDelete.Location = new System.Drawing.Point(16, 77);
+            this.btnChainDelete.Name = "btnChainDelete";
+            this.btnChainDelete.Size = new System.Drawing.Size(75, 23);
+            this.btnChainDelete.TabIndex = 2;
+            this.btnChainDelete.Text = "Удалить";
+            this.btnChainDelete.UseVisualStyleBackColor = true;
+            this.btnChainDelete.Click += new System.EventHandler(this.BtnChainDelete_Click);
             // 
             // lvChains
             // 
@@ -752,13 +767,20 @@
             this.dList,
             this.pCount,
             this.rList,
-            this.lDist});
+            this.lDist,
+            this.cCross});
             this.lvChains.Location = new System.Drawing.Point(9, 110);
             this.lvChains.Name = "lvChains";
-            this.lvChains.Size = new System.Drawing.Size(1076, 493);
+            this.lvChains.Size = new System.Drawing.Size(1074, 511);
             this.lvChains.TabIndex = 1;
             this.lvChains.UseCompatibleStateImageBehavior = false;
             this.lvChains.View = System.Windows.Forms.View.Details;
+            // 
+            // cId
+            // 
+            this.cId.Text = "#";
+            this.cId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.cId.Width = 50;
             // 
             // fName
             // 
@@ -785,6 +807,10 @@
             // 
             this.lDist.Text = "Длинное плечо";
             this.lDist.Width = 100;
+            // 
+            // cCross
+            // 
+            this.cCross.Text = "Нелинейность";
             // 
             // cbChains
             // 
@@ -874,14 +900,14 @@
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(1056, 325);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
@@ -904,17 +930,21 @@
             this.btStatSave.UseVisualStyleBackColor = true;
             this.btStatSave.Click += new System.EventHandler(this.BtStatSave_Click);
             // 
-            // cId
+            // btnChainsSave
             // 
-            this.cId.Text = "#";
-            this.cId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.cId.Width = 50;
+            this.btnChainsSave.Location = new System.Drawing.Point(97, 77);
+            this.btnChainsSave.Name = "btnChainsSave";
+            this.btnChainsSave.Size = new System.Drawing.Size(88, 23);
+            this.btnChainsSave.TabIndex = 3;
+            this.btnChainsSave.Text = "Сохранить";
+            this.btnChainsSave.UseVisualStyleBackColor = true;
+            this.btnChainsSave.Click += new System.EventHandler(this.BtnChainsSave_Click);
             // 
             // FmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1101, 640);
+            this.ClientSize = new System.Drawing.Size(1099, 658);
             this.Controls.Add(this.tcMain);
             this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -1031,6 +1061,9 @@
         private System.Windows.Forms.ColumnHeader rList;
         private System.Windows.Forms.ColumnHeader lDist;
         private System.Windows.Forms.ColumnHeader cId;
+        private System.Windows.Forms.ColumnHeader cCross;
+        private System.Windows.Forms.Button btnChainDelete;
+        private System.Windows.Forms.Button btnChainsSave;
     }
 }
 
