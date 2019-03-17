@@ -649,17 +649,16 @@ namespace TestEMGU1
             var fi = new FileInfo(tbSingleFile.Text);
             var filePath = fi.DirectoryName + @"\chains_" + DateTime.Now.ToShortDateString() + "_.txt";
             StreamWriter sw;
-            var headerStr = lvGrade.Columns.Cast<ColumnHeader>().Aggregate("", (current, hd) => current + (hd.Text + ":"));
+            var headerStr = lvChains.Columns.Cast<ColumnHeader>().Aggregate("", (current, hd) => current + (hd.Text + ":"));
             using (sw = new StreamWriter(filePath))
             {
                 sw.WriteLine(headerStr);
-                foreach (ListViewItem item in lvGrade.Items)
+                foreach (ListViewItem item in lvChains.Items)
                 {
                     sw.WriteLine(SubItemToString(item).Replace(',', '.'));
                 }
             }
             sw.Close();
-
         }
     }
 }
