@@ -431,7 +431,7 @@ namespace TestEMGU1
                         }
                         chItem.SubItems.Add(pList);
                         chItem.SubItems.Add(_clickedPoint.Count.ToString());
-                        chItem.SubItems.Add((avgR / _clickedPoint.Count).ToString("F5"));
+                        chItem.SubItems.Add((avgR / _clickedPoint.Count-1).ToString("F5"));
                         var lR = (new PointListItem(0, _circles[_clickedPoint[0]].Center)).GetDistance(_circles[_clickedPoint[_clickedPoint.Count-1]].Center);
                         chItem.SubItems.Add(lR.ToString("F5"));
                         chItem.SubItems.Add((_polygon.Count-_polygon.Distinct().Count()).ToString());
