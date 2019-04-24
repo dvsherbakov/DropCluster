@@ -24,5 +24,15 @@ namespace TestEMGU1
         {
             return (float)Math.Sqrt(Math.Pow(X - x, 2) + Math.Pow(Y -y, 2));
         }
+
+        public float getX()
+        {
+            return X;
+        }
+
+        public float getY()
+        {
+            return Y;
+        }
     }
 }

@@ -260,7 +260,7 @@
             // 
             this.tbMinRadius.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMinRadius.Location = new System.Drawing.Point(3, 363);
-            this.tbMinRadius.Maximum = 50;
+            this.tbMinRadius.Maximum = 75;
             this.tbMinRadius.Name = "tbMinRadius";
             this.tbMinRadius.Size = new System.Drawing.Size(219, 34);
             this.tbMinRadius.TabIndex = 3;
@@ -271,7 +271,7 @@
             // 
             this.tbMaxRadius.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMaxRadius.Location = new System.Drawing.Point(3, 443);
-            this.tbMaxRadius.Maximum = 100;
+            this.tbMaxRadius.Maximum = 120;
             this.tbMaxRadius.Name = "tbMaxRadius";
             this.tbMaxRadius.Size = new System.Drawing.Size(219, 34);
             this.tbMaxRadius.TabIndex = 4;

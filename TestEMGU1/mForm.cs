@@ -9,14 +9,12 @@ using Emgu.CV.Structure;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Threading.Tasks;
 using System.Reflection;
 
 namespace TestEMGU1
 {
     public partial class FmMain : Form
     {
-        private bool IsStop { get; set; }
         private CircleF[] _circles;
         private int _mouseClickNo;
         private readonly List<PointListItem> _listCircles = new List<PointListItem>();
@@ -44,7 +42,6 @@ namespace TestEMGU1
             tbRadCount.Text = Properties.Settings.Default.RadCount;
             //pictureBox1.BackColor = Color.FromArgb(255, 128, 128);
             TransparencyKey = Color.FromArgb(255, 128, 128);
-            IsStop = false;
 
             if (IntPtr.Size != 8)
             {
@@ -71,14 +68,25 @@ namespace TestEMGU1
             progressBar1.Maximum = files.Length;
             var strList = new List<string>();
             var dropCount = tbDropCount.Value;
-            Parallel.ForEach(files.OrderBy(x => x.Name), file =>
+            //Parallel.ForEach(files.OrderBy(x => x.Name), file =>
+            //{
+            //    if (IsStop) return;
+            //    var lst = PreparePicture(file.FullName, dropCount);
+            //    Invoke(new AddMessageDelegate(IncValue));
+            //    var tstr = lst.Aggregate("", (current, t) => current + t.Radius() + ":");
+            //    strList.Add(file.Name + ":" + tstr);
+            //});
+
+            foreach (var file in files.OrderBy(x => x.Name))
             {
-                if (IsStop) return;
                 var lst = PreparePicture(file.FullName, dropCount);
-                Invoke(new AddMessageDelegate(IncValue));
-                var tstr = lst.Aggregate("", (current, t) => current + t.Radius() + ":");
-                strList.Add(file.Name + ":" + tstr);
-            });
+                IncValue();
+                var ballElements = lst as BallElement[] ?? lst.Where(t=>t.getY()<645).ToArray();
+                var cx = ballElements.Average(x => x.getX());
+                var cy = ballElements.Average(x => x.getY());
+                var tstr = ballElements.Aggregate("", (current, t) => current +t.getX()+":"+t.getY() + ":" + t.Radius() + ":");
+                strList.Add(file.Name + ":" + tstr + ":" + cx + ":" + cy );
+            }
 
             using (var sw = new StreamWriter(dirName + @"\stat.lst"))
             {
@@ -86,8 +94,6 @@ namespace TestEMGU1
                     sw.WriteLine(t.Replace(',', '.'));
             }
         }
-
-        private delegate void AddMessageDelegate();
 
         private void IncValue()
         {
@@ -108,7 +114,14 @@ namespace TestEMGU1
 
             CvInvoke.CvtColor(img, uimage, ColorConversion.Bgr2Gray);
 
-            _circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, 15, 75, 40, 25, 85);
+            var minDist = tbMinimalDist.Value;
+            var param1 = tbGradient.Value;
+            var param2 = tbCurvature.Value;
+            var minRadius = tbMinRadius.Value;
+            var maxRadius = tbMaxRadius.Value;
+
+            _circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, minDist, param1,
+                param2, minRadius, maxRadius);
 
             var circleImage = img.Copy(); //CopyBlank();
 
@@ -180,6 +193,7 @@ namespace TestEMGU1
 
         private void TestPicture(string filename)
         {
+            if (!File.Exists(filename)) return;
             var bmp = new Bitmap(filename);
             _listCircles.Clear();
 
@@ -206,6 +220,7 @@ namespace TestEMGU1
                 _yScale = rectangle.Height / (float)circleImage.Bitmap.Size.Height;
                 _xScale = rectangle.Width / (float)circleImage.Bitmap.Size.Width;
             }
+            
             for (var i = 0; i < _circles.Length; i++)
             {
                 var circle = _circles[i];
@@ -238,7 +253,6 @@ namespace TestEMGU1
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            IsStop = true;
         }
 
         private void Button2_Click(object sender, EventArgs e)
@@ -391,7 +405,7 @@ namespace TestEMGU1
                             lvItem.SubItems.Add(fi.Name);
                             lvArea.Items.Add(lvItem);
                         }
-                        var pi = new PointInArea();
+                        
                         for (var i = 0; i < _circles.Length; i++)
                         {
                             var cir = _circles[i];
