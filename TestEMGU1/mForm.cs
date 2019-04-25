@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using Emgu.CV.Cuda;
 
 namespace TestEMGU1
 {
@@ -51,13 +52,40 @@ namespace TestEMGU1
             FillGradeList();
         }
 
+        //private static List<BallElement> CompareToPrev(List<BallElement>prev, List<BallElement> lst)
+        //{
+        //    return prev.Select(pElem => lst.OrderBy(x => x.Range(pElem.getX(), pElem.getY())).FirstOrDefault()).ToList();
+        //}
+
+        private static IEnumerable<BallElement> SortCoord(IList<BallElement> prv, IList<BallElement> cur)
+        {
+            var lRes = new List<BallElement>();
+            const int cPrev = 0;
+            while (prv.Count > 0)
+            {
+                var minDist = float.MaxValue;
+                var marker = 0;
+                for (var i = 0; i < cur.Count; i++)
+                {
+                    var dst = prv[cPrev].Range(cur[i].getX(), cur[i].getY());
+                    if (!(dst < minDist)) continue;
+                    minDist = dst;
+                    marker = i;
+                }
+                lRes.Add(cur[marker]);
+                cur.RemoveAt(marker);
+                prv.RemoveAt(cPrev);
+            }
+
+            return lRes.ToArray();
+        }
+
         private void PrepareDir()
         {
             var fInfo = new FileInfo(tbSingleFile.Text);
 
             if (fInfo.Directory == null) return;
             var dirName = fInfo.Directory.FullName;
-            // listBox2.Items.Clear();
             var d = new DirectoryInfo(dirName); //Assuming Test is your Folder
 
             var files = d.GetFiles("c_*.jpg");
@@ -68,24 +96,20 @@ namespace TestEMGU1
             progressBar1.Maximum = files.Length;
             var strList = new List<string>();
             var dropCount = tbDropCount.Value;
-            //Parallel.ForEach(files.OrderBy(x => x.Name), file =>
-            //{
-            //    if (IsStop) return;
-            //    var lst = PreparePicture(file.FullName, dropCount);
-            //    Invoke(new AddMessageDelegate(IncValue));
-            //    var tstr = lst.Aggregate("", (current, t) => current + t.Radius() + ":");
-            //    strList.Add(file.Name + ":" + tstr);
-            //});
+            var prevList = new List<BallElement>();
 
             foreach (var file in files.OrderBy(x => x.Name))
             {
                 var lst = PreparePicture(file.FullName, dropCount);
                 IncValue();
-                var ballElements = lst as BallElement[] ?? lst.Where(t=>t.getY()<645).ToArray();
+                var ballElements = prevList.Count > 0 ? SortCoord(prevList, lst.ToList()).ToArray() : lst.ToArray();
                 var cx = ballElements.Average(x => x.getX());
                 var cy = ballElements.Average(x => x.getY());
                 var tstr = ballElements.Aggregate("", (current, t) => current +t.getX()+":"+t.getY() + ":" + t.Radius() + ":");
                 strList.Add(file.Name + ":" + tstr + ":" + cx + ":" + cy );
+                prevList = ballElements.ToList();
+                ballElements = null;
+                lst = null;
             }
 
             using (var sw = new StreamWriter(dirName + @"\stat.lst"))
@@ -102,9 +126,8 @@ namespace TestEMGU1
 
         private IEnumerable<BallElement> PreparePicture(string filename, int dropCount)
         {
-            var lst = new List<BallElement>();
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
+            //var stopWatch = new Stopwatch();
+            //stopWatch.Start();
 
             var bmp = new Bitmap(filename);
             //var g = Graphics.FromImage(bmp);
@@ -113,7 +136,7 @@ namespace TestEMGU1
             var uimage = new UMat();
 
             CvInvoke.CvtColor(img, uimage, ColorConversion.Bgr2Gray);
-
+            
             var minDist = tbMinimalDist.Value;
             var param1 = tbGradient.Value;
             var param2 = tbCurvature.Value;
@@ -122,19 +145,16 @@ namespace TestEMGU1
 
             _circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, minDist, param1,
                 param2, minRadius, maxRadius);
+            bmp.Dispose();
+            img.Dispose();
+            uimage.Dispose();
+           // var circleImage = img.Copy(); //CopyBlank();
 
-            var circleImage = img.Copy(); //CopyBlank();
+            //var f = new FileInfo(filename);
+            //var fn = f.DirectoryName + @"\c_" + f.Name;
+            //circleImage.Save(fn);
 
-            foreach (var circle in _circles.OrderByDescending(x => x.Radius).Take(dropCount))
-            {
-                circleImage.Draw(circle, new Bgr(Color.Brown), 2);
-                lst.Add(new BallElement(circle.Area, circle.Center.X, circle.Center.Y, circle.Radius));
-            }
-            var f = new FileInfo(filename);
-            var fn = f.DirectoryName + @"\c_" + f.Name;
-            circleImage.Save(fn);
-
-            return lst;
+            return _circles.OrderByDescending(x => x.Radius).Take(dropCount).Select(circle => new BallElement(circle.Area, circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
         }
 
 
@@ -200,7 +220,9 @@ namespace TestEMGU1
             var img = new Image<Bgr, byte>(bmp);
             var uimage = new UMat();
 
+            
             CvInvoke.CvtColor(img, uimage, ColorConversion.Bgr2Gray);
+
             var minDist = tbMinimalDist.Value;
             var param1 = tbGradient.Value;
             var param2 = tbCurvature.Value;
@@ -658,8 +680,6 @@ namespace TestEMGU1
 
         private void BtnChainsSave_Click(object sender, EventArgs e)
         {
-            //Save the chains
-            //ToDo
             var fi = new FileInfo(tbSingleFile.Text);
             var filePath = fi.DirectoryName + @"\chains_" + DateTime.Now.ToShortDateString() + "_.txt";
             StreamWriter sw;
