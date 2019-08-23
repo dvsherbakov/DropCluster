@@ -87,6 +87,7 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cbArea = new System.Windows.Forms.CheckBox();
             this.tpChains = new System.Windows.Forms.TabPage();
+            this.btnChainsSave = new System.Windows.Forms.Button();
             this.btnChainDelete = new System.Windows.Forms.Button();
             this.lvChains = new System.Windows.Forms.ListView();
             this.cId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -108,7 +109,6 @@
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btStatSave = new System.Windows.Forms.Button();
-            this.btnChainsSave = new System.Windows.Forms.Button();
             this.tabPage2.SuspendLayout();
             this.tlpMaster.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOnePict)).BeginInit();
@@ -138,7 +138,7 @@
             this.tabPage2.Controls.Add(this.tlpMaster);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(1093, 611);
+            this.tabPage2.Size = new System.Drawing.Size(1091, 629);
             this.tabPage2.TabIndex = 2;
             this.tabPage2.Text = "Обработка изображений";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -155,7 +155,7 @@
             this.tlpMaster.Name = "tlpMaster";
             this.tlpMaster.RowCount = 1;
             this.tlpMaster.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpMaster.Size = new System.Drawing.Size(1093, 611);
+            this.tlpMaster.Size = new System.Drawing.Size(1091, 629);
             this.tlpMaster.TabIndex = 0;
             // 
             // pbOnePict
@@ -163,7 +163,7 @@
             this.pbOnePict.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbOnePict.Location = new System.Drawing.Point(3, 3);
             this.pbOnePict.Name = "pbOnePict";
-            this.pbOnePict.Size = new System.Drawing.Size(759, 605);
+            this.pbOnePict.Size = new System.Drawing.Size(757, 623);
             this.pbOnePict.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pbOnePict.TabIndex = 0;
             this.pbOnePict.TabStop = false;
@@ -199,7 +199,7 @@
             this.tableLayoutPanel2.Controls.Add(this.lbdropCount, 1, 1);
             this.tableLayoutPanel2.Controls.Add(this.button1, 1, 14);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(768, 3);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(766, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 16;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
@@ -218,7 +218,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(322, 605);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(322, 623);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // tbMinimalDist
@@ -260,7 +260,7 @@
             // 
             this.tbMinRadius.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMinRadius.Location = new System.Drawing.Point(3, 363);
-            this.tbMinRadius.Maximum = 50;
+            this.tbMinRadius.Maximum = 75;
             this.tbMinRadius.Name = "tbMinRadius";
             this.tbMinRadius.Size = new System.Drawing.Size(219, 34);
             this.tbMinRadius.TabIndex = 3;
@@ -271,7 +271,7 @@
             // 
             this.tbMaxRadius.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMaxRadius.Location = new System.Drawing.Point(3, 443);
-            this.tbMaxRadius.Maximum = 100;
+            this.tbMaxRadius.Maximum = 120;
             this.tbMaxRadius.Name = "tbMaxRadius";
             this.tbMaxRadius.Size = new System.Drawing.Size(219, 34);
             this.tbMaxRadius.TabIndex = 4;
@@ -512,7 +512,7 @@
             this.tabPage1.Controls.Add(this.tbPoint1);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(1093, 611);
+            this.tabPage1.Size = new System.Drawing.Size(1091, 629);
             this.tabPage1.TabIndex = 3;
             this.tabPage1.Text = "Углы";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -618,7 +618,7 @@
             this.tpArea.Controls.Add(this.cbArea);
             this.tpArea.Location = new System.Drawing.Point(4, 25);
             this.tpArea.Name = "tpArea";
-            this.tpArea.Size = new System.Drawing.Size(1093, 611);
+            this.tpArea.Size = new System.Drawing.Size(1091, 629);
             this.tpArea.TabIndex = 5;
             this.tpArea.Text = "Область";
             this.tpArea.UseVisualStyleBackColor = true;
@@ -746,6 +746,16 @@
             this.tpChains.Text = "Цепочки";
             this.tpChains.UseVisualStyleBackColor = true;
             // 
+            // btnChainsSave
+            // 
+            this.btnChainsSave.Location = new System.Drawing.Point(97, 77);
+            this.btnChainsSave.Name = "btnChainsSave";
+            this.btnChainsSave.Size = new System.Drawing.Size(88, 23);
+            this.btnChainsSave.TabIndex = 3;
+            this.btnChainsSave.Text = "Сохранить";
+            this.btnChainsSave.UseVisualStyleBackColor = true;
+            this.btnChainsSave.Click += new System.EventHandler(this.BtnChainsSave_Click);
+            // 
             // btnChainDelete
             // 
             this.btnChainDelete.Location = new System.Drawing.Point(16, 77);
@@ -827,7 +837,7 @@
             this.tabPage3.Controls.Add(this.flpStat);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1093, 611);
+            this.tabPage3.Size = new System.Drawing.Size(1091, 629);
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "Статистика";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -841,7 +851,7 @@
             this.flpStat.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpStat.Location = new System.Drawing.Point(0, 0);
             this.flpStat.Name = "flpStat";
-            this.flpStat.Size = new System.Drawing.Size(1093, 611);
+            this.flpStat.Size = new System.Drawing.Size(1091, 629);
             this.flpStat.TabIndex = 0;
             // 
             // panel1
@@ -929,16 +939,6 @@
             this.btStatSave.Text = "Сохранить";
             this.btStatSave.UseVisualStyleBackColor = true;
             this.btStatSave.Click += new System.EventHandler(this.BtStatSave_Click);
-            // 
-            // btnChainsSave
-            // 
-            this.btnChainsSave.Location = new System.Drawing.Point(97, 77);
-            this.btnChainsSave.Name = "btnChainsSave";
-            this.btnChainsSave.Size = new System.Drawing.Size(88, 23);
-            this.btnChainsSave.TabIndex = 3;
-            this.btnChainsSave.Text = "Сохранить";
-            this.btnChainsSave.UseVisualStyleBackColor = true;
-            this.btnChainsSave.Click += new System.EventHandler(this.BtnChainsSave_Click);
             // 
             // FmMain
             // 
