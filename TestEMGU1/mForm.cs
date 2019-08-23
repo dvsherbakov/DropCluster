@@ -60,24 +60,27 @@ namespace TestEMGU1
         private static IEnumerable<BallElement> SortCoord(IList<BallElement> prv, IList<BallElement> cur)
         {
             var lRes = new List<BallElement>();
-            const int cPrev = 0;
-            while (prv.Count > 0)
+            if (cur.Count > 0)
             {
-                var minDist = float.MaxValue;
-                var marker = 0;
-                for (var i = 0; i < cur.Count; i++)
+                const int cPrev = 0;
+                while (prv.Count > 0)
                 {
-                    var dst = prv[cPrev].Range(cur[i].getX(), cur[i].getY());
-                    if (!(dst < minDist)) continue;
-                    minDist = dst;
-                    marker = i;
+                    var minDist = float.MaxValue;
+                    var marker = 0;
+                    for (var i = 0; i < cur.Count; i++)
+                    {
+                        var dst = prv[cPrev].Range(cur[i].getX(), cur[i].getY());
+                        if (!(dst < minDist)) continue;
+                        minDist = dst;
+                        marker = i;
+                    }
+                    lRes.Add(cur[marker]);
+                    cur.RemoveAt(marker);
+                    prv.RemoveAt(cPrev);
                 }
-                lRes.Add(cur[marker]);
-                cur.RemoveAt(marker);
-                prv.RemoveAt(cPrev);
+                return lRes.ToArray();
             }
-
-            return lRes.ToArray();
+            else return cur;
         }
 
         private void PrepareDir()
@@ -88,10 +91,10 @@ namespace TestEMGU1
             var dirName = fInfo.Directory.FullName;
             var d = new DirectoryInfo(dirName); //Assuming Test is your Folder
 
-            var files = d.GetFiles("c_*.jpg");
+            var files = d.GetFiles("c_*.png");
             foreach (var f in files) f.Delete();
 
-            files = d.GetFiles("*.jpg");
+            files = d.GetFiles("*.png");
             progressBar1.Value = 0;
             progressBar1.Maximum = files.Length;
             var strList = new List<string>();
@@ -103,11 +106,14 @@ namespace TestEMGU1
                 var lst = PreparePicture(file.FullName, dropCount);
                 IncValue();
                 var ballElements = prevList.Count > 0 ? SortCoord(prevList, lst.ToList()).ToArray() : lst.ToArray();
-                var cx = ballElements.Average(x => x.getX());
-                var cy = ballElements.Average(x => x.getY());
-                var tstr = ballElements.Aggregate("", (current, t) => current +t.getX()+":"+t.getY() + ":" + t.Radius() + ":");
-                strList.Add(file.Name + ":" + tstr + ":" + cx + ":" + cy );
-                prevList = ballElements.ToList();
+                if (ballElements.Count() > 0)
+                {
+                    var cx = ballElements.Average(x => x.getX());
+                    var cy = ballElements.Average(x => x.getY());
+                    var tstr = ballElements.Aggregate("", (current, t) => current + t.getX() + ":" + t.getY() + ":" + t.Radius() + ":");
+                    strList.Add(file.Name + ":" + tstr + ":" + cx + ":" + cy);
+                    prevList = ballElements.ToList();
+                }
                 ballElements = null;
                 lst = null;
             }

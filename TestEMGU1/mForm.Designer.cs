@@ -568,6 +568,7 @@
             this.p2,
             this.p3,
             this.Align});
+            this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(8, 129);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(1077, 481);
@@ -691,6 +692,7 @@
             this.columnHeader3,
             this.columnHeader4,
             this.columnHeader5});
+            this.lvArea.HideSelection = false;
             this.lvArea.Location = new System.Drawing.Point(3, 253);
             this.lvArea.Name = "lvArea";
             this.lvArea.Size = new System.Drawing.Size(1089, 355);
@@ -779,6 +781,7 @@
             this.rList,
             this.lDist,
             this.cCross});
+            this.lvChains.HideSelection = false;
             this.lvChains.Location = new System.Drawing.Point(9, 110);
             this.lvChains.Name = "lvChains";
             this.lvChains.Size = new System.Drawing.Size(1074, 511);
@@ -893,6 +896,7 @@
             // lvGrade
             // 
             this.lvGrade.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvGrade.HideSelection = false;
             this.lvGrade.Location = new System.Drawing.Point(0, 0);
             this.lvGrade.Name = "lvGrade";
             this.lvGrade.Size = new System.Drawing.Size(850, 100);
