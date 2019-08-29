@@ -109,6 +109,13 @@
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btStatSave = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmRename = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tmExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tpCadr = new System.Windows.Forms.TabPage();
+            this.tbCadr = new System.Windows.Forms.TextBox();
             this.tabPage2.SuspendLayout();
             this.tlpMaster.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOnePict)).BeginInit();
@@ -131,6 +138,8 @@
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel4.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
+            this.tpCadr.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage2
@@ -138,7 +147,7 @@
             this.tabPage2.Controls.Add(this.tlpMaster);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(1091, 629);
+            this.tabPage2.Size = new System.Drawing.Size(1091, 605);
             this.tabPage2.TabIndex = 2;
             this.tabPage2.Text = "Обработка изображений";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -155,7 +164,7 @@
             this.tlpMaster.Name = "tlpMaster";
             this.tlpMaster.RowCount = 1;
             this.tlpMaster.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpMaster.Size = new System.Drawing.Size(1091, 629);
+            this.tlpMaster.Size = new System.Drawing.Size(1091, 605);
             this.tlpMaster.TabIndex = 0;
             // 
             // pbOnePict
@@ -163,7 +172,7 @@
             this.pbOnePict.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbOnePict.Location = new System.Drawing.Point(3, 3);
             this.pbOnePict.Name = "pbOnePict";
-            this.pbOnePict.Size = new System.Drawing.Size(757, 623);
+            this.pbOnePict.Size = new System.Drawing.Size(757, 599);
             this.pbOnePict.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pbOnePict.TabIndex = 0;
             this.pbOnePict.TabStop = false;
@@ -218,7 +227,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(322, 623);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(322, 599);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // tbMinimalDist
@@ -490,13 +499,14 @@
             this.tcMain.Controls.Add(this.tpArea);
             this.tcMain.Controls.Add(this.tpChains);
             this.tcMain.Controls.Add(this.tabPage3);
+            this.tcMain.Controls.Add(this.tpCadr);
             this.tcMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcMain.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tcMain.Location = new System.Drawing.Point(0, 0);
+            this.tcMain.Location = new System.Drawing.Point(0, 24);
             this.tcMain.Margin = new System.Windows.Forms.Padding(4);
             this.tcMain.Name = "tcMain";
             this.tcMain.SelectedIndex = 0;
-            this.tcMain.Size = new System.Drawing.Size(1099, 658);
+            this.tcMain.Size = new System.Drawing.Size(1099, 634);
             this.tcMain.TabIndex = 6;
             // 
             // tabPage1
@@ -944,13 +954,74 @@
             this.btStatSave.UseVisualStyleBackColor = true;
             this.btStatSave.Click += new System.EventHandler(this.BtStatSave_Click);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.файлToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1099, 24);
+            this.menuStrip1.TabIndex = 7;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // файлToolStripMenuItem
+            // 
+            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmRename,
+            this.toolStripMenuItem1,
+            this.tmExit});
+            this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.файлToolStripMenuItem.Text = "Файл";
+            // 
+            // tmRename
+            // 
+            this.tmRename.Name = "tmRename";
+            this.tmRename.Size = new System.Drawing.Size(180, 22);
+            this.tmRename.Text = "Переименовать";
+            this.tmRename.Click += new System.EventHandler(this.TmRename_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // tmExit
+            // 
+            this.tmExit.Name = "tmExit";
+            this.tmExit.Size = new System.Drawing.Size(180, 22);
+            this.tmExit.Text = "Выход";
+            this.tmExit.Click += new System.EventHandler(this.TmExit_Click);
+            // 
+            // tpCadr
+            // 
+            this.tpCadr.Controls.Add(this.tbCadr);
+            this.tpCadr.Location = new System.Drawing.Point(4, 25);
+            this.tpCadr.Name = "tpCadr";
+            this.tpCadr.Padding = new System.Windows.Forms.Padding(3);
+            this.tpCadr.Size = new System.Drawing.Size(1091, 605);
+            this.tpCadr.TabIndex = 7;
+            this.tpCadr.Text = "Кадр";
+            this.tpCadr.UseVisualStyleBackColor = true;
+            // 
+            // tbCadr
+            // 
+            this.tbCadr.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbCadr.Location = new System.Drawing.Point(3, 3);
+            this.tbCadr.Multiline = true;
+            this.tbCadr.Name = "tbCadr";
+            this.tbCadr.Size = new System.Drawing.Size(1085, 599);
+            this.tbCadr.TabIndex = 0;
+            // 
             // FmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1099, 658);
             this.Controls.Add(this.tcMain);
+            this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FmMain";
             this.Text = "Управление";
@@ -983,7 +1054,12 @@
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.panel4.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.tpCadr.ResumeLayout(false);
+            this.tpCadr.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -1068,6 +1144,13 @@
         private System.Windows.Forms.ColumnHeader cCross;
         private System.Windows.Forms.Button btnChainDelete;
         private System.Windows.Forms.Button btnChainsSave;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tmRename;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem tmExit;
+        private System.Windows.Forms.TabPage tpCadr;
+        private System.Windows.Forms.TextBox tbCadr;
     }
 }
 

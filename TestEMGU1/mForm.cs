@@ -111,7 +111,7 @@ namespace TestEMGU1
                     var cx = ballElements.Average(x => x.getX());
                     var cy = ballElements.Average(x => x.getY());
                     var tstr = ballElements.Aggregate("", (current, t) => current + t.getX() + ":" + t.getY() + ":" + t.Radius() + ":");
-                    strList.Add(file.Name + ":" + tstr + ":" + cx + ":" + cy);
+                    strList.Add(file.Name + ":" + tstr );
                     prevList = ballElements.ToList();
                 }
                 ballElements = null;
@@ -238,6 +238,9 @@ namespace TestEMGU1
             _circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, minDist, param1,
                 param2, minRadius, maxRadius);
 
+            var ballElements = _circles.OrderByDescending(x => x.Radius).Select(circle => new BallElement(circle.Area, circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
+            var tstr = ballElements.Aggregate("", (current, t) => current + t.getX() + ":" + t.getY() + ":" + t.Radius() + ":");
+            tbCadr.Text = tstr;
             var circleImage = img.Copy(); //CopyBlank();
             pbOnePict.SizeMode = PictureBoxSizeMode.Zoom;
             pbOnePict.Image = circleImage.Bitmap;
@@ -699,6 +702,37 @@ namespace TestEMGU1
                 }
             }
             sw.Close();
+        }
+
+        private void TmExit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void TmRename_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    string[] files = Directory.GetFiles(fbd.SelectedPath);
+
+                    foreach (var file in files)
+                    {
+                        var onlyPath = Path.GetDirectoryName(file);
+                        var onlyName = Path.GetFileNameWithoutExtension(file);
+                        var extension = Path.GetExtension(file);
+                        if (onlyName.Length == 1) onlyName = "00" + onlyName;
+                        if (onlyName.Length == 2) onlyName = "0" + onlyName;
+                        var fullName = Path.Combine(onlyPath, onlyName+extension);
+                        System.IO.File.Move(file, fullName);
+
+                    }
+
+                }
+            }
         }
     }
 }
