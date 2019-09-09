@@ -492,7 +492,7 @@ namespace TestEMGU1
         {
             var listPoints = lst as IList<PointListItem> ?? lst.ToList();
             var summ = listPoints.Sum(it => _circles[it.Id()].Radius);
-            var rc = float.Parse(tbRadCount.Text);
+            var rc = float.Parse(tbRadCount.Text.Replace("\"", string.Empty));
             var avg = (summ / listPoints.Count) * rc;
             var lnkCount = 0;
             var lnkAvg = 0.0d;
