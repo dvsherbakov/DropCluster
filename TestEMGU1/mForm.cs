@@ -519,14 +519,15 @@ namespace TestEMGU1
         private void BuildHistogramm(List<double> lst)
         {
             var interval = lst.Max() - lst.Min();
-            var dy = interval / 20;
+            var dy = interval / 50;
+            var cnt = lst.Count;
             chart2.Series[0].Points.Clear();
             
 
-            for (var i = 1.0; i <= 20; i ++)
+            for (var i = 1.0; i <= 50; i ++)
             { 
-                var t = lst.Count(x => x >= (i-1) * dy && x < i * dy);   
-                chart2.Series[0].Points.AddXY(i, t);
+                var t = lst.Count(x => x <= (lst.Min() + (i * dy)));   
+                chart2.Series[0].Points.AddXY(Math.Round(lst.Min() + (i * dy)), (float)t/cnt);
             }
         }
 
