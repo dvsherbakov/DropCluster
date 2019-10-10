@@ -226,7 +226,6 @@ namespace TestEMGU1
             var img = new Image<Bgr, byte>(bmp);
             var uimage = new UMat();
 
-            
             CvInvoke.CvtColor(img, uimage, ColorConversion.Bgr2Gray);
 
             var minDist = tbMinimalDist.Value;
@@ -490,6 +489,7 @@ namespace TestEMGU1
 
         private void PrepareLinks(IEnumerable<PointListItem> lst)
         {
+            var lList = new List<double>();
             var listPoints = lst as IList<PointListItem> ?? lst.ToList();
             var summ = listPoints.Sum(it => _circles[it.Id()].Radius);
             var rc = float.Parse(tbRadCount.Text.Replace("\"", string.Empty));
@@ -506,12 +506,28 @@ namespace TestEMGU1
                 foreach (var lnk in tl)
                 {
                     lbLinks.Items.Add($"{item.Id()}<->{lnk.Id()}:{lnk.GetDistance(item.GetPoint()):F5}");
+                    lList.Add(lnk.GetDistance(item.GetPoint()));
                     lnkCount++;
                     lnkAvg += lnk.GetDistance(item.GetPoint());
                 }
             }
             lnkAvg = lnkAvg / lnkCount;
             lbLinks.Items.Add($"Всего:{lnkCount}; Средн:{lnkAvg}");
+            BuildHistogramm(lList);
+        }
+
+        private void BuildHistogramm(List<double> lst)
+        {
+            var interval = lst.Max() - lst.Min();
+            var dy = interval / 20;
+            chart2.Series[0].Points.Clear();
+            
+
+            for (var i = 1.0; i <= 20; i ++)
+            { 
+                var t = lst.Count(x => x >= (i-1) * dy && x < i * dy);   
+                chart2.Series[0].Points.AddXY(i, t);
+            }
         }
 
         private void TrackBarGrade_Scroll(object sender, EventArgs e)

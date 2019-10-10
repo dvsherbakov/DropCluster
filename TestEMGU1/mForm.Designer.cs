@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -109,13 +111,14 @@
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btStatSave = new System.Windows.Forms.Button();
+            this.tpCadr = new System.Windows.Forms.TabPage();
+            this.tbCadr = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tmRename = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.tmExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tpCadr = new System.Windows.Forms.TabPage();
-            this.tbCadr = new System.Windows.Forms.TextBox();
+            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage2.SuspendLayout();
             this.tlpMaster.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOnePict)).BeginInit();
@@ -138,8 +141,9 @@
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel4.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             this.tpCadr.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage2
@@ -522,7 +526,7 @@
             this.tabPage1.Controls.Add(this.tbPoint1);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(1091, 629);
+            this.tabPage1.Size = new System.Drawing.Size(1091, 605);
             this.tabPage1.TabIndex = 3;
             this.tabPage1.Text = "Углы";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -619,6 +623,7 @@
             // 
             // tpArea
             // 
+            this.tpArea.Controls.Add(this.chart2);
             this.tpArea.Controls.Add(this.lbAvgRad);
             this.tpArea.Controls.Add(this.btAreaClear);
             this.tpArea.Controls.Add(this.tbRadCount);
@@ -629,7 +634,7 @@
             this.tpArea.Controls.Add(this.cbArea);
             this.tpArea.Location = new System.Drawing.Point(4, 25);
             this.tpArea.Name = "tpArea";
-            this.tpArea.Size = new System.Drawing.Size(1091, 629);
+            this.tpArea.Size = new System.Drawing.Size(1091, 605);
             this.tpArea.TabIndex = 5;
             this.tpArea.Text = "Область";
             this.tpArea.UseVisualStyleBackColor = true;
@@ -753,7 +758,7 @@
             this.tpChains.Controls.Add(this.cbChains);
             this.tpChains.Location = new System.Drawing.Point(4, 25);
             this.tpChains.Name = "tpChains";
-            this.tpChains.Size = new System.Drawing.Size(1091, 629);
+            this.tpChains.Size = new System.Drawing.Size(1091, 605);
             this.tpChains.TabIndex = 6;
             this.tpChains.Text = "Цепочки";
             this.tpChains.UseVisualStyleBackColor = true;
@@ -850,7 +855,7 @@
             this.tabPage3.Controls.Add(this.flpStat);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1091, 629);
+            this.tabPage3.Size = new System.Drawing.Size(1091, 605);
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "Статистика";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -864,7 +869,7 @@
             this.flpStat.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpStat.Location = new System.Drawing.Point(0, 0);
             this.flpStat.Name = "flpStat";
-            this.flpStat.Size = new System.Drawing.Size(1091, 629);
+            this.flpStat.Size = new System.Drawing.Size(1091, 605);
             this.flpStat.TabIndex = 0;
             // 
             // panel1
@@ -924,14 +929,14 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(1056, 325);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
@@ -953,6 +958,26 @@
             this.btStatSave.Text = "Сохранить";
             this.btStatSave.UseVisualStyleBackColor = true;
             this.btStatSave.Click += new System.EventHandler(this.BtStatSave_Click);
+            // 
+            // tpCadr
+            // 
+            this.tpCadr.Controls.Add(this.tbCadr);
+            this.tpCadr.Location = new System.Drawing.Point(4, 25);
+            this.tpCadr.Name = "tpCadr";
+            this.tpCadr.Padding = new System.Windows.Forms.Padding(3);
+            this.tpCadr.Size = new System.Drawing.Size(1091, 605);
+            this.tpCadr.TabIndex = 7;
+            this.tpCadr.Text = "Кадр";
+            this.tpCadr.UseVisualStyleBackColor = true;
+            // 
+            // tbCadr
+            // 
+            this.tbCadr.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbCadr.Location = new System.Drawing.Point(3, 3);
+            this.tbCadr.Multiline = true;
+            this.tbCadr.Name = "tbCadr";
+            this.tbCadr.Size = new System.Drawing.Size(1085, 599);
+            this.tbCadr.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -977,41 +1002,36 @@
             // tmRename
             // 
             this.tmRename.Name = "tmRename";
-            this.tmRename.Size = new System.Drawing.Size(180, 22);
+            this.tmRename.Size = new System.Drawing.Size(161, 22);
             this.tmRename.Text = "Переименовать";
             this.tmRename.Click += new System.EventHandler(this.TmRename_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(158, 6);
             // 
             // tmExit
             // 
             this.tmExit.Name = "tmExit";
-            this.tmExit.Size = new System.Drawing.Size(180, 22);
+            this.tmExit.Size = new System.Drawing.Size(161, 22);
             this.tmExit.Text = "Выход";
             this.tmExit.Click += new System.EventHandler(this.TmExit_Click);
             // 
-            // tpCadr
+            // chart2
             // 
-            this.tpCadr.Controls.Add(this.tbCadr);
-            this.tpCadr.Location = new System.Drawing.Point(4, 25);
-            this.tpCadr.Name = "tpCadr";
-            this.tpCadr.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCadr.Size = new System.Drawing.Size(1091, 605);
-            this.tpCadr.TabIndex = 7;
-            this.tpCadr.Text = "Кадр";
-            this.tpCadr.UseVisualStyleBackColor = true;
-            // 
-            // tbCadr
-            // 
-            this.tbCadr.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbCadr.Location = new System.Drawing.Point(3, 3);
-            this.tbCadr.Multiline = true;
-            this.tbCadr.Name = "tbCadr";
-            this.tbCadr.Size = new System.Drawing.Size(1085, 599);
-            this.tbCadr.TabIndex = 0;
+            this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea1.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea1);
+            this.chart2.Location = new System.Drawing.Point(13, 60);
+            this.chart2.Name = "chart2";
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart2.Series.Add(series1);
+            this.chart2.Size = new System.Drawing.Size(704, 139);
+            this.chart2.TabIndex = 8;
+            this.chart2.Text = "chart2";
             // 
             // FmMain
             // 
@@ -1054,10 +1074,11 @@
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.panel4.ResumeLayout(false);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.tpCadr.ResumeLayout(false);
             this.tpCadr.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1151,6 +1172,7 @@
         private System.Windows.Forms.ToolStripMenuItem tmExit;
         private System.Windows.Forms.TabPage tpCadr;
         private System.Windows.Forms.TextBox tbCadr;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
     }
 }
 
