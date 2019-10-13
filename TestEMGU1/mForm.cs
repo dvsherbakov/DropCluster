@@ -118,11 +118,9 @@ namespace TestEMGU1
                 lst = null;
             }
 
-            using (var sw = new StreamWriter(dirName + @"\stat.lst"))
-            {
-                foreach (var t in strList.OrderBy(x => x))
-                    sw.WriteLine(t.Replace(',', '.'));
-            }
+            using var sw = new StreamWriter(dirName + @"\stat.lst");
+            foreach (var t in strList.OrderBy(x => x))
+                sw.WriteLine(t.Replace(',', '.'));
         }
 
         private void IncValue()
@@ -184,10 +182,12 @@ namespace TestEMGU1
 
         private void Button3_Click(object sender, EventArgs e)
         {
-            var opf = new OpenFileDialog();
-            if (opf.ShowDialog() == DialogResult.OK)
+            using (OpenFileDialog opf = new OpenFileDialog())
             {
-                tbSingleFile.Text = opf.FileName;
+                if (opf.ShowDialog() == DialogResult.OK)
+                {
+                    tbSingleFile.Text = opf.FileName;
+                }
             }
             TestPicture(tbSingleFile.Text);
         }
@@ -511,7 +511,7 @@ namespace TestEMGU1
                     lnkAvg += lnk.GetDistance(item.GetPoint());
                 }
             }
-            lnkAvg = lnkAvg / lnkCount;
+            lnkAvg /= lnkCount;
             lbLinks.Items.Add($"Всего:{lnkCount}; Средн:{lnkAvg}");
             BuildHistogramm(lList);
         }
@@ -568,7 +568,7 @@ namespace TestEMGU1
 
         private void BtLoad_Click(object sender, EventArgs e)
         {
-            var fd = new OpenFileDialog { Filter = @"Файлы txt|*.txt" };
+            using OpenFileDialog fd = new OpenFileDialog { Filter = @"Файлы txt|*.txt" };
             if (fd.ShowDialog() != DialogResult.OK) return;
             var filePath = fd.FileName;
             StreamReader sr;

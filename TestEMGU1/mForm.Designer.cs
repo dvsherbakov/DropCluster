@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tlpMaster = new System.Windows.Forms.TableLayoutPanel();
             this.pbOnePict = new System.Windows.Forms.PictureBox();
@@ -75,6 +75,7 @@
             this.tbPoint2 = new System.Windows.Forms.TextBox();
             this.tbPoint1 = new System.Windows.Forms.TextBox();
             this.tpArea = new System.Windows.Forms.TabPage();
+            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.lbAvgRad = new System.Windows.Forms.Label();
             this.btAreaClear = new System.Windows.Forms.Button();
             this.tbRadCount = new System.Windows.Forms.TextBox();
@@ -118,7 +119,6 @@
             this.tmRename = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.tmExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage2.SuspendLayout();
             this.tlpMaster.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOnePict)).BeginInit();
@@ -132,6 +132,7 @@
             this.tcMain.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tpArea.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.tpChains.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.flpStat.SuspendLayout();
@@ -143,7 +144,6 @@
             this.panel4.SuspendLayout();
             this.tpCadr.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage2
@@ -639,6 +639,21 @@
             this.tpArea.Text = "Область";
             this.tpArea.UseVisualStyleBackColor = true;
             // 
+            // chart2
+            // 
+            this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea1.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea1);
+            this.chart2.Location = new System.Drawing.Point(13, 60);
+            this.chart2.Name = "chart2";
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart2.Series.Add(series1);
+            this.chart2.Size = new System.Drawing.Size(704, 139);
+            this.chart2.TabIndex = 8;
+            this.chart2.Text = "chart2";
+            // 
             // lbAvgRad
             // 
             this.lbAvgRad.AutoSize = true;
@@ -1018,21 +1033,6 @@
             this.tmExit.Text = "Выход";
             this.tmExit.Click += new System.EventHandler(this.TmExit_Click);
             // 
-            // chart2
-            // 
-            this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea1);
-            this.chart2.Location = new System.Drawing.Point(13, 60);
-            this.chart2.Name = "chart2";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.chart2.Series.Add(series1);
-            this.chart2.Size = new System.Drawing.Size(704, 139);
-            this.chart2.TabIndex = 8;
-            this.chart2.Text = "chart2";
-            // 
             // FmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
@@ -1063,6 +1063,7 @@
             this.tabPage1.PerformLayout();
             this.tpArea.ResumeLayout(false);
             this.tpArea.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             this.tpChains.ResumeLayout(false);
             this.tpChains.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -1078,7 +1079,6 @@
             this.tpCadr.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
