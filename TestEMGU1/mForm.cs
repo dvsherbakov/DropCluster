@@ -728,27 +728,25 @@ namespace TestEMGU1
 
         private void TmRename_Click(object sender, EventArgs e)
         {
-            using (var fbd = new FolderBrowserDialog())
+            using var fbd = new FolderBrowserDialog();
+            DialogResult result = fbd.ShowDialog();
+
+            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
             {
-                DialogResult result = fbd.ShowDialog();
+                string[] files = Directory.GetFiles(fbd.SelectedPath);
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                foreach (var file in files)
                 {
-                    string[] files = Directory.GetFiles(fbd.SelectedPath);
-
-                    foreach (var file in files)
-                    {
-                        var onlyPath = Path.GetDirectoryName(file);
-                        var onlyName = Path.GetFileNameWithoutExtension(file);
-                        var extension = Path.GetExtension(file);
-                        if (onlyName.Length == 1) onlyName = "00" + onlyName;
-                        if (onlyName.Length == 2) onlyName = "0" + onlyName;
-                        var fullName = Path.Combine(onlyPath, onlyName+extension);
-                        System.IO.File.Move(file, fullName);
-
-                    }
+                    var onlyPath = Path.GetDirectoryName(file);
+                    var onlyName = Path.GetFileNameWithoutExtension(file);
+                    var extension = Path.GetExtension(file);
+                    if (onlyName.Length == 1) onlyName = "00" + onlyName;
+                    if (onlyName.Length == 2) onlyName = "0" + onlyName;
+                    var fullName = Path.Combine(onlyPath, onlyName + extension);
+                    File.Move(file, fullName);
 
                 }
+
             }
         }
     }
