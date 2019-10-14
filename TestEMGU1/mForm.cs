@@ -523,15 +523,15 @@ namespace TestEMGU1
         {
             string outStr = $"{count}:{avg}";
             var interval = lst.Max() - lst.Min();
-            var dy = interval / count * 2;
+            // var dy = interval / 10 * 2;
             var cnt = lst.Count;
             chart2.Series[0].Points.Clear();
             
-            for (var i = 1.0; i <= count * 2; i ++)
+            for (var i = 1.0; i <= 10 * 2; i ++)
             { 
-                var t = lst.Count(x => x <= (lst.Min() + (i * dy)));   
-                chart2.Series[0].Points.AddXY(Math.Round(lst.Min() + (i * dy)), (float)t/cnt);
-                outStr += $":{lst.Min() + (i * dy)}:{(float)t / cnt}";
+                var t = lst.Count(x => x <=i);   
+                chart2.Series[0].Points.AddXY(i, (float)t/cnt);
+                outStr += $":{i}:{(float)t / cnt}";
             }
         }
 
