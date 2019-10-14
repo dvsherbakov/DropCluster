@@ -41,7 +41,6 @@ namespace TestEMGU1
             tbMinRadius.Value = Properties.Settings.Default.MinRadius;
             tbMaxRadius.Value = Properties.Settings.Default.MaxRadius;
             tbRadCount.Text = Properties.Settings.Default.RadCount;
-            //pictureBox1.BackColor = Color.FromArgb(255, 128, 128);
             TransparencyKey = Color.FromArgb(255, 128, 128);
 
             if (IntPtr.Size != 8)
@@ -494,6 +493,8 @@ namespace TestEMGU1
             var lList = new List<double>();
             var listPoints = lst as IList<PointListItem> ?? lst.ToList();
             var summ = listPoints.Sum(it => _circles[it.Id()].Radius);
+            var lavg = summ / listPoints.Count;
+            var lcount = listPoints.Count;
             var rc = float.Parse(tbRadCount.Text.Replace("\"", string.Empty));
             var avg = (summ / listPoints.Count) * rc;
             var lnkCount = 0;
@@ -508,28 +509,29 @@ namespace TestEMGU1
                 foreach (var lnk in tl)
                 {
                     lbLinks.Items.Add($"{item.Id()}<->{lnk.Id()}:{lnk.GetDistance(item.GetPoint()):F5}");
-                    lList.Add(lnk.GetDistance(item.GetPoint()));
+                    lList.Add(lnk.GetDistance(item.GetPoint())/lavg);
                     lnkCount++;
                     lnkAvg += lnk.GetDistance(item.GetPoint());
                 }
             }
             lnkAvg /= lnkCount;
             lbLinks.Items.Add($"Всего:{lnkCount}; Средн:{lnkAvg}");
-            BuildHistogramm(lList);
+            BuildHistogramm(lList, lcount, lavg);
         }
 
-        private void BuildHistogramm(List<double> lst)
+        private void BuildHistogramm(List<double> lst, int count, double avg)
         {
+            string outStr = $"{count}:{avg}";
             var interval = lst.Max() - lst.Min();
-            var dy = interval / 50;
+            var dy = interval / count * 2;
             var cnt = lst.Count;
             chart2.Series[0].Points.Clear();
             
-
-            for (var i = 1.0; i <= 50; i ++)
+            for (var i = 1.0; i <= count * 2; i ++)
             { 
                 var t = lst.Count(x => x <= (lst.Min() + (i * dy)));   
                 chart2.Series[0].Points.AddXY(Math.Round(lst.Min() + (i * dy)), (float)t/cnt);
+                outStr += $":{lst.Min() + (i * dy)}:{(float)t / cnt}";
             }
         }
 
