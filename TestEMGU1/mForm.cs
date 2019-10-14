@@ -118,9 +118,11 @@ namespace TestEMGU1
                 lst = null;
             }
 
-            using var sw = new StreamWriter(dirName + @"\stat.lst");
-            foreach (var t in strList.OrderBy(x => x))
-                sw.WriteLine(t.Replace(',', '.'));
+            using (StreamWriter sw = new StreamWriter(dirName + @"\stat.lst"))
+            { 
+                foreach (var t in strList.OrderBy(x => x))
+                    sw.WriteLine(t.Replace(',', '.'));
+            }
         }
 
         private void IncValue()
@@ -568,27 +570,30 @@ namespace TestEMGU1
 
         private void BtLoad_Click(object sender, EventArgs e)
         {
-            using OpenFileDialog fd = new OpenFileDialog { Filter = @"Файлы txt|*.txt" };
-            if (fd.ShowDialog() != DialogResult.OK) return;
-            var filePath = fd.FileName;
-            StreamReader sr;
-            using (sr = new StreamReader(filePath))
+            using (OpenFileDialog fd = new OpenFileDialog { Filter = @"Файлы txt|*.txt" })
             {
-                while (!sr.EndOfStream)
-                {
-                    var lineFs = sr.ReadLine();
-                    if (lineFs == null) continue;
-                    var sl = lineFs.Split(':');
+                if (fd.ShowDialog() != DialogResult.OK) return;
+                var filePath = fd.FileName;
 
-                    var lvItem = new ListViewItem(sl[0]);
-                    lvItem.SubItems.Add(sl[1]);
-                    lvItem.SubItems.Add(sl[2]);
-                    lvItem.SubItems.Add(sl[3]);
-                    lvItem.SubItems.Add(sl[4]);
-                    lvItem.SubItems.Add(sl[5]);
-                    lvItem.SubItems.Add(sl[6]);
-                    lvItem.SubItems.Add(sl[7]);
-                    listView1.Items.Add(lvItem);
+                StreamReader sr;
+                using (sr = new StreamReader(filePath))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        var lineFs = sr.ReadLine();
+                        if (lineFs == null) continue;
+                        var sl = lineFs.Split(':');
+
+                        var lvItem = new ListViewItem(sl[0]);
+                        lvItem.SubItems.Add(sl[1]);
+                        lvItem.SubItems.Add(sl[2]);
+                        lvItem.SubItems.Add(sl[3]);
+                        lvItem.SubItems.Add(sl[4]);
+                        lvItem.SubItems.Add(sl[5]);
+                        lvItem.SubItems.Add(sl[6]);
+                        lvItem.SubItems.Add(sl[7]);
+                        listView1.Items.Add(lvItem);
+                    }
                 }
             }
         }
@@ -728,25 +733,27 @@ namespace TestEMGU1
 
         private void TmRename_Click(object sender, EventArgs e)
         {
-            using var fbd = new FolderBrowserDialog();
-            DialogResult result = fbd.ShowDialog();
-
-            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
             {
-                string[] files = Directory.GetFiles(fbd.SelectedPath);
+                DialogResult result = fbd.ShowDialog();
 
-                foreach (var file in files)
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    var onlyPath = Path.GetDirectoryName(file);
-                    var onlyName = Path.GetFileNameWithoutExtension(file);
-                    var extension = Path.GetExtension(file);
-                    if (onlyName.Length == 1) onlyName = "00" + onlyName;
-                    if (onlyName.Length == 2) onlyName = "0" + onlyName;
-                    var fullName = Path.Combine(onlyPath, onlyName + extension);
-                    File.Move(file, fullName);
+                    string[] files = Directory.GetFiles(fbd.SelectedPath);
+
+                    foreach (var file in files)
+                    {
+                        var onlyPath = Path.GetDirectoryName(file);
+                        var onlyName = Path.GetFileNameWithoutExtension(file);
+                        var extension = Path.GetExtension(file);
+                        if (onlyName.Length == 1) onlyName = "00" + onlyName;
+                        if (onlyName.Length == 2) onlyName = "0" + onlyName;
+                        var fullName = Path.Combine(onlyPath, onlyName + extension);
+                        File.Move(file, fullName);
+
+                    }
 
                 }
-
             }
         }
     }
