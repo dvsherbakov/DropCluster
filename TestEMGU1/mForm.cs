@@ -532,7 +532,7 @@ namespace TestEMGU1
                 var t = lst.Count(x => x <=i);   
                 chart2.Series[0].Points.AddXY(i, (float)t/cnt);
                 outStr += $":{i}:{(float)t / cnt}";
-                if (i>=3 && i<=5)
+                if (i>=1 && i<=10)
                 {
                     for (var di = 0.2; di<=0.8; di +=0.2)
                     {
