@@ -41,7 +41,6 @@ namespace TestEMGU1
             tbMinRadius.Value = Properties.Settings.Default.MinRadius;
             tbMaxRadius.Value = Properties.Settings.Default.MaxRadius;
             tbRadCount.Text = Properties.Settings.Default.RadCount;
-            //pictureBox1.BackColor = Color.FromArgb(255, 128, 128);
             TransparencyKey = Color.FromArgb(255, 128, 128);
 
             if (IntPtr.Size != 8)
@@ -118,8 +117,8 @@ namespace TestEMGU1
                 lst = null;
             }
 
-            using (var sw = new StreamWriter(dirName + @"\stat.lst"))
-            {
+            using (StreamWriter sw = new StreamWriter(dirName + @"\stat.lst"))
+            { 
                 foreach (var t in strList.OrderBy(x => x))
                     sw.WriteLine(t.Replace(',', '.'));
             }
@@ -184,10 +183,12 @@ namespace TestEMGU1
 
         private void Button3_Click(object sender, EventArgs e)
         {
-            var opf = new OpenFileDialog();
-            if (opf.ShowDialog() == DialogResult.OK)
+            using (OpenFileDialog opf = new OpenFileDialog())
             {
-                tbSingleFile.Text = opf.FileName;
+                if (opf.ShowDialog() == DialogResult.OK)
+                {
+                    tbSingleFile.Text = opf.FileName;
+                }
             }
             TestPicture(tbSingleFile.Text);
         }
@@ -492,6 +493,8 @@ namespace TestEMGU1
             var lList = new List<double>();
             var listPoints = lst as IList<PointListItem> ?? lst.ToList();
             var summ = listPoints.Sum(it => _circles[it.Id()].Radius);
+            var lavg = summ / listPoints.Count;
+            var lcount = listPoints.Count;
             var rc = float.Parse(tbRadCount.Text.Replace("\"", string.Empty));
             var avg = (summ / listPoints.Count) * rc;
             var lnkCount = 0;
@@ -506,28 +509,37 @@ namespace TestEMGU1
                 foreach (var lnk in tl)
                 {
                     lbLinks.Items.Add($"{item.Id()}<->{lnk.Id()}:{lnk.GetDistance(item.GetPoint()):F5}");
-                    lList.Add(lnk.GetDistance(item.GetPoint()));
+                    lList.Add(lnk.GetDistance(item.GetPoint())/lavg);
                     lnkCount++;
                     lnkAvg += lnk.GetDistance(item.GetPoint());
                 }
             }
-            lnkAvg = lnkAvg / lnkCount;
+            lnkAvg /= lnkCount;
             lbLinks.Items.Add($"Всего:{lnkCount}; Средн:{lnkAvg}");
-            BuildHistogramm(lList);
+            BuildHistogramm(lList, lcount, lavg);
         }
 
-        private void BuildHistogramm(List<double> lst)
+        private void BuildHistogramm(List<double> lst, int count, double avg)
         {
-            var interval = lst.Max() - lst.Min();
-            var dy = interval / 50;
+            string outStr = $"{count}:{avg}";
+            // var interval = lst.Max() - lst.Min();
+            // var dy = interval / 10 * 2;
             var cnt = lst.Count;
             chart2.Series[0].Points.Clear();
             
-
-            for (var i = 1.0; i <= 50; i ++)
+            for (var i = 1.0; i <= 10 * 2; i ++)
             { 
-                var t = lst.Count(x => x <= (lst.Min() + (i * dy)));   
-                chart2.Series[0].Points.AddXY(Math.Round(lst.Min() + (i * dy)), (float)t/cnt);
+                var t = lst.Count(x => x <=i);   
+                chart2.Series[0].Points.AddXY(i, (float)t/cnt);
+                outStr += $":{i}:{(float)t / cnt}";
+                if (i>=1 && i<=10)
+                {
+                    for (var di = 0.2; di<=0.8; di +=0.2)
+                    {
+                        var dt = lst.Count(x => x <= (i + di));
+                        outStr += $":{i + di}:{(float)dt / cnt}";
+                    }
+                }
             }
         }
 
@@ -568,27 +580,30 @@ namespace TestEMGU1
 
         private void BtLoad_Click(object sender, EventArgs e)
         {
-            var fd = new OpenFileDialog { Filter = @"Файлы txt|*.txt" };
-            if (fd.ShowDialog() != DialogResult.OK) return;
-            var filePath = fd.FileName;
-            StreamReader sr;
-            using (sr = new StreamReader(filePath))
+            using (OpenFileDialog fd = new OpenFileDialog { Filter = @"Файлы txt|*.txt" })
             {
-                while (!sr.EndOfStream)
-                {
-                    var lineFs = sr.ReadLine();
-                    if (lineFs == null) continue;
-                    var sl = lineFs.Split(':');
+                if (fd.ShowDialog() != DialogResult.OK) return;
+                var filePath = fd.FileName;
 
-                    var lvItem = new ListViewItem(sl[0]);
-                    lvItem.SubItems.Add(sl[1]);
-                    lvItem.SubItems.Add(sl[2]);
-                    lvItem.SubItems.Add(sl[3]);
-                    lvItem.SubItems.Add(sl[4]);
-                    lvItem.SubItems.Add(sl[5]);
-                    lvItem.SubItems.Add(sl[6]);
-                    lvItem.SubItems.Add(sl[7]);
-                    listView1.Items.Add(lvItem);
+                StreamReader sr;
+                using (sr = new StreamReader(filePath))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        var lineFs = sr.ReadLine();
+                        if (lineFs == null) continue;
+                        var sl = lineFs.Split(':');
+
+                        var lvItem = new ListViewItem(sl[0]);
+                        lvItem.SubItems.Add(sl[1]);
+                        lvItem.SubItems.Add(sl[2]);
+                        lvItem.SubItems.Add(sl[3]);
+                        lvItem.SubItems.Add(sl[4]);
+                        lvItem.SubItems.Add(sl[5]);
+                        lvItem.SubItems.Add(sl[6]);
+                        lvItem.SubItems.Add(sl[7]);
+                        listView1.Items.Add(lvItem);
+                    }
                 }
             }
         }
@@ -728,7 +743,7 @@ namespace TestEMGU1
 
         private void TmRename_Click(object sender, EventArgs e)
         {
-            using (var fbd = new FolderBrowserDialog())
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
             {
                 DialogResult result = fbd.ShowDialog();
 
@@ -743,8 +758,8 @@ namespace TestEMGU1
                         var extension = Path.GetExtension(file);
                         if (onlyName.Length == 1) onlyName = "00" + onlyName;
                         if (onlyName.Length == 2) onlyName = "0" + onlyName;
-                        var fullName = Path.Combine(onlyPath, onlyName+extension);
-                        System.IO.File.Move(file, fullName);
+                        var fullName = Path.Combine(onlyPath, onlyName + extension);
+                        File.Move(file, fullName);
 
                     }
 
