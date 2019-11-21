@@ -519,9 +519,9 @@ namespace TestEMGU1
             BuildHistogramm(lList, lcount, lavg);
         }
 
-        private void BuildHistogramm(List<double> lst, int count, double avg)
+        private string BuildHistogramm(IReadOnlyCollection<double> lst, int count, double avg)
         {
-            string outStr = $"{count}:{avg}";
+            var outStr = $"{count}:{avg}";
             // var interval = lst.Max() - lst.Min();
             // var dy = interval / 10 * 2;
             var cnt = lst.Count;
@@ -532,7 +532,7 @@ namespace TestEMGU1
                 var t = lst.Count(x => x <=i);   
                 chart2.Series[0].Points.AddXY(i, (float)t/cnt);
                 outStr += $":{i}:{(float)t / cnt}";
-                if (i>=1 && i<=10)
+                if (!(i >= 1) || !(i <= 10)) continue;
                 {
                     for (var di = 0.2; di<=0.8; di +=0.2)
                     {
@@ -541,6 +541,8 @@ namespace TestEMGU1
                     }
                 }
             }
+
+            return outStr;
         }
 
         private void TrackBarGrade_Scroll(object sender, EventArgs e)
