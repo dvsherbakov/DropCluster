@@ -5,28 +5,40 @@ namespace TestEMGU1
 {
     internal class PointListItem
     {
-        private readonly int _id;
-        private PointF _pt;
+        private readonly int m_Id;
+        private readonly PointF m_Pt;
+        private readonly float m_Radius;
 
-        public PointListItem(int i, PointF a)
+        public PointListItem(int i, PointF a, float radius)
         {
-            _id = i;
-            _pt = new PointF(a.X, a.Y);
+            m_Id = i;
+            m_Pt = new PointF(a.X, a.Y);
+            m_Radius = radius;
         }
 
         public double GetDistance(PointF a)
         {
-            return Math.Sqrt(Math.Pow(_pt.X - a.X, 2) + Math.Pow(_pt.Y - a.Y, 2));
+            return Math.Sqrt(Math.Pow(m_Pt.X - a.X, 2) + Math.Pow(m_Pt.Y - a.Y, 2));
+        }
+
+        public bool IsTouched(PointListItem a)
+        {
+            return GetDistance(a.GetPoint()) - (m_Radius + a.GetRadius()) * 0.525 < 0;
         }
 
         public PointF GetPoint()
         {
-            return _pt;
+            return m_Pt;
         }
 
         public int Id()
         {
-            return _id;
+            return m_Id;
+        }
+
+        public float GetRadius()
+        {
+            return m_Radius;
         }
     }
 }
