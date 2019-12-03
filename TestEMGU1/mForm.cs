@@ -543,11 +543,11 @@ namespace TestEMGU1
         {
             var lList = new List<double>();
             var listPoints = lst as IList<PointListItem> ?? lst.ToList();
-            var summ = listPoints.Sum(it => m_Circles[it.Id()].Radius);
-            var lavg = summ / listPoints.Count;
-            var lcount = listPoints.Count;
+            var sum = listPoints.Sum(it => m_Circles[it.Id()].Radius);
+            var lAvg = sum / listPoints.Count;
+            var lCount = listPoints.Count;
             var rc = float.Parse(tbRadCount.Text.Replace("\"", string.Empty));
-            var avg = (summ / listPoints.Count) * rc;
+            var avg = (sum / listPoints.Count) * rc;
             var lnkCount = 0;
             var lnkAvg = 0.0d;
             while (listPoints.Count > 1)
@@ -560,14 +560,14 @@ namespace TestEMGU1
                 foreach (var lnk in tl)
                 {
                     lbLinks.Items.Add($"{item.Id()}<->{lnk.Id()}:{lnk.GetDistance(item.GetPoint()):F5}");
-                    lList.Add(lnk.GetDistance(item.GetPoint())/lavg);
+                    lList.Add(lnk.GetDistance(item.GetPoint())/lAvg);
                     lnkCount++;
                     lnkAvg += lnk.GetDistance(item.GetPoint());
                 }
             }
             lnkAvg /= lnkCount;
             lbLinks.Items.Add($"Всего:{lnkCount}; Средн:{lnkAvg}");
-            BuildHistogramm(lList, lcount, lavg);
+            BuildHistogramm(lList, lCount, lAvg);
         }
 
         private string BuildHistogramm(IReadOnlyCollection<double> lst, int count, double avg)
@@ -598,7 +598,7 @@ namespace TestEMGU1
 
         private void TrackBarGrade_Scroll(object sender, EventArgs e)
         {
-            lbGrade.Text = @"Градация " + trackBarGrade.Value.ToString();
+            lbGrade.Text = @"Градация " + trackBarGrade.Value;
             FillGradeList();
         }
 
