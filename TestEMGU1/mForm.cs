@@ -10,8 +10,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using Emgu.CV.Cuda;
-using Emgu.CV.UI;
 
 namespace TestEMGU1
 {
@@ -413,6 +411,19 @@ namespace TestEMGU1
                 }
                 else
                 {
+                    var brOverage = m_Branched.Average(x=>x.GetRadius());
+                    var resOvg = 0.0;
+                    for (var i = 1; i < m_Branched.Count; i++)
+                    {
+                        var res = i * (m_Branched.Count - i);
+                        resOvg += res;
+                        Debug.WriteLine($"{i}: {res}");
+                    }
+
+                    resOvg /= m_Branched.Count;
+                    var rg = (brOverage * brOverage / m_Branched.Count()) * resOvg;
+                    Debug.WriteLine($"Rg^={rg}");
+
                     foreach (var itm in m_Branched)
                     {
                         foreach (var l in m_Branched)
