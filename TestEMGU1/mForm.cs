@@ -424,14 +424,14 @@ namespace TestEMGU1
                     var rg = (brOverage * brOverage / m_Branched.Count()) * resOvg;
                     Debug.WriteLine($"Rg^={rg}");
 
-                    foreach (var itm in m_Branched)
+                    var vList = new List<Vector>();
+                    foreach (var itmI in m_Branched)
                     {
-                        foreach (var l in m_Branched)
+                        foreach (var itmJ in m_Branched)
                         {
-                            if (itm.IsTouched(l) && itm.Id() != l.Id())
-                            {
-                                Debug.WriteLine($"{itm.Id()} <-> {l.Id()}");
-                            }
+                            if (itmI.Id() == itmJ.Id()) continue;
+                            var vector = new Vector(itmI.GetPoint(), itmJ.GetPoint());
+                            vList.Add(vector);
                         }
                     }
 
