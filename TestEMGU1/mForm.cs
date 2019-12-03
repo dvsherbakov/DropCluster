@@ -68,7 +68,7 @@ namespace TestEMGU1
                     var marker = 0;
                     for (var i = 0; i < cur.Count; i++)
                     {
-                        var dst = prv[cPrev].Range(cur[i].getX(), cur[i].getY());
+                        var dst = prv[cPrev].Range(cur[i].GetX(), cur[i].GetY());
                         if (!(dst < minDist)) continue;
                         minDist = dst;
                         marker = i;
@@ -108,7 +108,7 @@ namespace TestEMGU1
                 if (!ballElements.Any()) continue;
                 //var cx = ballElements.Average(x => x.getX());
                 //var cy = ballElements.Average(x => x.getY());
-                var tstr = ballElements.Aggregate("", (current, t) => current + t.getX() + ":" + t.getY() + ":" + t.Radius() + ":");
+                var tstr = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
                 strList.Add(file.Name + ":" + tstr );
                 prevList = ballElements.ToList();
                 /*
@@ -240,7 +240,7 @@ namespace TestEMGU1
                 param2, minRadius, maxRadius);
 
             var ballElements = m_Circles.OrderByDescending(x => x.Radius).Select(circle => new BallElement(circle.Area, circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
-            var tstr = ballElements.Aggregate("", (current, t) => current + t.getX() + ":" + t.getY() + ":" + t.Radius() + ":");
+            var tstr = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
             tbCadr.Text = tstr;
             var circleImage = img.Copy(); //CopyBlank();
             pbOnePict.SizeMode = PictureBoxSizeMode.Zoom;

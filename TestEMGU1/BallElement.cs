@@ -4,19 +4,19 @@ namespace TestEMGU1
 {
     internal class BallElement
     {
-        private readonly double _area;
-        private readonly float _rad;
+        private readonly double m_Area;
+        private readonly float m_Rad;
 
         public BallElement(double a, float x, float y, float r)
         {
-            _area = a;
+            m_Area = a;
             X = x;
             Y = y;
-            _rad = r;
+            m_Rad = r;
         }
 
-        public double Area() { return _area; }
-        public float Radius() { return _rad; }
+        public double Area() { return m_Area; }
+        public float Radius() { return m_Rad; }
         private float X { get; }
         private float Y { get; }
 
@@ -25,12 +25,12 @@ namespace TestEMGU1
             return (float)Math.Sqrt(Math.Pow(X - x, 2) + Math.Pow(Y -y, 2));
         }
 
-        public float getX()
+        public float GetX()
         {
             return X;
         }
 
-        public float getY()
+        public float GetY()
         {
             return Y;
         }
