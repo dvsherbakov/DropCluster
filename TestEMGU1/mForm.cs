@@ -10,8 +10,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using Emgu.CV.Cuda;
-using Emgu.CV.UI;
 
 namespace TestEMGU1
 {
@@ -70,7 +68,7 @@ namespace TestEMGU1
                     var marker = 0;
                     for (var i = 0; i < cur.Count; i++)
                     {
-                        var dst = prv[cPrev].Range(cur[i].getX(), cur[i].getY());
+                        var dst = prv[cPrev].Range(cur[i].GetX(), cur[i].GetY());
                         if (!(dst < minDist)) continue;
                         minDist = dst;
                         marker = i;
@@ -110,7 +108,7 @@ namespace TestEMGU1
                 if (!ballElements.Any()) continue;
                 //var cx = ballElements.Average(x => x.getX());
                 //var cy = ballElements.Average(x => x.getY());
-                var tstr = ballElements.Aggregate("", (current, t) => current + t.getX() + ":" + t.getY() + ":" + t.Radius() + ":");
+                var tstr = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
                 strList.Add(file.Name + ":" + tstr );
                 prevList = ballElements.ToList();
                 /*
@@ -242,7 +240,7 @@ namespace TestEMGU1
                 param2, minRadius, maxRadius);
 
             var ballElements = m_Circles.OrderByDescending(x => x.Radius).Select(circle => new BallElement(circle.Area, circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
-            var tstr = ballElements.Aggregate("", (current, t) => current + t.getX() + ":" + t.getY() + ":" + t.Radius() + ":");
+            var tstr = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
             tbCadr.Text = tstr;
             var circleImage = img.Copy(); //CopyBlank();
             pbOnePict.SizeMode = PictureBoxSizeMode.Zoom;
@@ -413,17 +411,48 @@ namespace TestEMGU1
                 }
                 else
                 {
-                    foreach (var itm in m_Branched)
+                    var brOverage = m_Branched.Average(x=>x.GetRadius());
+                    var resOvg = 0.0;
+                    for (var i = 1; i < m_Branched.Count; i++)
                     {
-                        foreach (var l in m_Branched)
+                        var res = i * (m_Branched.Count - i);
+                        resOvg += res;
+                        Debug.WriteLine($"{i}: {res}");
+                    }
+
+                    resOvg /= m_Branched.Count;
+                    var rg = (brOverage * brOverage / m_Branched.Count()) * resOvg;
+                    Debug.WriteLine($"Rg(1)^={rg}");
+
+                    var vList = new List<Vector>();
+                    foreach (var itmI in m_Branched)
+                    {
+                        foreach (var itmJ in m_Branched)
                         {
-                            if (itm.IsTouched(l) && itm.Id() != l.Id())
-                            {
-                                Debug.WriteLine($"{itm.Id()} <-> {l.Id()}");
-                            }
+                            if (itmI.Id() == itmJ.Id()) continue;
+                            var vector = new Vector(itmI.GetPoint(), itmJ.GetPoint());
+                            vList.Add(vector);
                         }
                     }
 
+                    var vSubtactSumm = 0.0;
+                    foreach (var vectorI in vList)
+                    {
+                        foreach (var vectorJ in vList)
+                        {
+                            Debug.WriteLine("Start Iteration");
+                            Debug.WriteLine($"Vector I X:{vectorI.X}, Y: {vectorI.Y}; Vector J X:{vectorJ.X}, Y: {vectorJ.Y}");
+                            var sub = vectorI.Subtract(vectorJ);
+                            Debug.WriteLine($"Subtract vector X:{sub.X}, Y: {sub.Y}");
+                            var mul = sub.ScalarMul(sub);
+                            Debug.WriteLine($"Square: {mul}");
+                            vSubtactSumm += mul;
+                            Debug.WriteLine("Stop Iteration");
+                        }
+                    }
+
+                    vSubtactSumm /= (vList.Count * vList.Count);
+                    Debug.WriteLine($"Rg(2)^={vSubtactSumm}");
                     var strList = new List<string>();
                     foreach (var cp in m_Branched)
                     {
@@ -532,11 +561,11 @@ namespace TestEMGU1
         {
             var lList = new List<double>();
             var listPoints = lst as IList<PointListItem> ?? lst.ToList();
-            var summ = listPoints.Sum(it => m_Circles[it.Id()].Radius);
-            var lavg = summ / listPoints.Count;
-            var lcount = listPoints.Count;
+            var sum = listPoints.Sum(it => m_Circles[it.Id()].Radius);
+            var lAvg = sum / listPoints.Count;
+            var lCount = listPoints.Count;
             var rc = float.Parse(tbRadCount.Text.Replace("\"", string.Empty));
-            var avg = (summ / listPoints.Count) * rc;
+            var avg = (sum / listPoints.Count) * rc;
             var lnkCount = 0;
             var lnkAvg = 0.0d;
             while (listPoints.Count > 1)
@@ -549,14 +578,14 @@ namespace TestEMGU1
                 foreach (var lnk in tl)
                 {
                     lbLinks.Items.Add($"{item.Id()}<->{lnk.Id()}:{lnk.GetDistance(item.GetPoint()):F5}");
-                    lList.Add(lnk.GetDistance(item.GetPoint())/lavg);
+                    lList.Add(lnk.GetDistance(item.GetPoint())/lAvg);
                     lnkCount++;
                     lnkAvg += lnk.GetDistance(item.GetPoint());
                 }
             }
             lnkAvg /= lnkCount;
             lbLinks.Items.Add($"Всего:{lnkCount}; Средн:{lnkAvg}");
-            BuildHistogramm(lList, lcount, lavg);
+            BuildHistogramm(lList, lCount, lAvg);
         }
 
         private string BuildHistogramm(IReadOnlyCollection<double> lst, int count, double avg)
@@ -587,7 +616,7 @@ namespace TestEMGU1
 
         private void TrackBarGrade_Scroll(object sender, EventArgs e)
         {
-            lbGrade.Text = @"Градация " + trackBarGrade.Value.ToString();
+            lbGrade.Text = @"Градация " + trackBarGrade.Value;
             FillGradeList();
         }
 
