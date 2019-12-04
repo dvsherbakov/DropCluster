@@ -422,7 +422,7 @@ namespace TestEMGU1
 
                     resOvg /= m_Branched.Count;
                     var rg = (brOverage * brOverage / m_Branched.Count()) * resOvg;
-                    Debug.WriteLine($"Rg^={rg}");
+                    Debug.WriteLine($"Rg(1)^={rg}");
 
                     var vList = new List<Vector>();
                     foreach (var itmI in m_Branched)
@@ -435,6 +435,24 @@ namespace TestEMGU1
                         }
                     }
 
+                    var vSubtactSumm = 0.0;
+                    foreach (var vectorI in vList)
+                    {
+                        foreach (var vectorJ in vList)
+                        {
+                            Debug.WriteLine("Start Iteration");
+                            Debug.WriteLine($"Vector I X:{vectorI.X}, Y: {vectorI.Y}; Vector J X:{vectorJ.X}, Y: {vectorJ.Y}");
+                            var sub = vectorI.Subtract(vectorJ);
+                            Debug.WriteLine($"Subtract vector X:{sub.X}, Y: {sub.Y}");
+                            var mul = sub.ScalarMul(sub);
+                            Debug.WriteLine($"Square: {mul}");
+                            vSubtactSumm += mul;
+                            Debug.WriteLine("Stop Iteration");
+                        }
+                    }
+
+                    vSubtactSumm /= (vList.Count * vList.Count);
+                    Debug.WriteLine($"Rg(2)^={vSubtactSumm}");
                     var strList = new List<string>();
                     foreach (var cp in m_Branched)
                     {
