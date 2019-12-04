@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tlpMaster = new System.Windows.Forms.TableLayoutPanel();
             this.pbOnePict = new System.Windows.Forms.PictureBox();
@@ -114,13 +114,13 @@
             this.btStatSave = new System.Windows.Forms.Button();
             this.tpCadr = new System.Windows.Forms.TabPage();
             this.tbCadr = new System.Windows.Forms.TextBox();
+            this.tpBranched = new System.Windows.Forms.TabPage();
+            this.cbBranched = new System.Windows.Forms.CheckBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tmRename = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.tmExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tpBranched = new System.Windows.Forms.TabPage();
-            this.cbBranched = new System.Windows.Forms.CheckBox();
             this.tabPage2.SuspendLayout();
             this.tlpMaster.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOnePict)).BeginInit();
@@ -145,8 +145,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel4.SuspendLayout();
             this.tpCadr.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             this.tpBranched.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage2
@@ -647,13 +647,13 @@
             // 
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea3);
+            chartArea1.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea1);
             this.chart2.Location = new System.Drawing.Point(13, 60);
             this.chart2.Name = "chart2";
-            series3.ChartArea = "ChartArea1";
-            series3.Name = "Series1";
-            this.chart2.Series.Add(series3);
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Series1";
+            this.chart2.Series.Add(series1);
             this.chart2.Size = new System.Drawing.Size(704, 139);
             this.chart2.TabIndex = 8;
             this.chart2.Text = "chart2";
@@ -948,14 +948,14 @@
             // 
             // chart1
             // 
-            chartArea4.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea4);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series4.ChartArea = "ChartArea1";
-            series4.Name = "Series1";
-            this.chart1.Series.Add(series4);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(1056, 325);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
@@ -998,6 +998,27 @@
             this.tbCadr.Size = new System.Drawing.Size(1085, 599);
             this.tbCadr.TabIndex = 0;
             // 
+            // tpBranched
+            // 
+            this.tpBranched.Controls.Add(this.cbBranched);
+            this.tpBranched.Location = new System.Drawing.Point(4, 25);
+            this.tpBranched.Name = "tpBranched";
+            this.tpBranched.Padding = new System.Windows.Forms.Padding(3);
+            this.tpBranched.Size = new System.Drawing.Size(1091, 605);
+            this.tpBranched.TabIndex = 8;
+            this.tpBranched.Text = "Ветвление";
+            this.tpBranched.UseVisualStyleBackColor = true;
+            // 
+            // cbBranched
+            // 
+            this.cbBranched.AutoSize = true;
+            this.cbBranched.Location = new System.Drawing.Point(9, 7);
+            this.cbBranched.Name = "cbBranched";
+            this.cbBranched.Size = new System.Drawing.Size(218, 21);
+            this.cbBranched.TabIndex = 0;
+            this.cbBranched.Text = "Использовать этот алгоритм";
+            this.cbBranched.UseVisualStyleBackColor = true;
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1036,27 +1057,6 @@
             this.tmExit.Size = new System.Drawing.Size(161, 22);
             this.tmExit.Text = "Выход";
             this.tmExit.Click += new System.EventHandler(this.TmExit_Click);
-            // 
-            // tpBranched
-            // 
-            this.tpBranched.Controls.Add(this.cbBranched);
-            this.tpBranched.Location = new System.Drawing.Point(4, 25);
-            this.tpBranched.Name = "tpBranched";
-            this.tpBranched.Padding = new System.Windows.Forms.Padding(3);
-            this.tpBranched.Size = new System.Drawing.Size(1091, 605);
-            this.tpBranched.TabIndex = 8;
-            this.tpBranched.Text = "Ветвление";
-            this.tpBranched.UseVisualStyleBackColor = true;
-            // 
-            // cbBranched
-            // 
-            this.cbBranched.AutoSize = true;
-            this.cbBranched.Location = new System.Drawing.Point(9, 7);
-            this.cbBranched.Name = "cbBranched";
-            this.cbBranched.Size = new System.Drawing.Size(218, 21);
-            this.cbBranched.TabIndex = 0;
-            this.cbBranched.Text = "Использовать этот алгоритм";
-            this.cbBranched.UseVisualStyleBackColor = true;
             // 
             // FmMain
             // 
@@ -1102,10 +1102,10 @@
             this.panel4.ResumeLayout(false);
             this.tpCadr.ResumeLayout(false);
             this.tpCadr.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.tpBranched.ResumeLayout(false);
             this.tpBranched.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
