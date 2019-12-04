@@ -11,11 +11,15 @@ namespace TestEMGU1
     {
         public double X { get; set; }
         public double Y { get; set; }
+        public int F { get; set; }
+        public int L { get; set; }
 
-        public Vector(PointF A, PointF B)
+        public Vector(PointF A, PointF B, int f, int l)
         {
             X = A.X - B.X;
             Y = A.Y - B.Y;
+            F = f;
+            L = l;
         }
 
         public Vector(double x, double y)
@@ -42,6 +46,11 @@ namespace TestEMGU1
         public double ScalarMul(Vector b)
         {
             return X * b.X + Y * b.Y;
+        }
+
+        public bool Identify(int f, int l)
+        {
+            return (f == F && l == L) || (f == L && l == F);
         }
     }
 }
