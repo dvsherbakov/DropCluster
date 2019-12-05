@@ -424,6 +424,10 @@ namespace TestEMGU1
                     var rg = (brOverage * brOverage / m_Branched.Count()) * resOvg;
                     Debug.WriteLine($"Rg(1)^={rg}");
 
+                    foreach (var itm in m_Branched)
+                    {
+                        Debug.WriteLine($"Point #{itm.Id()}, X:{itm.GetPoint().X}, Y:{itm.GetPoint().Y}, D: {itm.GetRadius()}");
+                    }
                     var vList = new List<Vector>();
                     foreach (var itmI in m_Branched)
                     {
@@ -431,6 +435,7 @@ namespace TestEMGU1
                         {
                             if (itmI.Id() == itmJ.Id()) continue;
                             var vector = new Vector(itmI.GetPoint(), itmJ.GetPoint());
+                            Debug.WriteLine($"Vector {itmI.Id()}-{itmJ.Id()}, X:{vector.X}, Y:{vector.Y}");
                             vList.Add(vector);
                         }
                     }
