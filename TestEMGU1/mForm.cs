@@ -18,6 +18,7 @@ namespace TestEMGU1
         private CircleF[] m_Circles;
         private int m_MouseClickNo;
         private readonly List<PointListItem> m_ListCircles = new List<PointListItem>();
+        private readonly List<PointListItem> m_OriginalCircles = new List<PointListItem>();
         private readonly List<PointF> m_Polygon = new List<PointF>();
         private float m_YScale;
         private float m_XScale;
@@ -261,6 +262,7 @@ namespace TestEMGU1
                 circleImage.Draw(i.ToString(), new Point((int)circle.Center.X, (int)circle.Center.Y), FontFace.HersheyComplex, 2.0, new Bgr(Color.Brown));
                 var fPt = new PointF(circle.Center.X * m_XScale, circle.Center.Y * m_YScale);
                 m_ListCircles.Add(new PointListItem(i, fPt, circle.Radius));
+                m_OriginalCircles.Add(new PointListItem(i, new PointF(circle.Center.X, circle.Center.Y), circle.Radius));
             }
             m_Branched.Clear();
         }
@@ -407,18 +409,18 @@ namespace TestEMGU1
                 {
                     var cp = new PointF(t.X - rectangle.X, t.Y);
                     var et = m_ListCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
-                    m_Branched.Add(et);
+                    var opt = m_OriginalCircles.FirstOrDefault(x => et != null && x.Id() == et.Id());
+                    m_Branched.Add(opt);
                 }
                 else
                 {
                     Debug.WriteLine($"Drops count {m_Branched.Count}");
-                    var brOverage = m_Branched.Average(x=>x.GetRadius());
+                    var brOverage = m_Branched.Average(x=>x.GetRadius())*2;
                     var resOvg = 0.0;
                     for (var i = 1; i < m_Branched.Count; i++)
                     {
                         var res = i * (m_Branched.Count - i);
                         resOvg += res;
-                        Debug.WriteLine($"{i}: {res}");
                     }
 
                     resOvg /= m_Branched.Count;
@@ -427,9 +429,9 @@ namespace TestEMGU1
                     Debug.WriteLine("Drops:");
                     foreach (var pt in m_Branched)
                     {
-                        Debug.WriteLine($"#{pt.Id()}, {pt.GetPoint().X}, {pt.GetPoint().Y}");
+                        Debug.WriteLine($"#{pt.Id()}, X:{pt.GetPoint().X}, Y:{pt.GetPoint().Y}, Radius:{pt.GetRadius()}");
                     }
-                    Debug.WriteLine(brOverage);
+                    Debug.WriteLine($"b={brOverage}");
                     Debug.WriteLine("Vectors:");
                     var vList = new List<Vector>();
                     foreach (var itmI in m_Branched)
@@ -438,11 +440,9 @@ namespace TestEMGU1
                         {
                             if (itmI.Id() == itmJ.Id()) continue;
                             var vector = new Vector(itmI.GetPoint(), itmJ.GetPoint(), itmI.Id(), itmJ.Id());
-                            if (!vList.Where(x => x.Identify(itmI.Id(), itmJ.Id())).Any())
-                            {
-                                vList.Add(vector);
-                                Debug.WriteLine($"{itmI.Id()} - {itmJ.Id()}, X:{vector.X}, Y:{vector.Y}");
-                            }
+                            if (vList.Any(x => x.Identify(itmI.Id(), itmJ.Id()))) continue;
+                            vList.Add(vector);
+                            Debug.WriteLine($"{itmI.Id()} - {itmJ.Id()}, X:{vector.X}, Y:{vector.Y}");
                         }
                     }
                     Debug.WriteLine($"Vectors count {vList.Count}");
@@ -479,6 +479,7 @@ namespace TestEMGU1
                         }
                     }
                     sw.Close();
+                    m_Branched.Clear();
                 }
             } 
             else
