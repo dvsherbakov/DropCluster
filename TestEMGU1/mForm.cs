@@ -411,6 +411,7 @@ namespace TestEMGU1
                 }
                 else
                 {
+                    Debug.WriteLine($"Drops count {m_Branched.Count}");
                     var brOverage = m_Branched.Average(x=>x.GetRadius());
                     var resOvg = 0.0;
                     for (var i = 1; i < m_Branched.Count; i++)
@@ -434,25 +435,29 @@ namespace TestEMGU1
                         foreach (var itmJ in m_Branched)
                         {
                             if (itmI.Id() == itmJ.Id()) continue;
-                            var vector = new Vector(itmI.GetPoint(), itmJ.GetPoint());
-                            Debug.WriteLine($"Vector {itmI.Id()}-{itmJ.Id()}, X:{vector.X}, Y:{vector.Y}");
-                            vList.Add(vector);
+                            var vector = new Vector(itmI.GetPoint(), itmJ.GetPoint(), itmI.Id(), itmJ.Id());
+                            if (!vList.Where(x => x.Identify(itmI.Id(), itmJ.Id())).Any())
+                            {
+                                vList.Add(vector);
+                                Debug.WriteLine($"{itmI.Id()} - {itmJ.Id()}, X:{vector.X}, Y:{vector.Y}");
+                            }
                         }
                     }
+                    Debug.WriteLine($"Vectors count {vList.Count}");
 
                     var vSubtactSumm = 0.0;
                     foreach (var vectorI in vList)
                     {
                         foreach (var vectorJ in vList)
                         {
-                            Debug.WriteLine("Start Iteration");
-                            Debug.WriteLine($"Vector I X:{vectorI.X}, Y: {vectorI.Y}; Vector J X:{vectorJ.X}, Y: {vectorJ.Y}");
+                            
+                            //Debug.WriteLine($"Vector I X:{vectorI.X}, Y: {vectorI.Y}; Vector J X:{vectorJ.X}, Y: {vectorJ.Y}");
                             var sub = vectorI.Subtract(vectorJ);
-                            Debug.WriteLine($"Subtract vector X:{sub.X}, Y: {sub.Y}");
+                            //Debug.WriteLine($"Subtract vector X:{sub.X}, Y: {sub.Y}");
                             var mul = sub.ScalarMul(sub);
-                            Debug.WriteLine($"Square: {mul}");
+                           // Debug.WriteLine($"Square: {mul}");
                             vSubtactSumm += mul;
-                            Debug.WriteLine("Stop Iteration");
+                            
                         }
                     }
 
