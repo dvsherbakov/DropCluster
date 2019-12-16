@@ -236,6 +236,9 @@ namespace TestEMGU1
             var param2 = tbCurvature.Value;
             var minRadius = tbMinRadius.Value;
             var maxRadius = tbMaxRadius.Value;
+            m_Branched.Clear();
+            m_ListCircles.Clear();
+            m_OriginalCircles.Clear();
 
             m_Circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, minDist, param1,
                 param2, minRadius, maxRadius);
@@ -264,7 +267,7 @@ namespace TestEMGU1
                 m_ListCircles.Add(new PointListItem(i, fPt, circle.Radius));
                 m_OriginalCircles.Add(new PointListItem(i, new PointF(circle.Center.X, circle.Center.Y), circle.Radius));
             }
-            m_Branched.Clear();
+            
         }
 
         private static double Angle_point(PointF a, PointF b, PointF c)
@@ -417,68 +420,27 @@ namespace TestEMGU1
                     Debug.WriteLine($"Drops count {m_Branched.Count}");
                     var brOverage = m_Branched.Average(x=>x.GetRadius())*2;
                     var resOvg = 0.0;
+                    
                     for (var i = 1; i < m_Branched.Count; i++)
                     {
                         var res = i * (m_Branched.Count - i);
                         resOvg += res;
+                        Debug.WriteLine($"{m_Branched.Count - i}, {res}");
                     }
 
-                    resOvg /= m_Branched.Count;
-                    var rg = (brOverage * brOverage / m_Branched.Count()) * resOvg;
+                    //resOvg /= m_Branched.Count;
+                    var rg = (brOverage * brOverage * resOvg)/ (m_Branched.Count() * m_Branched.Count()); 
                     Debug.WriteLine($"Rg(1)^={rg}");
 
-                    foreach (var itm in m_Branched)
+                    foreach (var pt in m_Branched)
                     {
                         Debug.WriteLine($"#{pt.Id()}, X:{pt.GetPoint().X}, Y:{pt.GetPoint().Y}, Radius:{pt.GetRadius()}");
                     }
                     Debug.WriteLine($"b={brOverage}");
                     Debug.WriteLine("Vectors:");
-                    var vList = new List<Vector>();
-                    foreach (var itmI in m_Branched)
-                    {
-                        foreach (var itmJ in m_Branched)
-                        {
-                            if (itmI.Id() == itmJ.Id()) continue;
-                            var vector = new Vector(itmI.GetPoint(), itmJ.GetPoint(), itmI.Id(), itmJ.Id());
-                            if (vList.Any(x => x.Identify(itmI.Id(), itmJ.Id()))) continue;
-                            vList.Add(vector);
-                            Debug.WriteLine($"{itmI.Id()} - {itmJ.Id()}, X:{vector.X}, Y:{vector.Y}");
-                        }
-                    }
-                    Debug.WriteLine($"Vectors count {vList.Count}");
+                    
 
-                    var vSubtactSumm = 0.0;
-                    foreach (var vectorI in vList)
-                    {
-                        foreach (var vectorJ in vList)
-                        {
-                            
-                            //Debug.WriteLine($"Vector I X:{vectorI.X}, Y: {vectorI.Y}; Vector J X:{vectorJ.X}, Y: {vectorJ.Y}");
-                            var sub = vectorI.Subtract(vectorJ);
-                            //Debug.WriteLine($"Subtract vector X:{sub.X}, Y: {sub.Y}");
-                            var mul = sub.ScalarMul(sub);
-                           // Debug.WriteLine($"Square: {mul}");
-                            vSubtactSumm += mul;
-                            
-                        }
-                    }
-
-                    vSubtactSumm /= (vList.Count * vList.Count);
-                    Debug.WriteLine($"Rg(2)^={vSubtactSumm}");
-                    var strList = new List<string>();
-                    foreach (var cp in m_Branched)
-                    {
-                        strList.Add($"{cp.Id()}: {cp.GetPoint().X}: {cp.GetPoint().Y}: {cp.GetRadius()}");
-                    }
-                    StreamWriter sw;
-                    using (sw = new StreamWriter("export-branched.csv"))
-                    {
-                        foreach (var item in strList)
-                        {
-                            sw.WriteLine(item);
-                        }
-                    }
-                    sw.Close();
+                    
                     m_Branched.Clear();
                 }
             } 
