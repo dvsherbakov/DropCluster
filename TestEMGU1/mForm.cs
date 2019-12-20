@@ -431,11 +431,15 @@ namespace TestEMGU1
                     //resOvg /= m_Branched.Count;
                     var rg = (brOverage * brOverage * resOvg)/ (m_Branched.Count() * m_Branched.Count()); 
                     Debug.WriteLine($"Rg(1)^={rg}");
-
+                    Clipboard.Clear();
+                    var forCB = "";
                     foreach (var pt in m_Branched)
                     {
                         Debug.WriteLine($"#{pt.Id()}, X:{pt.GetPoint().X}, Y:{pt.GetPoint().Y}, Radius:{pt.GetRadius()}");
+                        var currentStr = $"{pt.GetPoint().X}\t{ pt.GetPoint().Y}\t{pt.Id()}\r\n";
+                        forCB += currentStr;
                     }
+                    Clipboard.SetText(forCB);
                     Debug.WriteLine($"b={brOverage}");
                     Debug.WriteLine("Vectors:");
                     
