@@ -244,8 +244,22 @@ namespace TestEMGU1
                 param2, minRadius, maxRadius);
 
             var ballElements = m_Circles.OrderByDescending(x => x.Radius).Select(circle => new BallElement(circle.Area, circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
-            var tstr = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
-            tbCadr.Text = tstr;
+            var cadrInfo = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
+
+            var ranges= new List<float>();
+            foreach (var circle in ballElements)
+            {
+                foreach (var dCircle in ballElements)
+                {
+                    if (!(Math.Abs(circle.GetX() - dCircle.GetX()) < 0.000001 && Math.Abs(circle.GetY() - dCircle.GetY()) < 0.000001))
+                    {
+                        ranges.Add(circle.Range(dCircle.GetX(), dCircle.GetY()));
+                    }
+                }
+            }
+            cadrInfo += "Average distance: " + ranges.Average().ToString(CultureInfo.InvariantCulture);
+
+            tbCadr.Text = cadrInfo;
             var circleImage = img.Copy(); //CopyBlank();
             pbOnePict.SizeMode = PictureBoxSizeMode.Zoom;
             pbOnePict.Image = circleImage.Bitmap;
@@ -812,6 +826,11 @@ namespace TestEMGU1
 
                 }
             }
+        }
+
+        private void tbCadr_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
