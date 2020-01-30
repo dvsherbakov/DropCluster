@@ -244,7 +244,7 @@ namespace TestEMGU1
                 param2, minRadius, maxRadius);
 
             var ballElements = m_Circles.OrderByDescending(x => x.Radius).Select(circle => new BallElement(circle.Area, circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
-            var cadrInfo = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
+            var cardInfo = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
 
             var ranges= new List<float>();
             foreach (var circle in ballElements)
@@ -257,9 +257,9 @@ namespace TestEMGU1
                     }
                 }
             }
-            cadrInfo += "Average distance: " + ranges.Average().ToString(CultureInfo.InvariantCulture);
+            cardInfo += "Average distance: " + ranges.Average().ToString(CultureInfo.InvariantCulture);
 
-            tbCadr.Text = cadrInfo;
+            tbCadr.Text = cardInfo;
             var circleImage = img.Copy(); //CopyBlank();
             pbOnePict.SizeMode = PictureBoxSizeMode.Zoom;
             pbOnePict.Image = circleImage.Bitmap;
@@ -446,14 +446,14 @@ namespace TestEMGU1
                     var rg = (brOverage * brOverage * resOvg)/ (m_Branched.Count() * m_Branched.Count()); 
                     Debug.WriteLine($"Rg(1)^={rg}");
                     Clipboard.Clear();
-                    var forCB = "";
+                    var forCb = "";
                     foreach (var pt in m_Branched)
                     {
                         Debug.WriteLine($"#{pt.Id()}, X:{pt.GetPoint().X}, Y:{pt.GetPoint().Y}, Radius:{pt.GetRadius()}");
                         var currentStr = $"{pt.GetPoint().X}\t{ pt.GetPoint().Y}\t{pt.Id()}\r\n";
-                        forCB += currentStr;
+                        forCb += currentStr;
                     }
-                    Clipboard.SetText(forCB);
+                    Clipboard.SetText(forCb);
                     Debug.WriteLine($"b={brOverage}");
                     Debug.WriteLine("Vectors:");
                     
