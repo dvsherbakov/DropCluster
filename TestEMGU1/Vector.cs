@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace TestEMGU1
 {
-    class Vector
+    internal class Vector
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-        public int F { get; set; }
-        public int L { get; set; }
+        private double X { get; }
+        private double Y { get; }
+        private int F { get; }
+        private int L { get; }
 
         public Vector(PointF A, PointF B, int f, int l)
         {

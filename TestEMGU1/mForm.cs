@@ -109,8 +109,8 @@ namespace TestEMGU1
                 if (!ballElements.Any()) continue;
                 //var cx = ballElements.Average(x => x.getX());
                 //var cy = ballElements.Average(x => x.getY());
-                var tstr = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
-                strList.Add(file.Name + ":" + tstr );
+                var tmpStr = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
+                strList.Add(file.Name + ":" + tmpStr );
                 prevList = ballElements.ToList();
                 /*
                                 ballElements = null;
@@ -161,7 +161,7 @@ namespace TestEMGU1
             //var fn = f.DirectoryName + @"\c_" + f.Name;
             //circleImage.Save(fn);
 
-            return m_Circles.OrderByDescending(x => x.Radius).Take(dropCount).Select(circle => new BallElement(circle.Area, circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
+            return m_Circles.OrderByDescending(x => x.Radius).Take(dropCount).Select(circle => new BallElement(circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
         }
 
 
@@ -243,7 +243,7 @@ namespace TestEMGU1
             m_Circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 1, minDist, param1,
                 param2, minRadius, maxRadius);
 
-            var ballElements = m_Circles.OrderByDescending(x => x.Radius).Select(circle => new BallElement(circle.Area, circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
+            var ballElements = m_Circles.OrderByDescending(x => x.Radius).Select(circle => new BallElement(circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
             var cardInfo = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
 
             var ranges= new List<float>();
@@ -433,18 +433,7 @@ namespace TestEMGU1
                 {
                     Debug.WriteLine($"Drops count {m_Branched.Count}");
                     var brOverage = m_Branched.Average(x=>x.GetRadius())*2;
-                    var resOvg = 0.0;
                     
-                    for (var i = 1; i < m_Branched.Count; i++)
-                    {
-                        var res = i * (m_Branched.Count - i);
-                        resOvg += res;
-                        Debug.WriteLine($"{m_Branched.Count - i}, {res}");
-                    }
-
-                    //resOvg /= m_Branched.Count;
-                    var rg = (brOverage * brOverage * resOvg)/ (m_Branched.Count() * m_Branched.Count()); 
-                    Debug.WriteLine($"Rg(1)^={rg}");
                     Clipboard.Clear();
                     var forCb = "";
                     foreach (var pt in m_Branched)
@@ -455,10 +444,22 @@ namespace TestEMGU1
                     }
                     Clipboard.SetText(forCb);
                     Debug.WriteLine($"b={brOverage}");
-                    Debug.WriteLine("Vectors:");
-                    
 
+                    var ballElements = m_Branched.OrderByDescending(x => x.GetRadius()).Select(circle => new BallElement(circle.GetPoint().X, circle.GetPoint().Y, circle.GetRadius())).ToList();
+
+                    var ranges = new List<float>();
+                    foreach (var circle in ballElements)
+                    {
+                        foreach (var dCircle in ballElements)
+                        {
+                            if (!(Math.Abs(circle.GetX() - dCircle.GetX()) < 0.000001 && Math.Abs(circle.GetY() - dCircle.GetY()) < 0.000001))
+                            {
+                                ranges.Add(circle.Range(dCircle.GetX(), dCircle.GetY()));
+                            }
+                        }
+                    }
                     
+                    Debug.WriteLine($"Average={ranges.Average()}");
                     m_Branched.Clear();
                 }
             } 
@@ -578,10 +579,10 @@ namespace TestEMGU1
             }
             lnkAvg /= lnkCount;
             lbLinks.Items.Add($"Всего:{lnkCount}; Средн:{lnkAvg}");
-            BuildHistogramm(lList, lCount, lAvg);
+            BuildHistogram(lList, lCount, lAvg);
         }
 
-        private string BuildHistogramm(IReadOnlyCollection<double> lst, int count, double avg)
+        private string BuildHistogram(IReadOnlyCollection<double> lst, int count, double avg)
         {
             var outStr = $"{count}:{avg}";
             // var interval = lst.Max() - lst.Min();
