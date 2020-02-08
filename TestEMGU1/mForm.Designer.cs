@@ -70,6 +70,7 @@
             this.p2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.p3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Align = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.left = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button2 = new System.Windows.Forms.Button();
             this.tbPoint3 = new System.Windows.Forms.TextBox();
             this.tbPoint2 = new System.Windows.Forms.TextBox();
@@ -585,7 +586,8 @@
             this.p1,
             this.p2,
             this.p3,
-            this.Align});
+            this.Align,
+            this.left});
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(8, 129);
             this.listView1.Name = "listView1";
@@ -602,7 +604,7 @@
             this.button2.TabIndex = 3;
             this.button2.Text = "Исчислить";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.Button2_Click);
+            this.button2.Click += new System.EventHandler(this.AddToAngleList);
             // 
             // tbPoint3
             // 
@@ -1203,6 +1205,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private System.Windows.Forms.TabPage tpBranched;
         private System.Windows.Forms.CheckBox cbBranched;
+        private System.Windows.Forms.ColumnHeader left;
     }
 }
 

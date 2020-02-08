@@ -284,13 +284,13 @@ namespace TestEMGU1
             
         }
 
-        private static double Angle_point(PointF a, PointF b, PointF c)
+        private static Tuple<double, double> Angle_point(PointF a, PointF b, PointF c)
         {
             double x1 = a.X - b.X, x2 = c.X - b.X;
             double y1 = a.Y - b.Y, y2 = c.Y - b.Y;
             var d1 = Math.Sqrt(x1 * x1 + y1 * y1);
             var d2 = Math.Sqrt(x2 * x2 + y2 * y2);
-            return Math.Acos((x1 * x2 + y1 * y2) / (d1 * d2));
+            return Tuple.Create(Math.Acos((x1 * x2 + y1 * y2) / (d1 * d2)), (x1 * x2 + y1 * y2) / (d1 * d2));
         }
 
         private void Button4_Click(object sender, EventArgs e)
@@ -307,7 +307,7 @@ namespace TestEMGU1
         {
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void AddToAngleList(object sender, EventArgs e)
         {
             var point1 = 0; var point2 = 0; var point3 = 0;
             try
@@ -318,12 +318,10 @@ namespace TestEMGU1
             }
             finally
             {
-                var angle = Angle_point(m_Circles[point1].Center, m_Circles[point2].Center, m_Circles[point3].Center);
-                angle = angle * 180 / Math.PI;
-                if (angle > 180)
-                {
-                    angle = 360 - angle;
-                }
+                
+                var angleTuple = Angle_point(m_Circles[point1].Center, m_Circles[point2].Center, m_Circles[point3].Center);
+                var angle = angleTuple.Item1 * 180 / Math.PI;
+                var cos = angleTuple.Item2;
                 var fi = new FileInfo(tbSingleFile.Text);
                 var lvItem = new ListViewItem(fi.Name);
                 lvItem.SubItems.Add(point1.ToString());
@@ -333,6 +331,7 @@ namespace TestEMGU1
                 lvItem.SubItems.Add(point3.ToString());
                 lvItem.SubItems.Add(m_Circles[point3].Radius.ToString("F3"));
                 lvItem.SubItems.Add(angle.ToString("F8"));
+                lvItem.SubItems.Add(cos.ToString("F3"));
 
                 listView1.Items.Add(lvItem);
             }
@@ -352,6 +351,7 @@ namespace TestEMGU1
             listView1.Columns.Add("Третья точка", 50, HorizontalAlignment.Center);
             listView1.Columns.Add("Radius", 90, HorizontalAlignment.Center);
             listView1.Columns.Add("Угол", 150, HorizontalAlignment.Center);
+            listView1.Columns.Add("направление", 50, HorizontalAlignment.Center);
         }
 
         private void BtDelItem_Click(object sender, EventArgs e)
@@ -418,7 +418,7 @@ namespace TestEMGU1
                 }
                 else
                 {
-                    Button2_Click(sender, e);
+                    AddToAngleList(sender, e);
                 }
             } else if (cbBranched.Checked)
             {
@@ -645,7 +645,7 @@ namespace TestEMGU1
 
         private void BtLoad_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog fd = new OpenFileDialog { Filter = @"Файлы txt|*.txt" })
+            using (var fd = new OpenFileDialog { Filter = @"Файлы txt|*.txt" })
             {
                 if (fd.ShowDialog() != DialogResult.OK) return;
                 var filePath = fd.FileName;
