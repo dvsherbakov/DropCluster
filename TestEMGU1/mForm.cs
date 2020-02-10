@@ -458,8 +458,18 @@ namespace TestEMGU1
                             }
                         }
                     }
-                    
                     Debug.WriteLine($"Average={ranges.Average()}");
+                    var angles = new AngleCollection();
+                    foreach (var fr in m_Branched)
+                        foreach (var sc in m_Branched)
+                            foreach (var th in m_Branched)
+                                angles.Add(new AngleItem(fr, sc, th));
+                    foreach (var itm in angles.GetGollection())
+                    {
+                        var ids = itm.GetIds();
+                        var angl = itm.Angle_point();
+                        Debug.WriteLine($"{ids.Item1} : {ids.Item2} : {ids.Item3} : {angl.Item1} : {angl.Item2}");
+                    }
                     m_Branched.Clear();
                 }
             } 

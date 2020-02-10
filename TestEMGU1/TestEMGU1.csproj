@@ -84,6 +84,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AngleCollection.cs" />
+    <Compile Include="AngleItem.cs" />
     <Compile Include="BallElement.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="PointInArea.cs" />
