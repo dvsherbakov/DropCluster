@@ -185,7 +185,7 @@ namespace TestEMGU1
 
         private void Button3_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog opf = new OpenFileDialog())
+            using (var opf = new OpenFileDialog())
             {
                 if (opf.ShowDialog() == DialogResult.OK)
                 {
@@ -318,8 +318,19 @@ namespace TestEMGU1
             }
             finally
             {
-                
-                var angleTuple = Angle_point(m_Circles[point1].Center, m_Circles[point2].Center, m_Circles[point3].Center);
+                var pt1 = m_OriginalCircles.FirstOrDefault(x => x.Id() == point1);
+                var pt2 = m_OriginalCircles.FirstOrDefault(x => x.Id() == point2);
+                var pt3 = m_OriginalCircles.FirstOrDefault(x => x.Id() == point3);
+                var tmp1 = new PointListItem(point1, pt1.GetPoint(),pt1.GetRadius());
+                var tmp2 = new PointListItem(point2, pt2.GetPoint(),pt2.GetRadius());
+                var tmp3 = new PointListItem(point3, pt3.GetPoint(),pt3.GetRadius());
+
+                var ap = new AngleItem( tmp1, tmp2, tmp3);
+
+                //var angleTuple = Angle_point(m_Circles[point1].Center, m_Circles[point2].Center, m_Circles[point3].Center);
+                var angleTuple = ap.Angle_point();
+                var angleDirection = ap.GetAngleDirection();
+
                 var angle = angleTuple.Item1 * 180 / Math.PI;
                 var cos = angleTuple.Item2;
                 var fi = new FileInfo(tbSingleFile.Text);
@@ -332,7 +343,9 @@ namespace TestEMGU1
                 lvItem.SubItems.Add(m_Circles[point3].Radius.ToString("F3"));
                 lvItem.SubItems.Add(angle.ToString("F8"));
                 lvItem.SubItems.Add(cos.ToString("F3"));
+                lvItem.SubItems.Add(angleDirection.ToString("N"));
 
+                Debug.WriteLine(ap.GetAngleDirection());
                 listView1.Items.Add(lvItem);
             }
             tbPoint1.Text = "";
@@ -351,7 +364,8 @@ namespace TestEMGU1
             listView1.Columns.Add("Третья точка", 50, HorizontalAlignment.Center);
             listView1.Columns.Add("Radius", 90, HorizontalAlignment.Center);
             listView1.Columns.Add("Угол", 150, HorizontalAlignment.Center);
-            listView1.Columns.Add("направление", 50, HorizontalAlignment.Center);
+            listView1.Columns.Add("cos", 50, HorizontalAlignment.Center);
+            listView1.Columns.Add("Направление", 50, HorizontalAlignment.Center);
         }
 
         private void BtDelItem_Click(object sender, EventArgs e)
