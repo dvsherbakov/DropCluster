@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace TestEMGU1
@@ -9,11 +10,14 @@ namespace TestEMGU1
         private readonly PointF m_Pt;
         private readonly float m_Radius;
 
+        private readonly List<int> links;
+
         public PointListItem(int i, PointF a, float radius)
         {
             m_Id = i;
             m_Pt = new PointF(a.X, a.Y);
             m_Radius = radius;
+            links = new List<int>();
         }
 
         public double GetDistance(PointF a)
@@ -23,7 +27,7 @@ namespace TestEMGU1
 
         public bool IsTouched(PointListItem a)
         {
-            return GetDistance(a.GetPoint()) - (m_Radius + a.GetRadius()) * 0.525 < 0;
+            return GetDistance(a.GetPoint()) - (m_Radius + a.GetRadius()) < 5;
         }
 
         public PointF GetPoint()
@@ -39,6 +43,11 @@ namespace TestEMGU1
         public float GetRadius()
         {
             return m_Radius;
+        }
+
+        public void AddLink(int l)
+        {
+            if (!links.Contains(l)) links.Add(l);
         }
     }
 }

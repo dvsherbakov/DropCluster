@@ -11,7 +11,7 @@ namespace TestEMGU1
         PointListItem A;
         PointListItem B;
         PointListItem C;
-
+        
         public AngleItem(PointListItem a, PointListItem b, PointListItem c)
         {
             A = a;

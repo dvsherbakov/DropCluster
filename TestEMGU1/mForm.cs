@@ -436,6 +436,7 @@ namespace TestEMGU1
                 }
             } else if (cbBranched.Checked)
             {
+                
                 if (t.Button == MouseButtons.Left)
                 {
                     var cp = new PointF(t.X - rectangle.X, t.Y);
@@ -446,8 +447,8 @@ namespace TestEMGU1
                 else
                 {
                     Debug.WriteLine($"Drops count {m_Branched.Count}");
-                    var brOverage = m_Branched.Average(x=>x.GetRadius())*2;
-                    
+                    var brOverage = m_Branched.Average(x => x.GetRadius()) * 2;
+
                     Clipboard.Clear();
                     var forCb = "";
                     foreach (var pt in m_Branched)
@@ -472,19 +473,17 @@ namespace TestEMGU1
                             }
                         }
                     }
-                    Debug.WriteLine($"Average={ranges.Average()}");
-                    var angles = new AngleCollection();
-                    foreach (var fr in m_Branched)
-                        foreach (var sc in m_Branched)
-                            foreach (var th in m_Branched)
-                                angles.Add(new AngleItem(fr, sc, th));
-                    foreach (var itm in angles.GetGollection())
+                   
+                    while (m_Branched.Count > 0)
                     {
-                        var ids = itm.GetIds();
-                        var angl = itm.Angle_point();
-                        Debug.WriteLine($"{ids.Item1} : {ids.Item2} : {ids.Item3} : {angl.Item1} : {angl.Item2}");
+                        var currentDrop = m_Branched.FirstOrDefault();
+                        m_Branched.Remove(currentDrop);
+                        foreach (var dc in m_Branched)
+                        {
+                            if (currentDrop.IsTouched(dc))
+                                Debug.WriteLine($"{currentDrop.Id()}<=>{dc.Id()}");
+                        }
                     }
-                    m_Branched.Clear();
                 }
             } 
             else
