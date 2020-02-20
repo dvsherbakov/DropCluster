@@ -473,7 +473,13 @@ namespace TestEMGU1
                             }
                         }
                     }
-                   
+
+                    var firstDrop = m_Branched.FirstOrDefault();
+                    var lastDrop = m_Branched.Last();
+                    Debug.WriteLine($"{firstDrop.Id()}<=>{lastDrop.Id()}:R1={firstDrop.GetRadius()}:R2={lastDrop.GetRadius()}:Dist={firstDrop.GetDistance(lastDrop.GetPoint())}");
+                    Debug.WriteLine($"Summ of radius={m_Branched.Sum(x => x.GetRadius())}");
+                    Debug.WriteLine("*******************");
+                    float sumDist = 0f;
                     while (m_Branched.Count > 0)
                     {
                         var currentDrop = m_Branched.FirstOrDefault();
@@ -481,9 +487,14 @@ namespace TestEMGU1
                         foreach (var dc in m_Branched)
                         {
                             if (currentDrop.IsTouched(dc))
-                                Debug.WriteLine($"{currentDrop.Id()}<=>{dc.Id()}");
+                            {
+                                Debug.WriteLine($"{currentDrop.Id()}<=>{dc.Id()}:R1={currentDrop.GetRadius()}:R2={dc.GetRadius()}:Dist={currentDrop.GetDistance(dc.GetPoint())}");
+                                sumDist += (float)currentDrop.GetDistance(dc.GetPoint());
+                            }
                         }
                     }
+                    Debug.WriteLine("*******************");
+                    Debug.WriteLine($"Summ of distantion={sumDist}");
                 }
             } 
             else
