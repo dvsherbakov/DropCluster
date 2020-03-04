@@ -405,6 +405,10 @@ namespace TestEMGU1
                 BindingFlags.Instance);
             if (pInfo == null) return;
             var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
+            if (cbChains.Checked)
+            {
+                var chains = new Chains(m_OriginalCircles);
+            }
             if (cbAngles.Checked)
             {
                 if (t.Button == MouseButtons.Left)
@@ -436,7 +440,6 @@ namespace TestEMGU1
                 }
             } else if (cbBranched.Checked)
             {
-                
                 if (t.Button == MouseButtons.Left)
                 {
                     var cp = new PointF(t.X - rectangle.X, t.Y);
@@ -447,8 +450,8 @@ namespace TestEMGU1
                 else
                 {
                     Debug.WriteLine($"Drops count {m_Branched.Count}");
-                    var brOverage = m_Branched.Average(x => x.GetRadius()) * 2;
-
+                    var brOverage = m_Branched.Average(x=>x.GetRadius())*2;
+                    
                     Clipboard.Clear();
                     var forCb = "";
                     foreach (var pt in m_Branched)
@@ -473,28 +476,19 @@ namespace TestEMGU1
                             }
                         }
                     }
-
-                    var firstDrop = m_Branched.FirstOrDefault();
-                    var lastDrop = m_Branched.Last();
-                    Debug.WriteLine($"{firstDrop.Id()}<=>{lastDrop.Id()}:R1={firstDrop.GetRadius()}:R2={lastDrop.GetRadius()}:Dist={firstDrop.GetDistance(lastDrop.GetPoint())}");
-                    Debug.WriteLine($"Summ of radius={m_Branched.Sum(x => x.GetRadius())}");
-                    Debug.WriteLine("*******************");
-                    float sumDist = 0f;
-                    while (m_Branched.Count > 0)
+                    Debug.WriteLine($"Average={ranges.Average()}");
+                    var angles = new AngleCollection();
+                    foreach (var fr in m_Branched)
+                        foreach (var sc in m_Branched)
+                            foreach (var th in m_Branched)
+                                angles.Add(new AngleItem(fr, sc, th));
+                    foreach (var itm in angles.GetGollection())
                     {
-                        var currentDrop = m_Branched.FirstOrDefault();
-                        m_Branched.Remove(currentDrop);
-                        foreach (var dc in m_Branched)
-                        {
-                            if (currentDrop.IsTouched(dc))
-                            {
-                                Debug.WriteLine($"{currentDrop.Id()}<=>{dc.Id()}:R1={currentDrop.GetRadius()}:R2={dc.GetRadius()}:Dist={currentDrop.GetDistance(dc.GetPoint())}");
-                                sumDist += (float)currentDrop.GetDistance(dc.GetPoint());
-                            }
-                        }
+                        var ids = itm.GetIds();
+                        var angl = itm.Angle_point();
+                        Debug.WriteLine($"{ids.Item1} : {ids.Item2} : {ids.Item3} : {angl.Item1} : {angl.Item2}");
                     }
-                    Debug.WriteLine("*******************");
-                    Debug.WriteLine($"Summ of distantion={sumDist}");
+                    m_Branched.Clear();
                 }
             } 
             else
