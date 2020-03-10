@@ -28,11 +28,27 @@ namespace TestEMGU1
                nbs.Remove(current);
                if (!item.Self().IsTouched(current)) 
                 if (!item.AddLink(current)) continue;
-               m_OriginsList.Remove(current);
+               
                var ch = new Chain(current);
                FindNeighbors(ch);
            }
 
+        }
+
+        private List<PointListItem> FindTouchedList(int ItemId)
+        {
+            var res = new List<PointListItem>();
+            var self =m_OriginsList.FirstOrDefault(x => x.Id() == ItemId);
+            if (self == null) return res;
+            {
+                var nbs = m_OriginsList.OrderBy(x => x.GetDistance(self.GetPoint())).Take(4).ToList();
+                foreach (var itm in nbs)
+                {
+                    if (self.IsTouched(itm)) res.Add(itm);
+                }
+            }
+
+            return res;
         }
 
         private void FindChains()
