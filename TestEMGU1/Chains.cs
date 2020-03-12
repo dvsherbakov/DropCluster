@@ -11,10 +11,12 @@ namespace TestEMGU1
     internal class Chains
     {
         private readonly List<PointListItem> m_OriginsList;
+        private List<int> TmpIds;
 
         public Chains(List<PointListItem> originsList)
         {
             m_OriginsList = originsList;
+            TmpIds = originsList.Select(x => x.Id()).ToList();
             FindChains();
         }
 
@@ -47,7 +49,6 @@ namespace TestEMGU1
                     if (self.IsTouched(itm)) res.Add(itm);
                 }
             }
-
             return res;
         }
 
@@ -91,5 +92,10 @@ namespace TestEMGU1
         {
             return m_Self;
         }
+    }
+
+    class ChainLink
+    {
+
     }
 }
