@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,18 +21,12 @@ namespace TestEMGU1
 
         private void FindNeighbors(Chain item)
         {
-            m_OriginsList.Remove(item.Self());
-            var nbs = m_OriginsList.OrderBy(x => x.GetDistance(item.Self().GetPoint())).Take(4).ToList();
-           while (nbs.Any())
-           {
-               var current = nbs.FirstOrDefault();
-               nbs.Remove(current);
-               if (!item.Self().IsTouched(current)) 
-                if (!item.AddLink(current)) continue;
-               
-               var ch = new Chain(current);
-               FindNeighbors(ch);
-           }
+
+            var lst = FindTouchedList(item.Id());
+            if (lst.Count > 0)
+            {
+                Debug.WriteLine(lst.Count);
+            }
 
         }
 
@@ -59,6 +54,7 @@ namespace TestEMGU1
                 //m_OriginsList.Remove(current);
                 var ch = new Chain(current);
                 FindNeighbors(ch);
+
             }
         }
     }
