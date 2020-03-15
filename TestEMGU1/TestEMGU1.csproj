@@ -88,6 +88,7 @@
     <Compile Include="AngleItem.cs" />
     <Compile Include="BallElement.cs" />
     <Compile Include="Chains.cs" />
+    <Compile Include="GraphClasses.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="PointInArea.cs" />
     <Compile Include="PointListItem.cs" />
