@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using Emgu.CV.UI;
 
 namespace TestEMGU1
 {
@@ -561,22 +560,15 @@ namespace TestEMGU1
                         for (var i = 1; i < m_ClickedPoint.Count; i++)
                         {
                             var itm = m_ClickedPoint[i];
-                            var mOrigItm = m_OriginalCircles.FirstOrDefault(x => x.Id() == itm);
                             var pItm = m_ClickedPoint[i - 1];
-                            var mPOrigItm = m_OriginalCircles.FirstOrDefault(x => x.Id() == pItm);
-                            if (mOrigItm == null || mPOrigItm == null) continue;
-                            var cti = new PointListItem(i, mOrigItm.GetPoint(), mOrigItm.GetRadius());
-                            avgR += mOrigItm.GetDistance(mPOrigItm.GetPoint());
-                                //cti.GetDistance(m_Circles[pItm].Center);
+                            var cti = new PointListItem(i, m_Circles[itm].Center, m_Circles[itm].Radius);
+                            avgR += cti.GetDistance(m_Circles[pItm].Center);
                             pList += ", " + itm;
                         }
                         chItem.SubItems.Add(pList);
                         chItem.SubItems.Add(m_ClickedPoint.Count.ToString());
                         chItem.SubItems.Add((avgR / m_ClickedPoint.Count-1).ToString("F5"));
-                        var fPoint = m_OriginalCircles.FirstOrDefault(x => x.Id() == m_ClickedPoint[0]);
-                        var lPoint = m_OriginalCircles.FirstOrDefault(x => x.Id() == m_ClickedPoint[m_ClickedPoint.Count - 1]);
-                        var lR = (fPoint != null && lPoint != null) ? fPoint.GetDistance(lPoint.GetPoint()) : 0.0;
-                                 //(new PointListItem(0, m_Circles[m_ClickedPoint[0]].Center, m_Circles[m_ClickedPoint[0]].Radius)).GetDistance(m_Circles[m_ClickedPoint[m_ClickedPoint.Count-1]].Center);
+                        var lR = (new PointListItem(0, m_Circles[m_ClickedPoint[0]].Center, m_Circles[m_ClickedPoint[0]].Radius)).GetDistance(m_Circles[m_ClickedPoint[m_ClickedPoint.Count-1]].Center);
                         chItem.SubItems.Add(lR.ToString("F5"));
                         chItem.SubItems.Add((m_Polygon.Count-m_Polygon.Distinct().Count()).ToString());
                         lvChains.Items.Add(chItem);

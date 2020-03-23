@@ -13,10 +13,12 @@ namespace TestEMGU1
     {
         private readonly List<PointListItem> m_OriginsList;
         private List<int> TmpIds;
+        private List<Graph> GraphChains;
 
         public Chains(List<PointListItem> originsList)
         {
             m_OriginsList = originsList;
+            GraphChains = new List<Graph>();
             TmpIds = originsList.Select(x => x.Id()).ToList();
             FindChains();
         }
