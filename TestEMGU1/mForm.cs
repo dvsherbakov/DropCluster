@@ -408,7 +408,7 @@ namespace TestEMGU1
             var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
             if (cbChains.Checked)
             {
-                //var chains = new Chains(m_OriginalCircles);
+                var chains = new Chains(m_OriginalCircles);
             }
             if (cbAngles.Checked)
             {

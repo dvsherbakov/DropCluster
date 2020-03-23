@@ -21,41 +21,31 @@ namespace TestEMGU1
             FindChains();
         }
 
-        private void FindNeighbors(Chain item)
+        private bool IsHaveNeighbors(int ItemId)
         {
-
-            var lst = FindTouchedList(item.Id());
-            if (lst.Count > 0)
-            {
-                Debug.WriteLine(lst.Count);
-            }
-
-        }
-
-        private List<PointListItem> FindTouchedList(int ItemId)
-        {
-            var res = new List<PointListItem>();
-            var self =m_OriginsList.FirstOrDefault(x => x.Id() == ItemId);
-            if (self == null) return res;
+           
+            var self = m_OriginsList.FirstOrDefault(x => x.Id() == ItemId);
+            if (self == null) return false;
             {
                 var nbs = m_OriginsList.OrderBy(x => x.GetDistance(self.GetPoint())).Take(4).ToList();
                 foreach (var itm in nbs)
                 {
-                    if (self.IsTouched(itm)) res.Add(itm);
+                    if (self.IsTouched(itm)) return true;
                 }
             }
-            return res;
+            return false;
         }
-
+        
         private void FindChains()
         {
             while (m_OriginsList.Count>0)
             {
                 var current = m_OriginsList.FirstOrDefault();
-                //m_OriginsList.Remove(current);
-                var ch = new Chain(current);
-                FindNeighbors(ch);
-
+                if (IsHaveNeighbors(current.Id()))
+                {
+                    var ch = new Chain(current);
+                }
+                else m_OriginsList.Remove(current);
             }
         }
     }
@@ -69,6 +59,32 @@ namespace TestEMGU1
         {
             this.m_Self = self;
             m_LinkItems = new List<PointListItem>();
+        }
+
+        public void FindNeighbors(int item)
+        {
+
+            var lst = FindTouchedList(item);
+            if (lst.Count > 0)
+            {
+                Debug.WriteLine(lst.Count);
+            }
+
+        }
+
+        private List<int> FindTouchedList(int ItemId)
+        {
+            var res = new List<int>();
+            var self = m_LinkItems.FirstOrDefault(x => x.Id() == ItemId);
+            if (self == null) return res;
+            {
+                var nbs = m_LinkItems.OrderBy(x => x.GetDistance(self.GetPoint())).Take(4).ToList();
+                foreach (var itm in nbs)
+                {
+                    if (self.IsTouched(itm)) res.Add(itm.Id());
+                }
+            }
+            return res;
         }
 
         public bool AddLink(PointListItem item)
