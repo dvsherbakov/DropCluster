@@ -561,14 +561,13 @@ namespace TestEMGU1
                         for (var i = 1; i < m_ClickedPoint.Count; i++)
                         {
                             var itm = m_ClickedPoint[i];
-                            
                             var pItm = m_ClickedPoint[i - 1];
                             var cti = new PointListItem(i, m_Circles[itm].Center, m_Circles[itm].Radius);
                             var dist = cti.GetDistance(m_Circles[pItm].Center);
                             dList.Add(dist);
                             avgR += dist;
                             pList += ", " + itm;
-                            Debug.WriteLine($"{pItm}<=>{itm}:{cti.GetDistance(m_Circles[pItm].Center)}; R1={m_Circles[pItm].Radius}; R2={m_Circles[itm].Radius}");
+                            //Debug.WriteLine($"{pItm}<=>{itm}:{cti.GetDistance(m_Circles[pItm].Center)}; R1={m_Circles[pItm].Radius}; R2={m_Circles[itm].Radius}");
                         }
                         chItem.SubItems.Add(pList);
                         chItem.SubItems.Add(m_ClickedPoint.Count.ToString());
