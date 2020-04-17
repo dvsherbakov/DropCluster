@@ -87,11 +87,9 @@
     <Compile Include="AngleCollection.cs" />
     <Compile Include="AngleItem.cs" />
     <Compile Include="BallElement.cs" />
-    <Compile Include="Chains.cs" />
-    <Compile Include="GraphClasses.cs" />
-    <Compile Include="Location.cs" />
+    <Compile Include="Helpers\PointExtensions.cs" />
     <Compile Include="PointInArea.cs" />
-    <Compile Include="PointListItem.cs" />
+    <Compile Include="PointItem.cs" />
     <Compile Include="mForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,8 +98,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RayCrossingCounter.cs" />
-    <Compile Include="Vector.cs" />
     <EmbeddedResource Include="mForm.resx">
       <DependentUpon>mForm.cs</DependentUpon>
     </EmbeddedResource>
