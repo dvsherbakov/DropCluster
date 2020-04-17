@@ -23,8 +23,8 @@
         #region Код, автоматически созданный конструктором форм Windows
 
         /// <summary>
-        /// Требуемый метод для поддержки конструктора — не изменяйте 
-        /// содержимое этого метода с помощью редактора кода.
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -66,11 +66,11 @@
             this.btSaveToFile = new System.Windows.Forms.Button();
             this.btDelItem = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
-            this.p1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.p2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.p3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Align = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.left = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.p1 = new System.Windows.Forms.ColumnHeader();
+            this.p2 = new System.Windows.Forms.ColumnHeader();
+            this.p3 = new System.Windows.Forms.ColumnHeader();
+            this.Align = new System.Windows.Forms.ColumnHeader();
+            this.left = new System.Windows.Forms.ColumnHeader();
             this.button2 = new System.Windows.Forms.Button();
             this.tbPoint3 = new System.Windows.Forms.TextBox();
             this.tbPoint2 = new System.Windows.Forms.TextBox();
@@ -84,23 +84,23 @@
             this.lbLinks = new System.Windows.Forms.ListBox();
             this.btSaveArea = new System.Windows.Forms.Button();
             this.lvArea = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
             this.cbArea = new System.Windows.Forms.CheckBox();
             this.tpChains = new System.Windows.Forms.TabPage();
             this.btnChainsSave = new System.Windows.Forms.Button();
             this.btnChainDelete = new System.Windows.Forms.Button();
             this.lvChains = new System.Windows.Forms.ListView();
-            this.cId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.fName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.dList = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.pCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.rList = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lDist = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.cCross = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cId = new System.Windows.Forms.ColumnHeader();
+            this.fName = new System.Windows.Forms.ColumnHeader();
+            this.dList = new System.Windows.Forms.ColumnHeader();
+            this.pCount = new System.Windows.Forms.ColumnHeader();
+            this.rList = new System.Windows.Forms.ColumnHeader();
+            this.lDist = new System.Windows.Forms.ColumnHeader();
+            this.cCross = new System.Windows.Forms.ColumnHeader();
             this.cbChains = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.flpStat = new System.Windows.Forms.FlowLayoutPanel();
@@ -124,26 +124,26 @@
             this.tmExit = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage2.SuspendLayout();
             this.tlpMaster.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbOnePict)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.pbOnePict)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbMinimalDist)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbGradient)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbCurvature)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbMinRadius)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbMaxRadius)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbDropCount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbMinimalDist)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbGradient)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbCurvature)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbMinRadius)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbMaxRadius)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbDropCount)).BeginInit();
             this.tcMain.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tpArea.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.chart2)).BeginInit();
             this.tpChains.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.flpStat.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarGrade)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.trackBarGrade)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.chart1)).BeginInit();
             this.panel4.SuspendLayout();
             this.tpCadr.SuspendLayout();
             this.tpBranched.SuspendLayout();
@@ -153,9 +153,9 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.tlpMaster);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Location = new System.Drawing.Point(4, 30);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(1091, 605);
+            this.tabPage2.Size = new System.Drawing.Size(1091, 596);
             this.tabPage2.TabIndex = 2;
             this.tabPage2.Text = "Обработка изображений";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -172,7 +172,7 @@
             this.tlpMaster.Name = "tlpMaster";
             this.tlpMaster.RowCount = 1;
             this.tlpMaster.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpMaster.Size = new System.Drawing.Size(1091, 605);
+            this.tlpMaster.Size = new System.Drawing.Size(1091, 596);
             this.tlpMaster.TabIndex = 0;
             // 
             // pbOnePict
@@ -180,7 +180,7 @@
             this.pbOnePict.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbOnePict.Location = new System.Drawing.Point(3, 3);
             this.pbOnePict.Name = "pbOnePict";
-            this.pbOnePict.Size = new System.Drawing.Size(757, 599);
+            this.pbOnePict.Size = new System.Drawing.Size(757, 590);
             this.pbOnePict.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pbOnePict.TabIndex = 0;
             this.pbOnePict.TabStop = false;
@@ -235,7 +235,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(322, 599);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(322, 590);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // tbMinimalDist
@@ -311,7 +311,7 @@
             this.tbSingleFile.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbSingleFile.Location = new System.Drawing.Point(3, 483);
             this.tbSingleFile.Name = "tbSingleFile";
-            this.tbSingleFile.Size = new System.Drawing.Size(219, 24);
+            this.tbSingleFile.Size = new System.Drawing.Size(219, 28);
             this.tbSingleFile.TabIndex = 6;
             // 
             // label1
@@ -510,12 +510,12 @@
             this.tcMain.Controls.Add(this.tpCadr);
             this.tcMain.Controls.Add(this.tpBranched);
             this.tcMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tcMain.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tcMain.Location = new System.Drawing.Point(0, 24);
+            this.tcMain.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+            this.tcMain.Location = new System.Drawing.Point(0, 28);
             this.tcMain.Margin = new System.Windows.Forms.Padding(4);
             this.tcMain.Name = "tcMain";
             this.tcMain.SelectedIndex = 0;
-            this.tcMain.Size = new System.Drawing.Size(1099, 634);
+            this.tcMain.Size = new System.Drawing.Size(1099, 630);
             this.tcMain.TabIndex = 6;
             // 
             // tabPage1
@@ -529,9 +529,9 @@
             this.tabPage1.Controls.Add(this.tbPoint3);
             this.tabPage1.Controls.Add(this.tbPoint2);
             this.tabPage1.Controls.Add(this.tbPoint1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Location = new System.Drawing.Point(4, 30);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(1091, 605);
+            this.tabPage1.Size = new System.Drawing.Size(1091, 596);
             this.tabPage1.TabIndex = 3;
             this.tabPage1.Text = "Углы";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -541,7 +541,7 @@
             this.cbAngles.AutoSize = true;
             this.cbAngles.Location = new System.Drawing.Point(9, 13);
             this.cbAngles.Name = "cbAngles";
-            this.cbAngles.Size = new System.Drawing.Size(218, 21);
+            this.cbAngles.Size = new System.Drawing.Size(255, 25);
             this.cbAngles.TabIndex = 8;
             this.cbAngles.Text = "Использовать этот алгоритм";
             this.cbAngles.UseVisualStyleBackColor = true;
@@ -579,19 +579,12 @@
             // 
             // listView1
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.p1,
-            this.p2,
-            this.p3,
-            this.Align,
-            this.left});
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.p1, this.p2, this.p3, this.Align, this.left});
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(8, 129);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(1077, 481);
+            this.listView1.Size = new System.Drawing.Size(1077, 472);
             this.listView1.TabIndex = 4;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -610,21 +603,21 @@
             // 
             this.tbPoint3.Location = new System.Drawing.Point(8, 96);
             this.tbPoint3.Name = "tbPoint3";
-            this.tbPoint3.Size = new System.Drawing.Size(100, 24);
+            this.tbPoint3.Size = new System.Drawing.Size(100, 28);
             this.tbPoint3.TabIndex = 2;
             // 
             // tbPoint2
             // 
             this.tbPoint2.Location = new System.Drawing.Point(8, 66);
             this.tbPoint2.Name = "tbPoint2";
-            this.tbPoint2.Size = new System.Drawing.Size(100, 24);
+            this.tbPoint2.Size = new System.Drawing.Size(100, 28);
             this.tbPoint2.TabIndex = 1;
             // 
             // tbPoint1
             // 
             this.tbPoint1.Location = new System.Drawing.Point(8, 36);
             this.tbPoint1.Name = "tbPoint1";
-            this.tbPoint1.Size = new System.Drawing.Size(100, 24);
+            this.tbPoint1.Size = new System.Drawing.Size(100, 28);
             this.tbPoint1.TabIndex = 0;
             // 
             // tpArea
@@ -638,17 +631,16 @@
             this.tpArea.Controls.Add(this.btSaveArea);
             this.tpArea.Controls.Add(this.lvArea);
             this.tpArea.Controls.Add(this.cbArea);
-            this.tpArea.Location = new System.Drawing.Point(4, 25);
+            this.tpArea.Location = new System.Drawing.Point(4, 30);
             this.tpArea.Name = "tpArea";
-            this.tpArea.Size = new System.Drawing.Size(1091, 605);
+            this.tpArea.Size = new System.Drawing.Size(1091, 596);
             this.tpArea.TabIndex = 5;
             this.tpArea.Text = "Область";
             this.tpArea.UseVisualStyleBackColor = true;
             // 
             // chart2
             // 
-            this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             chartArea1.Name = "ChartArea1";
             this.chart2.ChartAreas.Add(chartArea1);
             this.chart2.Location = new System.Drawing.Point(13, 60);
@@ -665,7 +657,7 @@
             this.lbAvgRad.AutoSize = true;
             this.lbAvgRad.Location = new System.Drawing.Point(519, 224);
             this.lbAvgRad.Name = "lbAvgRad";
-            this.lbAvgRad.Size = new System.Drawing.Size(114, 17);
+            this.lbAvgRad.Size = new System.Drawing.Size(135, 21);
             this.lbAvgRad.TabIndex = 7;
             this.lbAvgRad.Text = "Средний радиус";
             // 
@@ -683,7 +675,7 @@
             // 
             this.tbRadCount.Location = new System.Drawing.Point(168, 34);
             this.tbRadCount.Name = "tbRadCount";
-            this.tbRadCount.Size = new System.Drawing.Size(48, 24);
+            this.tbRadCount.Size = new System.Drawing.Size(48, 28);
             this.tbRadCount.TabIndex = 5;
             this.tbRadCount.Text = "5";
             this.tbRadCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -693,18 +685,18 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(6, 37);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(156, 17);
+            this.label12.Size = new System.Drawing.Size(184, 21);
             this.label12.TabIndex = 4;
             this.label12.Text = "Кратность рассотяния";
             // 
             // lbLinks
             // 
-            this.lbLinks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbLinks.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbLinks.FormattingEnabled = true;
-            this.lbLinks.ItemHeight = 16;
+            this.lbLinks.ItemHeight = 21;
             this.lbLinks.Location = new System.Drawing.Point(731, 10);
             this.lbLinks.Name = "lbLinks";
-            this.lbLinks.Size = new System.Drawing.Size(345, 228);
+            this.lbLinks.Size = new System.Drawing.Size(345, 214);
             this.lbLinks.TabIndex = 3;
             // 
             // btSaveArea
@@ -719,19 +711,12 @@
             // 
             // lvArea
             // 
-            this.lvArea.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvArea.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4,
-            this.columnHeader5});
+            this.lvArea.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvArea.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.columnHeader1, this.columnHeader2, this.columnHeader3, this.columnHeader4, this.columnHeader5});
             this.lvArea.HideSelection = false;
             this.lvArea.Location = new System.Drawing.Point(3, 253);
             this.lvArea.Name = "lvArea";
-            this.lvArea.Size = new System.Drawing.Size(1089, 355);
+            this.lvArea.Size = new System.Drawing.Size(1089, 346);
             this.lvArea.TabIndex = 1;
             this.lvArea.UseCompatibleStateImageBehavior = false;
             this.lvArea.View = System.Windows.Forms.View.Details;
@@ -765,7 +750,7 @@
             this.cbArea.AutoSize = true;
             this.cbArea.Location = new System.Drawing.Point(9, 13);
             this.cbArea.Name = "cbArea";
-            this.cbArea.Size = new System.Drawing.Size(184, 21);
+            this.cbArea.Size = new System.Drawing.Size(213, 25);
             this.cbArea.TabIndex = 0;
             this.cbArea.Text = "Выбрать этот алгоритм";
             this.cbArea.UseVisualStyleBackColor = true;
@@ -777,9 +762,9 @@
             this.tpChains.Controls.Add(this.btnChainDelete);
             this.tpChains.Controls.Add(this.lvChains);
             this.tpChains.Controls.Add(this.cbChains);
-            this.tpChains.Location = new System.Drawing.Point(4, 25);
+            this.tpChains.Location = new System.Drawing.Point(4, 30);
             this.tpChains.Name = "tpChains";
-            this.tpChains.Size = new System.Drawing.Size(1091, 605);
+            this.tpChains.Size = new System.Drawing.Size(1091, 596);
             this.tpChains.TabIndex = 6;
             this.tpChains.Text = "Цепочки";
             this.tpChains.UseVisualStyleBackColor = true;
@@ -806,21 +791,12 @@
             // 
             // lvChains
             // 
-            this.lvChains.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvChains.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.cId,
-            this.fName,
-            this.dList,
-            this.pCount,
-            this.rList,
-            this.lDist,
-            this.cCross});
+            this.lvChains.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvChains.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.cId, this.fName, this.dList, this.pCount, this.rList, this.lDist, this.cCross});
             this.lvChains.HideSelection = false;
             this.lvChains.Location = new System.Drawing.Point(9, 110);
             this.lvChains.Name = "lvChains";
-            this.lvChains.Size = new System.Drawing.Size(1074, 511);
+            this.lvChains.Size = new System.Drawing.Size(1074, 502);
             this.lvChains.TabIndex = 1;
             this.lvChains.UseCompatibleStateImageBehavior = false;
             this.lvChains.View = System.Windows.Forms.View.Details;
@@ -866,7 +842,7 @@
             this.cbChains.AutoSize = true;
             this.cbChains.Location = new System.Drawing.Point(9, 4);
             this.cbChains.Name = "cbChains";
-            this.cbChains.Size = new System.Drawing.Size(218, 21);
+            this.cbChains.Size = new System.Drawing.Size(255, 25);
             this.cbChains.TabIndex = 0;
             this.cbChains.Text = "Использовать этот алгоритм";
             this.cbChains.UseVisualStyleBackColor = true;
@@ -874,9 +850,9 @@
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.flpStat);
-            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Location = new System.Drawing.Point(4, 30);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1091, 605);
+            this.tabPage3.Size = new System.Drawing.Size(1091, 596);
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "Статистика";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -890,7 +866,7 @@
             this.flpStat.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpStat.Location = new System.Drawing.Point(0, 0);
             this.flpStat.Name = "flpStat";
-            this.flpStat.Size = new System.Drawing.Size(1091, 605);
+            this.flpStat.Size = new System.Drawing.Size(1091, 596);
             this.flpStat.TabIndex = 0;
             // 
             // panel1
@@ -907,7 +883,7 @@
             this.lbGrade.AutoSize = true;
             this.lbGrade.Location = new System.Drawing.Point(6, 4);
             this.lbGrade.Name = "lbGrade";
-            this.lbGrade.Size = new System.Drawing.Size(68, 17);
+            this.lbGrade.Size = new System.Drawing.Size(84, 21);
             this.lbGrade.TabIndex = 1;
             this.lbGrade.Text = "Градация";
             // 
@@ -916,7 +892,7 @@
             this.trackBarGrade.Location = new System.Drawing.Point(3, 24);
             this.trackBarGrade.Minimum = 1;
             this.trackBarGrade.Name = "trackBarGrade";
-            this.trackBarGrade.Size = new System.Drawing.Size(191, 45);
+            this.trackBarGrade.Size = new System.Drawing.Size(191, 56);
             this.trackBarGrade.TabIndex = 0;
             this.trackBarGrade.Value = 1;
             this.trackBarGrade.Scroll += new System.EventHandler(this.TrackBarGrade_Scroll);
@@ -983,10 +959,10 @@
             // tpCadr
             // 
             this.tpCadr.Controls.Add(this.tbCadr);
-            this.tpCadr.Location = new System.Drawing.Point(4, 25);
+            this.tpCadr.Location = new System.Drawing.Point(4, 30);
             this.tpCadr.Name = "tpCadr";
             this.tpCadr.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCadr.Size = new System.Drawing.Size(1091, 605);
+            this.tpCadr.Size = new System.Drawing.Size(1091, 596);
             this.tpCadr.TabIndex = 7;
             this.tpCadr.Text = "Кадр";
             this.tpCadr.UseVisualStyleBackColor = true;
@@ -997,17 +973,17 @@
             this.tbCadr.Location = new System.Drawing.Point(3, 3);
             this.tbCadr.Multiline = true;
             this.tbCadr.Name = "tbCadr";
-            this.tbCadr.Size = new System.Drawing.Size(1085, 599);
+            this.tbCadr.Size = new System.Drawing.Size(1085, 590);
             this.tbCadr.TabIndex = 0;
             this.tbCadr.TextChanged += new System.EventHandler(this.tbCadr_TextChanged);
             // 
             // tpBranched
             // 
             this.tpBranched.Controls.Add(this.cbBranched);
-            this.tpBranched.Location = new System.Drawing.Point(4, 25);
+            this.tpBranched.Location = new System.Drawing.Point(4, 30);
             this.tpBranched.Name = "tpBranched";
             this.tpBranched.Padding = new System.Windows.Forms.Padding(3);
-            this.tpBranched.Size = new System.Drawing.Size(1091, 605);
+            this.tpBranched.Size = new System.Drawing.Size(1091, 596);
             this.tpBranched.TabIndex = 8;
             this.tpBranched.Text = "Ветвление";
             this.tpBranched.UseVisualStyleBackColor = true;
@@ -1017,58 +993,55 @@
             this.cbBranched.AutoSize = true;
             this.cbBranched.Location = new System.Drawing.Point(9, 7);
             this.cbBranched.Name = "cbBranched";
-            this.cbBranched.Size = new System.Drawing.Size(218, 21);
+            this.cbBranched.Size = new System.Drawing.Size(255, 25);
             this.cbBranched.TabIndex = 0;
             this.cbBranched.Text = "Использовать этот алгоритм";
             this.cbBranched.UseVisualStyleBackColor = true;
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.файлToolStripMenuItem});
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.файлToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1099, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1099, 28);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // файлToolStripMenuItem
             // 
-            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tmRename,
-            this.toolStripMenuItem1,
-            this.tmExit});
+            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.tmRename, this.toolStripMenuItem1, this.tmExit});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(57, 24);
             this.файлToolStripMenuItem.Text = "Файл";
             // 
             // tmRename
             // 
             this.tmRename.Name = "tmRename";
-            this.tmRename.Size = new System.Drawing.Size(161, 22);
+            this.tmRename.Size = new System.Drawing.Size(196, 26);
             this.tmRename.Text = "Переименовать";
             this.tmRename.Click += new System.EventHandler(this.TmRename_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(158, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(193, 6);
             // 
             // tmExit
             // 
             this.tmExit.Name = "tmExit";
-            this.tmExit.Size = new System.Drawing.Size(161, 22);
+            this.tmExit.Size = new System.Drawing.Size(196, 26);
             this.tmExit.Text = "Выход";
             this.tmExit.Click += new System.EventHandler(this.TmExit_Click);
             // 
             // FmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1099, 658);
             this.Controls.Add(this.tcMain);
             this.Controls.Add(this.menuStrip1);
-            this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FmMain";
@@ -1077,31 +1050,31 @@
             this.tabPage2.ResumeLayout(false);
             this.tlpMaster.ResumeLayout(false);
             this.tlpMaster.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbOnePict)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.pbOnePict)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbMinimalDist)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbGradient)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbCurvature)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbMinRadius)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbMaxRadius)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbDropCount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbMinimalDist)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbGradient)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbCurvature)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbMinRadius)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbMaxRadius)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.tbDropCount)).EndInit();
             this.tcMain.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tpArea.ResumeLayout(false);
             this.tpArea.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.chart2)).EndInit();
             this.tpChains.ResumeLayout(false);
             this.tpChains.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.flpStat.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarGrade)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.trackBarGrade)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.chart1)).EndInit();
             this.panel4.ResumeLayout(false);
             this.tpCadr.ResumeLayout(false);
             this.tpCadr.PerformLayout();
@@ -1111,101 +1084,100 @@
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
-        #endregion
-
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TableLayoutPanel tlpMaster;
-        private System.Windows.Forms.PictureBox pbOnePict;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TrackBar tbMinimalDist;
-        private System.Windows.Forms.TrackBar tbGradient;
-        private System.Windows.Forms.TrackBar tbCurvature;
-        private System.Windows.Forms.TrackBar tbMinRadius;
-        private System.Windows.Forms.TrackBar tbMaxRadius;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TextBox tbSingleFile;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.TabControl tcMain;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TrackBar tbDropCount;
-        private System.Windows.Forms.Label lbdropCount;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox tbPoint3;
-        private System.Windows.Forms.TextBox tbPoint2;
-        private System.Windows.Forms.TextBox tbPoint1;
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.ColumnHeader p1;
-        private System.Windows.Forms.ColumnHeader p2;
-        private System.Windows.Forms.ColumnHeader p3;
         private System.Windows.Forms.ColumnHeader Align;
+        private System.Windows.Forms.Button btAreaClear;
         private System.Windows.Forms.Button btDelItem;
-        private System.Windows.Forms.Button btSaveToFile;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.FlowLayoutPanel flpStat;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label lbGrade;
-        private System.Windows.Forms.TrackBar trackBarGrade;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.ListView lvGrade;
         private System.Windows.Forms.Button btLoad;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Button btnChainDelete;
+        private System.Windows.Forms.Button btnChainsSave;
+        private System.Windows.Forms.Button btSaveArea;
+        private System.Windows.Forms.Button btSaveToFile;
+        private System.Windows.Forms.Button btStatSave;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
         private System.Windows.Forms.CheckBox cbAngles;
-        private System.Windows.Forms.TabPage tpArea;
         private System.Windows.Forms.CheckBox cbArea;
-        private System.Windows.Forms.ListView lvArea;
+        private System.Windows.Forms.CheckBox cbBranched;
+        private System.Windows.Forms.CheckBox cbChains;
+        private System.Windows.Forms.ColumnHeader cCross;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+        private System.Windows.Forms.ColumnHeader cId;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.Button btSaveArea;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Button btStatSave;
-        private System.Windows.Forms.ListBox lbLinks;
-        private System.Windows.Forms.TextBox tbRadCount;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Button btAreaClear;
-        private System.Windows.Forms.Label lbAvgRad;
-        private System.Windows.Forms.TabPage tpChains;
-        private System.Windows.Forms.CheckBox cbChains;
-        private System.Windows.Forms.ListView lvChains;
-        private System.Windows.Forms.ColumnHeader fName;
         private System.Windows.Forms.ColumnHeader dList;
-        private System.Windows.Forms.ColumnHeader pCount;
-        private System.Windows.Forms.ColumnHeader rList;
+        private System.Windows.Forms.FlowLayoutPanel flpStat;
+        private System.Windows.Forms.ColumnHeader fName;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lbAvgRad;
+        private System.Windows.Forms.Label lbdropCount;
+        private System.Windows.Forms.Label lbGrade;
+        private System.Windows.Forms.ListBox lbLinks;
         private System.Windows.Forms.ColumnHeader lDist;
-        private System.Windows.Forms.ColumnHeader cId;
-        private System.Windows.Forms.ColumnHeader cCross;
-        private System.Windows.Forms.Button btnChainDelete;
-        private System.Windows.Forms.Button btnChainsSave;
+        private System.Windows.Forms.ColumnHeader left;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView lvArea;
+        private System.Windows.Forms.ListView lvChains;
+        private System.Windows.Forms.ListView lvGrade;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
+        private System.Windows.Forms.ColumnHeader p1;
+        private System.Windows.Forms.ColumnHeader p2;
+        private System.Windows.Forms.ColumnHeader p3;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.PictureBox pbOnePict;
+        private System.Windows.Forms.ColumnHeader pCount;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ColumnHeader rList;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TextBox tbCadr;
+        private System.Windows.Forms.TrackBar tbCurvature;
+        private System.Windows.Forms.TrackBar tbDropCount;
+        private System.Windows.Forms.TrackBar tbGradient;
+        private System.Windows.Forms.TrackBar tbMaxRadius;
+        private System.Windows.Forms.TrackBar tbMinimalDist;
+        private System.Windows.Forms.TrackBar tbMinRadius;
+        private System.Windows.Forms.TextBox tbPoint1;
+        private System.Windows.Forms.TextBox tbPoint2;
+        private System.Windows.Forms.TextBox tbPoint3;
+        private System.Windows.Forms.TextBox tbRadCount;
+        private System.Windows.Forms.TextBox tbSingleFile;
+        private System.Windows.Forms.TabControl tcMain;
+        private System.Windows.Forms.TableLayoutPanel tlpMaster;
+        private System.Windows.Forms.ToolStripMenuItem tmExit;
         private System.Windows.Forms.ToolStripMenuItem tmRename;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem tmExit;
-        private System.Windows.Forms.TabPage tpCadr;
-        private System.Windows.Forms.TextBox tbCadr;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+        private System.Windows.Forms.TabPage tpArea;
         private System.Windows.Forms.TabPage tpBranched;
-        private System.Windows.Forms.CheckBox cbBranched;
-        private System.Windows.Forms.ColumnHeader left;
+        private System.Windows.Forms.TabPage tpCadr;
+        private System.Windows.Forms.TabPage tpChains;
+        private System.Windows.Forms.TrackBar trackBarGrade;
+        private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
+
+        #endregion
     }
 }
 

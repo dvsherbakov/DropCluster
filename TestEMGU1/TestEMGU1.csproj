@@ -90,8 +90,10 @@
     <Compile Include="Chains.cs" />
     <Compile Include="GraphClasses.cs" />
     <Compile Include="Location.cs" />
+    <Compile Include="Helpers\PointExtensions.cs" />
     <Compile Include="PointInArea.cs" />
     <Compile Include="PointListItem.cs" />
+    <Compile Include="PointItem.cs" />
     <Compile Include="mForm.cs">
       <SubType>Form</SubType>
     </Compile>

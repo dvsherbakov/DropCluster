@@ -1,35 +1,26 @@
 ﻿using System;
+using TestEMGU1.Helpers;
 
 namespace TestEMGU1
 {
     internal class BallElement
     {
-        private readonly float m_Rad;
-
         public BallElement(float x, float y, float r)
         {
             X = x;
             Y = y;
-            m_Rad = r;
+            Radius = r;
         }
 
-        public float Radius() { return m_Rad; }
-        private float X { get; }
-        private float Y { get; }
+        public float X { get; }
 
-        public float Range(float x, float y)
-        {
-            return (float)Math.Sqrt(Math.Pow(X - x, 2) + Math.Pow(Y -y, 2));
-        }
+        public float Y { get; }
 
-        public float GetX()
-        {
-            return X;
-        }
+        public float Radius { get; }
 
-        public float GetY()
+        public float GetRange(float x, float y)
         {
-            return Y;
+            return (float) PointExtensions.GetDistance(X, Y, x, y);
         }
     }
 }
