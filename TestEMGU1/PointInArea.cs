@@ -2,7 +2,7 @@
 
 namespace TestEMGU1
 {
-    public class PointInArea
+    public static class PointInArea
     {
         public static bool IsPointInside(PointF[] polygon, PointF point)
         {
@@ -20,7 +20,7 @@ namespace TestEMGU1
                 var a = new PointF(polygon[prev].X - point.X, polygon[prev].Y - point.Y);
                 var b = new PointF(polygon[i].X - point.X, polygon[i].Y - point.Y);
 
-                var t = (a.X * (b.Y - a.Y) - a.Y * (b.X - a.X));
+                var t = a.X * (b.Y - a.Y) - a.Y * (b.X - a.X);
                 if (curUnder && !prevUnder)
                 {
                     if (t > 0)
