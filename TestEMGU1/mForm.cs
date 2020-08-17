@@ -59,6 +59,7 @@ namespace TestEMGU1
 
         private static IEnumerable<BallElement> SortCoord(IList<BallElement> prv, IList<BallElement> cur)
         {
+            
             var lRes = new List<BallElement>();
             if (cur.Count > 0)
             {
@@ -135,6 +136,8 @@ namespace TestEMGU1
         {
             //var stopWatch = new Stopwatch();
             //stopWatch.Start();
+
+            
 
             var bmp = new Bitmap(filename);
             //var g = Graphics.FromImage(bmp);
@@ -223,6 +226,9 @@ namespace TestEMGU1
         private void TestPicture(string filename)
         {
             if (!File.Exists(filename)) return;
+
+            
+
             var bmp = new Bitmap(filename);
             m_ListCircles.Clear();
 
@@ -257,7 +263,8 @@ namespace TestEMGU1
                     }
                 }
             }
-            cardInfo += "Average distance: " + ranges.Average().ToString(CultureInfo.InvariantCulture);
+            if (ranges.Count>0)
+                cardInfo += "Average distance: " + ranges.Average().ToString(CultureInfo.InvariantCulture);
 
             tbCadr.Text = cardInfo;
             var circleImage = img.Copy(); //CopyBlank();
