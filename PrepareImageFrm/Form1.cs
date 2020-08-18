@@ -148,7 +148,7 @@ namespace PrepareImageFrm
                     var rctB = CvInvoke.FitEllipse(contours[1]);
                     var aspctA = getAspectRatio(rctA);
                     var aspctB = getAspectRatio(rctB);
-                    if ((aspctA < 0.3f) && (aspctB < 0.3f)) {
+                    if ((aspctA < 0.33f) && (aspctB < 0.33f)) {
                         res =
                             $"{filename}:{rctA.Center.X}:{rctA.Center.Y}:{rctA.Size.Width}:{rctA.Size.Height}" +
                         $":{rctB.Center.X}:{rctB.Center.Y}:{rctB.Size.Width}:{rctB.Size.Height}" +
