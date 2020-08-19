@@ -282,8 +282,12 @@ namespace TestEMGU1
                     }
                 }
             }
+<<<<<<< HEAD
+            //cardInfo += "Average distance: " + ranges.Average().ToString(CultureInfo.InvariantCulture);
+=======
             if (ranges.Count>0)
                 cardInfo += "Average distance: " + ranges.Average().ToString(CultureInfo.InvariantCulture);
+>>>>>>> bacac72f11e45cb75fca4b52c034a8c45a6f2747
 
             tbCadr.Text = cardInfo;
             var circleImage = img.Copy(); //CopyBlank();
