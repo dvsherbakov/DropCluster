@@ -25,6 +25,7 @@ namespace TestEMGU1
         private readonly List<int> m_ClickedPoint = new List<int>();
         private PointF[] m_CanArea = new PointF[0];
         private readonly List<PointListItem> m_Branched = new List<PointListItem>();
+        private Graphics gMarker;
 
         public FmMain()
         {
@@ -43,6 +44,7 @@ namespace TestEMGU1
             tbMaxRadius.Value = Properties.Settings.Default.MaxRadius;
             tbRadCount.Text = Properties.Settings.Default.RadCount;
             TransparencyKey = Color.FromArgb(255, 128, 128);
+            gMarker = pbOnePict.CreateGraphics();
 
             if (IntPtr.Size != 8)
             {
@@ -91,10 +93,10 @@ namespace TestEMGU1
             var dirName = fInfo.Directory.FullName;
             var d = new DirectoryInfo(dirName); //Assuming Test is your Folder
 
-            var files = d.GetFiles("c_*.png");
+            var files = d.GetFiles("c_*.jpg");
             foreach (var f in files) f.Delete();
 
-            files = d.GetFiles("*.png");
+            files = d.GetFiles("*.jpg");
             progressBar1.Value = 0;
             progressBar1.Maximum = files.Length;
             var strList = new List<string>();
@@ -109,9 +111,25 @@ namespace TestEMGU1
                 if (!ballElements.Any()) continue;
                 //var cx = ballElements.Average(x => x.getX());
                 //var cy = ballElements.Average(x => x.getY());
-                var tmpStr = ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
-                strList.Add(file.Name + ":" + tmpStr );
-                prevList = ballElements.ToList();
+                var tmpStr
+                    = // ballElements.Aggregate("", (current, t) => current + t.GetX() + ":" + t.GetY() + ":" + t.Radius() + ":");
+                    ballElements.Average(x => x.Radius());
+                var balls = new List<PointListItem>();
+                var counter = 1;
+                foreach (var b in ballElements)
+                {
+                    balls.Add(new PointListItem(counter, new PointF(b.GetX(), b.GetY()), b.Radius()));
+                    counter++;
+                }
+
+                var avgLinks=PrepareLinks(balls);
+                strList.Add(file.Name + ":" + 
+                            tmpStr.ToString("F3") + ":" + 
+                            (tmpStr*0.58).ToString("F3") + ":" +
+                            avgLinks.ToString("F3") + ":" +
+                            (avgLinks*0.58).ToString("F3") + ":" +
+                            ballElements.Length.ToString("N"));
+                //prevList = ballElements.ToList();
                 /*
                                 ballElements = null;
                                 lst = null;
@@ -161,7 +179,7 @@ namespace TestEMGU1
             //var fn = f.DirectoryName + @"\c_" + f.Name;
             //circleImage.Save(fn);
 
-            return m_Circles.OrderByDescending(x => x.Radius).Take(dropCount).Select(circle => new BallElement(circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
+            return m_Circles.OrderByDescending(x => x.Radius).Select(circle => new BallElement(circle.Center.X, circle.Center.Y, circle.Radius)).ToList();
         }
 
 
@@ -225,6 +243,7 @@ namespace TestEMGU1
             if (!File.Exists(filename)) return;
             var bmp = new Bitmap(filename);
             m_ListCircles.Clear();
+            gMarker = pbOnePict.CreateGraphics();
 
             var img = new Image<Bgr, byte>(bmp);
             var uimage = new UMat();
@@ -257,7 +276,7 @@ namespace TestEMGU1
                     }
                 }
             }
-            cardInfo += "Average distance: " + ranges.Average().ToString(CultureInfo.InvariantCulture);
+            //cardInfo += "Average distance: " + ranges.Average().ToString(CultureInfo.InvariantCulture);
 
             tbCadr.Text = cardInfo;
             var circleImage = img.Copy(); //CopyBlank();
@@ -270,18 +289,20 @@ namespace TestEMGU1
                 m_YScale = rectangle.Height / (float)circleImage.Bitmap.Size.Height;
                 m_XScale = rectangle.Width / (float)circleImage.Bitmap.Size.Width;
             }
-            
+
             for (var i = 0; i < m_Circles.Length; i++)
             {
                 var circle = m_Circles[i];
                 circleImage.Draw(circle, new Bgr(Color.Brown), 2);
 
-                circleImage.Draw(i.ToString(), new Point((int)circle.Center.X, (int)circle.Center.Y), FontFace.HersheyComplex, 2.0, new Bgr(Color.Brown));
+                //circleImage.Draw(i.ToString(), new Point((int) circle.Center.X, (int) circle.Center.Y),
+                //    FontFace.HersheyComplex, 2.0, new Bgr(Color.Brown));
                 var fPt = new PointF(circle.Center.X * m_XScale, circle.Center.Y * m_YScale);
                 m_ListCircles.Add(new PointListItem(i, fPt, circle.Radius));
-                m_OriginalCircles.Add(new PointListItem(i, new PointF(circle.Center.X, circle.Center.Y), circle.Radius));
+                m_OriginalCircles.Add(new PointListItem(i, new PointF(circle.Center.X, circle.Center.Y),
+                    circle.Radius));
             }
-            
+
         }
 
         private static Tuple<double, double> Angle_point(PointF a, PointF b, PointF c)
@@ -307,34 +328,21 @@ namespace TestEMGU1
         {
         }
 
-        private void AddToAngleList(object sender, EventArgs e)
+        private void AddToAngleList(AngleItem ap)
         {
-            var point1 = 0; var point2 = 0; var point3 = 0;
-            try
-            {
-                point1 = int.Parse(tbPoint1.Text);
-                point2 = int.Parse(tbPoint2.Text);
-                point3 = int.Parse(tbPoint3.Text);
-            }
-            finally
-            {
-                var pt1 = m_OriginalCircles.FirstOrDefault(x => x.Id() == point1);
-                var pt2 = m_OriginalCircles.FirstOrDefault(x => x.Id() == point2);
-                var pt3 = m_OriginalCircles.FirstOrDefault(x => x.Id() == point3);
-                var tmp1 = new PointListItem(point1, pt1.GetPoint(),pt1.GetRadius());
-                var tmp2 = new PointListItem(point2, pt2.GetPoint(),pt2.GetRadius());
-                var tmp3 = new PointListItem(point3, pt3.GetPoint(),pt3.GetRadius());
-
-                var ap = new AngleItem( tmp1, tmp2, tmp3);
 
                 //var angleTuple = Angle_point(m_Circles[point1].Center, m_Circles[point2].Center, m_Circles[point3].Center);
                 var angleTuple = ap.Angle_point();
                 var angleDirection = ap.GetAngleDirection();
 
-                var angle = angleTuple.Item1 * 180 / Math.PI;
+                var angle = angleTuple.Item1;
                 var cos = angleTuple.Item2;
                 var fi = new FileInfo(tbSingleFile.Text);
                 var lvItem = new ListViewItem(fi.Name);
+                var pnt = ap.GetIds();
+                var point1 = pnt.Item1;
+                var point2 = pnt.Item2;
+                var point3 = pnt.Item3;
                 lvItem.SubItems.Add(point1.ToString());
                 lvItem.SubItems.Add(m_Circles[point1].Radius.ToString("F3"));
                 lvItem.SubItems.Add(point2.ToString());
@@ -345,12 +353,7 @@ namespace TestEMGU1
                 lvItem.SubItems.Add(cos.ToString("F3"));
                 lvItem.SubItems.Add(angleDirection.ToString("N"));
 
-                Debug.WriteLine(ap.GetAngleDirection());
                 listView1.Items.Add(lvItem);
-            }
-            tbPoint1.Text = "";
-            tbPoint2.Text = "";
-            tbPoint3.Text = "";
         }
 
         private void InitAngleList()
@@ -407,87 +410,76 @@ namespace TestEMGU1
             var rectangle = (Rectangle)pInfo.GetValue(pbOnePict, null);
             if (cbChains.Checked)
             {
-                // var chains = new Chains(m_OriginalCircles);
+               
+                // var res = chain.Generate();
+                
             }
             if (cbAngles.Checked)
             {
-                if (t.Button == MouseButtons.Left)
+                var cp = new PointF(t.X - rectangle.X, t.Y);
+                var et = m_ListCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
+                var opt = m_OriginalCircles.FirstOrDefault(x => et != null && x.Id() == et.Id());
+
+                var chain = new Chain(opt, m_OriginalCircles);
+                var res = chain.Generate();
+                var angls = chain.GetAngles();
+                foreach (var angl in angls.GetGollection())
                 {
-                    var cp = new PointF(t.X - rectangle.X, t.Y);
-                    var et = m_ListCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
-                    if (et == null) return;
-                    switch (m_MouseClickNo)
-                    {
-                        case 0:
-                            tbPoint1.Text = et.Id().ToString();
-                            break;
-                        case 1:
-                            tbPoint2.Text = et.Id().ToString();
-                            break;
-                        case 2:
-                            tbPoint3.Text = et.Id().ToString();
-                            break;
-                        default:
-                            m_MouseClickNo = 0;
-                            break;
-                    }
-                    m_MouseClickNo++;
-                    if (m_MouseClickNo > 2) m_MouseClickNo = 0;
+                    AddToAngleList(angl);
                 }
-                else
-                {
-                    AddToAngleList(sender, e);
-                }
+                
             } else if (cbBranched.Checked)
             {
                 if (t.Button == MouseButtons.Left)
                 {
                     var cp = new PointF(t.X - rectangle.X, t.Y);
                     var et = m_ListCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
-                    var opt = m_OriginalCircles.FirstOrDefault(x => et != null && x.Id() == et.Id());
+                    if (et == null) return;
+                    gMarker.DrawEllipse(Pens.Orange, rectangle.X + et.GetPoint().X - et.GetRadius() / 2,
+                        et.GetPoint().Y - et.GetRadius() / 2, et.GetRadius(), et.GetRadius());
+                    var opt = m_OriginalCircles.FirstOrDefault(x => x.Id() == et.Id());
                     m_Branched.Add(opt);
                 }
                 else
                 {
-                    Debug.WriteLine($"Drops count {m_Branched.Count}");
                     var brOverage = m_Branched.Average(x=>x.GetRadius())*2;
                     
                     Clipboard.Clear();
-                    var forCb = "";
+                    var forCb = $"{tbSingleFile.Text}\r\nСредний диаметр\t{brOverage}\r\nНомер\tX\tY\tРадиус\r\n";
                     foreach (var pt in m_Branched)
                     {
-                        Debug.WriteLine($"#{pt.Id()}, X:{pt.GetPoint().X}, Y:{pt.GetPoint().Y}, Radius:{pt.GetRadius()}");
-                        var currentStr = $"{pt.GetPoint().X}\t{ pt.GetPoint().Y}\t{pt.Id()}\r\n";
+                        //var currentStr = $"{pt.GetPoint().X}\t{ pt.GetPoint().Y}\t{pt.Id()}\r\n";
+                        var currentStr = $"{pt.Id()}\t{pt.GetPoint().X}\t{ pt.GetPoint().Y}\t{pt.GetRadius()}\r\n";
                         forCb += currentStr;
                     }
                     Clipboard.SetText(forCb);
                     Debug.WriteLine($"b={brOverage}");
 
-                    var ballElements = m_Branched.OrderByDescending(x => x.GetRadius()).Select(circle => new BallElement(circle.GetPoint().X, circle.GetPoint().Y, circle.GetRadius())).ToList();
+                    //var ballElements = m_Branched.OrderByDescending(x => x.GetRadius()).Select(circle => new BallElement(circle.GetPoint().X, circle.GetPoint().Y, circle.GetRadius())).ToList();
 
-                    var ranges = new List<float>();
-                    foreach (var circle in ballElements)
-                    {
-                        foreach (var dCircle in ballElements)
-                        {
-                            if (!(Math.Abs(circle.GetX() - dCircle.GetX()) < 0.000001 && Math.Abs(circle.GetY() - dCircle.GetY()) < 0.000001))
-                            {
-                                ranges.Add(circle.Range(dCircle.GetX(), dCircle.GetY()));
-                            }
-                        }
-                    }
-                    Debug.WriteLine($"Average={ranges.Average()}");
-                    var angles = new AngleCollection();
-                    foreach (var fr in m_Branched)
-                        foreach (var sc in m_Branched)
-                            foreach (var th in m_Branched)
-                                angles.Add(new AngleItem(fr, sc, th));
-                    foreach (var itm in angles.GetGollection())
-                    {
-                        var ids = itm.GetIds();
-                        var angl = itm.Angle_point();
-                        Debug.WriteLine($"{ids.Item1} : {ids.Item2} : {ids.Item3} : {angl.Item1} : {angl.Item2}");
-                    }
+                    //var ranges = new List<float>();
+                    //foreach (var circle in ballElements)
+                    //{
+                    //    foreach (var dCircle in ballElements)
+                    //    {
+                    //        if (!(Math.Abs(circle.GetX() - dCircle.GetX()) < 0.000001 && Math.Abs(circle.GetY() - dCircle.GetY()) < 0.000001))
+                    //        {
+                    //            ranges.Add(circle.Range(dCircle.GetX(), dCircle.GetY()));
+                    //        }
+                    //    }
+                    //}
+                    //Debug.WriteLine($"Average={ranges.Average()}");
+                    //var angles = new AngleCollection();
+                    //foreach (var fr in m_Branched)
+                    //    foreach (var sc in m_Branched)
+                    //        foreach (var th in m_Branched)
+                    //            angles.Add(new AngleItem(fr, sc, th));
+                    //foreach (var itm in angles.GetGollection())
+                    //{
+                    //    var ids = itm.GetIds();
+                    //    var angl = itm.Angle_point();
+                    //    Debug.WriteLine($"{ids.Item1} : {ids.Item2} : {ids.Item3} : {angl.Item1} : {angl.Item2}");
+                    //}
                     m_Branched.Clear();
                 }
             } 
@@ -495,11 +487,19 @@ namespace TestEMGU1
             {
                 if (t.Button == MouseButtons.Left)
                 {
-                    var cp = new PointF(t.X - rectangle.X, t.Y);
-                    var et = m_ListCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
-                    if (et == null) return;
-                    m_Polygon.Add(m_Circles[et.Id()].Center);
-                    m_ClickedPoint.Add(et.Id());
+                    try
+                    {
+                        var cp = new PointF(t.X - rectangle.X, t.Y);
+                        var et = m_ListCircles.OrderBy(x => x.GetDistance(cp)).FirstOrDefault();
+                        if (et == null) return;
+                        m_Polygon.Add(m_Circles[et.Id()].Center);
+                        m_ClickedPoint.Add(et.Id());
+                    }
+                    catch (Exception ex)
+                    {
+                        // ignored
+                        Debug.WriteLine(ex.Message);
+                    }
                 }
                 else
                 {
@@ -584,11 +584,11 @@ namespace TestEMGU1
             }
         }
 
-        private void PrepareLinks(IEnumerable<PointListItem> lst)
+        private double PrepareLinks(IEnumerable<PointListItem> lst)
         {
             var lList = new List<double>();
             var listPoints = lst as IList<PointListItem> ?? lst.ToList();
-            var sum = listPoints.Sum(it => m_Circles[it.Id()].Radius);
+            var sum = listPoints.Sum(it => m_Circles[it.Id()-1].Radius);
             var lAvg = sum / listPoints.Count;
             var lCount = listPoints.Count;
             var rc = float.Parse(tbRadCount.Text.Replace("\"", string.Empty));
@@ -599,7 +599,7 @@ namespace TestEMGU1
             {
                 var item = listPoints.FirstOrDefault();
                 listPoints.Remove(item);
-                if (item == null) return;
+                if (item == null) return 0.0;
                 var tl = listPoints.OrderBy(x => x.GetDistance(item.GetPoint())).Take(6)
                     .Where(x => x.GetDistance(item.GetPoint()) < avg);
                 foreach (var lnk in tl)
@@ -613,6 +613,7 @@ namespace TestEMGU1
             lnkAvg /= lnkCount;
             lbLinks.Items.Add($"Всего:{lnkCount}; Средн:{lnkAvg}");
             BuildHistogram(lList, lCount, lAvg);
+            return lnkAvg;
         }
 
         private string BuildHistogram(IReadOnlyCollection<double> lst, int count, double avg)

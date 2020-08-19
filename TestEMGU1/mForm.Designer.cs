@@ -604,7 +604,6 @@
             this.button2.TabIndex = 3;
             this.button2.Text = "Исчислить";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.AddToAngleList);
             // 
             // tbPoint3
             // 
