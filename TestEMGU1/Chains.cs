@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using ZedGraph;
 
 namespace TestEMGU1
@@ -14,13 +15,14 @@ namespace TestEMGU1
         private readonly List<PointListItem> m_OriginsList;
         private List<int> TmpIds;
         private List<Graph> GraphChains;
+        private readonly PointListItem StartPoint;
 
-        public Chains(List<PointListItem> originsList)
+        public Chains(List<PointListItem> originsList, PointListItem fPoint)
         {
             m_OriginsList = originsList;
+            StartPoint = fPoint;
             GraphChains = new List<Graph>();
-            TmpIds = originsList.Select(x => x.Id()).ToList();
-            FindChains();
+            FindChains(StartPoint);
         }
 
         private bool IsHaveNeighbors(int ItemId)
@@ -38,16 +40,16 @@ namespace TestEMGU1
             return false;
         }
         
-        private void FindChains()
+        private void FindChains(PointListItem startItem)
         {
             while (m_OriginsList.Count>0)
             {
-                var current = m_OriginsList.FirstOrDefault();
-                if (IsHaveNeighbors(current.Id()))
+                
+                if (IsHaveNeighbors(startItem.Id()))
                 {
-                    var ch = new Chain(current);
+                    //var ch = new Chain(startItem);
                 }
-                else m_OriginsList.Remove(current);
+                else m_OriginsList.Remove(startItem);
             }
         }
     }
@@ -56,45 +58,69 @@ namespace TestEMGU1
     {
         private readonly PointListItem m_Self;
         private readonly List<PointListItem> m_LinkItems;
+        private readonly List<PointListItem> m_OrigItems;
 
-        public Chain(PointListItem self)
+        public Chain(PointListItem self, IEnumerable<PointListItem> orig)
         {
             this.m_Self = self;
             m_LinkItems = new List<PointListItem>();
+            m_OrigItems = new List<PointListItem>();
+            foreach (var itm in orig) m_OrigItems.Add(itm);
         }
 
-        public void FindNeighbors(int item)
+        public IEnumerable<PointListItem> Generate()
         {
-
-            var lst = FindTouchedList(item);
-            if (lst.Count > 0)
-            {
-                Debug.WriteLine(lst.Count);
-            }
-
+            m_OrigItems.Remove(m_Self);
+            AddLink(m_Self);
+            GenerateRecurse(m_Self);
+            return m_LinkItems;
         }
 
-        private List<int> FindTouchedList(int ItemId)
+        private void GenerateRecurse(PointListItem current)
+        {
+            
+            var nbh = FindTouchedList(current);
+            foreach (var itm in nbh)
+            {
+                var tmp = m_OrigItems.FirstOrDefault(x => x.Id() == itm);
+                m_OrigItems.Remove(tmp);
+                AddLink(tmp);
+                GenerateRecurse(tmp);
+            }
+            
+        }
+        
+        private IEnumerable<int> FindTouchedList(PointListItem self)
         {
             var res = new List<int>();
-            var self = m_LinkItems.FirstOrDefault(x => x.Id() == ItemId);
+            
             if (self == null) return res;
+
+            var nbs = m_OrigItems.OrderBy(x => x.GetDistance(self.GetPoint())).Take(4).ToList();
+            foreach (var itm in nbs)
             {
-                var nbs = m_LinkItems.OrderBy(x => x.GetDistance(self.GetPoint())).Take(4).ToList();
-                foreach (var itm in nbs)
-                {
-                    if (self.IsTouched(itm)) res.Add(itm.Id());
-                }
+                if (self.IsTouched(itm)) res.Add(itm.Id());
             }
+
             return res;
         }
 
-        public bool AddLink(PointListItem item)
+        private bool AddLink(PointListItem item)
         {
-            if (m_LinkItems.Select(x => x.Id() == item.Id()).Any()) 
+            if (m_LinkItems.Any(x => x.Id() == item.Id()))
                 return false;
             m_LinkItems.Add(item);
             return true;
+        }
+
+        public AngleCollection GetAngles()
+        {
+            var angles = new AngleCollection();
+            for (var i=1; i<=m_LinkItems.Count-2; i++) {
+                angles.Add(new AngleItem(m_LinkItems[i-1], m_LinkItems[i], m_LinkItems[i+1]));
+            }
+
+            return angles;
         }
 
         public int Id()

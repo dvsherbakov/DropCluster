@@ -17,13 +17,14 @@ namespace TestEMGU1
 
         public void Add(AngleItem item)
         {
-            var p = AnglesList.Where(x=>(x.GetId(0)==item.GetId(0)) && (x.GetId(1) == item.GetId(1)) && (x.GetId(2)==item.GetId(2)) 
-            || (x.GetId(0) == item.GetId(2)) && (x.GetId(1) == item.GetId(1)) && (x.GetId(2) == item.GetId(0)));
-            if ((p.Count()==0)
+            var p = AnglesList.Where(x =>
+                (x.GetId(0) == item.GetId(0)) && (x.GetId(1) == item.GetId(1)) && (x.GetId(2) == item.GetId(2))
+                || (x.GetId(0) == item.GetId(2)) && (x.GetId(1) == item.GetId(1)) && (x.GetId(2) == item.GetId(0)));
+            if ((!p.Any())
                 && (item.GetId(0) != item.GetId(1))
                 && (item.GetId(0) != item.GetId(2))
                 && (item.GetId(1) != item.GetId(2))
-                )
+            )
                 AnglesList.Add(item);
         }
 
