@@ -21,14 +21,16 @@ namespace PrepareImageFrm
         private Image<Bgr, byte> f_ImgInput;
         private string f_CurrentFile;
         private bool f_ShowInImgBox;
+        private List<ImageResult> f_ImageResult;
 
         public Form1()
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
+            f_ImageResult = new List<ImageResult>();
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
@@ -43,11 +45,11 @@ namespace PrepareImageFrm
             }
             catch (Exception ex)
             {
-                listBox1.Items.Insert(0, ex.Message);
+                listBox1.Items.Add(ex.Message);
             }
         }
 
-        private void detectShapesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DetectShapesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (f_ImgInput == null)
             {
@@ -57,36 +59,34 @@ namespace PrepareImageFrm
             {
                 try
                 {
-                    var temp = f_ImgInput.SmoothGaussian(15).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(90), new Gray(255));
-                    VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
-                    Mat m = new Mat();
-                    CvInvoke.FindContours(image: temp, contours, m, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
+                    //var temp = f_ImgInput.Convert<Gray, byte>().ThresholdBinaryInv(new Gray(80), new Gray(255));
+                    //VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
+                    //Mat m = new Mat();
+                    //CvInvoke.FindContours(image: temp, contours, m, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
+                    
+                    var tmpCnt =ExtractContours();
+                    var contours = FilterContours(tmpCnt);
+                    if (contours.Size == 2)
+                    {
+                        listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(f_CurrentFile)}:{GetDistanceBeforeCenter(contours[0], contours[1])}");
+                    }
+                    else
+                    {
+                        listBox1.Items.Add( $"{Path.GetFileNameWithoutExtension(f_CurrentFile)}: Contours count not is two");
+                    }
                     for (int i = 0; i < contours.Size; i++)
                     {
                         double perimeter = CvInvoke.ArcLength(contours[i], true);
                         VectorOfPoint approx = new VectorOfPoint();
                         CvInvoke.ApproxPolyDP(contours[i], approx, 0.03 * perimeter, true);
                         CvInvoke.DrawContours(f_ImgInput, contours, i, new MCvScalar(0, 0, 255));
-                        var rct = CvInvoke.FitEllipse(contours[i]);
-                        var aspct = GetAspectRatio(rct);
-                        if (aspct < 0.33f)
-                            listBox1.Items.Insert(0, $"X: {rct.Center.X}, Y: {rct.Center.Y}, Width: {rct.Size.Width}, Height: {rct.Size.Height}, Aspect: {GetAspectRatio(rct)}");
                     }
-                    if (contours.Size == 2)
-                    {
-                        listBox1.Items.Insert(0, GetDistanceBeforeCenter(contours[0], contours[1]));
-                    }
-                    else
-                    {
-                        listBox1.Items.Insert(0, $"{f_CurrentFile}: Contours count not is two");
-                    }
-
                     pictureBox1.Image = f_ImgInput.AsBitmap();
                     //pictureBox2.Image = temp.AsBitmap();
                 }
                 catch (Exception ex)
                 {
-                    listBox1.Items.Insert(0, ex.Message);
+                    listBox1.Items.Add( ex.Message);
                 }
             }
         }
@@ -99,7 +99,7 @@ namespace PrepareImageFrm
             }
             catch (Exception ex)
             {
-                listBox1.Items.Insert(0, ex.Message);
+                listBox1.Items.Add(ex.Message);
                 return 1.0f;
             }
         }
@@ -118,73 +118,83 @@ namespace PrepareImageFrm
 
         }
 
-        void savePreparedToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SavePreparedToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pictureBox1.Image.Save(@"output.jpeg", ImageFormat.Jpeg);
         }
 
-        string PrepareFile(string filename)
+        private void PrepareFile(string filename)
         {
-            string res;
+            //string res;
             try
             {
+                f_CurrentFile = filename;
+                //OpenFileAsync();
                 f_ImgInput = new Image<Bgr, byte>(filename);
-                
-                
-
-                var temp = f_ImgInput.SmoothGaussian(15).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(80), new Gray(255));
-                var contours = new VectorOfVectorOfPoint();
-                var m = new Mat();
-                CvInvoke.FindContours(image: temp, contours, m, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
-                temp.Dispose();
-                var filteredContours = new VectorOfVectorOfPoint();
-                for (var i = 0; i < contours.Size; i++)
+                var tmpCnt = ExtractContours();
+                var contours = FilterContours(tmpCnt);
+                if (contours.Size == 2)
                 {
-                    var perimeter = CvInvoke.ArcLength(contours[i], true);
-                    var approx = new VectorOfPoint();
-                    CvInvoke.ApproxPolyDP(contours[i], approx, 0.1 * perimeter, true);
-                    CvInvoke.DrawContours(f_ImgInput, contours, i, new MCvScalar(0, 0, 255));
-                    if (contours[i].Size < 5) continue;
-                    var rct = CvInvoke.FitEllipse(contours[i]);
-                    if (GetAspectRatio(rct)<0.33f)
-                        filteredContours.Push(contours[i]);
-                }
-                //contours.
-                if (filteredContours.Size == 2)
-                {
-                    var rectA = new RotatedRect();
-                    var rectB = new RotatedRect();
-                    if (filteredContours[0].Size>=5) rectA = CvInvoke.FitEllipse(filteredContours[0]);
-                    if (filteredContours[1].Size>=5) rectB = CvInvoke.FitEllipse(filteredContours[1]);
-                    
-                    var aspectA = GetAspectRatio(rectA);
-                    var aspectB = GetAspectRatio(rectB);
-                    if ((aspectA < 0.33f) && (aspectB < 0.33f)) {
-                        res =
-                            $"{filename}:{rectA.Center.X}:{rectA.Center.Y}:{rectA.Size.Width}:{rectA.Size.Height}" +
-                        $":{rectB.Center.X}:{rectB.Center.Y}:{rectB.Size.Width}:{rectB.Size.Height}" +
-                        $":{GetDistanceBeforeCenter(contours[0], contours[1])}";
-                    }
-                    else
-                    {
-                        res = $"{filename}: Contours count not is two";
-                    }
+                    listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(f_CurrentFile)}:{GetDistanceBeforeCenter(contours[0], contours[1])}");
                 }
                 else
                 {
-                    res = $"{filename}: Contours count not is two";
+                    listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(f_CurrentFile)}: Contours count not is two");
                 }
+                f_ImgInput.Dispose();
+                //var temp = f_ImgInput.SmoothGaussian(15).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(80), new Gray(255));
+                //var contours = new VectorOfVectorOfPoint();
+                //var m = new Mat();
+                //CvInvoke.FindContours(image: temp, contours, m, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
+                //temp.Dispose();
+                //var filteredContours = new VectorOfVectorOfPoint();
+                //for (var i = 0; i < contours.Size; i++)
+                //{
+                //    var perimeter = CvInvoke.ArcLength(contours[i], true);
+                //    var approx = new VectorOfPoint();
+                //    CvInvoke.ApproxPolyDP(contours[i], approx, 0.1 * perimeter, true);
+                //    CvInvoke.DrawContours(f_ImgInput, contours, i, new MCvScalar(0, 0, 255));
+                //    if (contours[i].Size < 5) continue;
+                //    var rct = CvInvoke.FitEllipse(contours[i]);
+                //    if (GetAspectRatio(rct)<0.33f)
+                //        filteredContours.Push(contours[i]);
+                //}
+                ////contours.
+                //if (filteredContours.Size == 2)
+                //{
+                //    var rectA = new RotatedRect();
+                //    var rectB = new RotatedRect();
+                //    if (filteredContours[0].Size>=5) rectA = CvInvoke.FitEllipse(filteredContours[0]);
+                //    if (filteredContours[1].Size>=5) rectB = CvInvoke.FitEllipse(filteredContours[1]);
+
+                //    var aspectA = GetAspectRatio(rectA);
+                //    var aspectB = GetAspectRatio(rectB);
+                //    if ((aspectA < 0.33f) && (aspectB < 0.33f)) {
+                //        res =
+                //            $"{filename}:{rectA.Center.X}:{rectA.Center.Y}:{rectA.Size.Width}:{rectA.Size.Height}" +
+                //        $":{rectB.Center.X}:{rectB.Center.Y}:{rectB.Size.Width}:{rectB.Size.Height}" +
+                //        $":{GetDistanceBeforeCenter(contours[0], contours[1])}";
+                //    }
+                //    else
+                //    {
+                //        res = $"{filename}: Contours count not is two";
+                //    }
+                //}
+                //else
+                //{
+                //    res = $"{filename}: Contours count not is two";
+                //}
             }
             catch (Exception ex)
             {
-                listBox1.Items.Add($"{filename}: {ex.Message}");
-                res = $"{filename}: {ex.Message}";
+                listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(filename)}: {ex.Message}");
+                //res = $"{filename}: {ex.Message}";
             }
 
-            return res;
+           // return res;
         }
 
-        void dirToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
@@ -194,15 +204,16 @@ namespace PrepareImageFrm
                     var files = Directory.GetFiles(dialog.SelectedPath);
                     foreach (var file in files)
                     {
-                        var tmpRes = PrepareFile(file);
-                        listBox1.Items.Add(tmpRes);
+                        //var tmpRes = 
+                            PrepareFile(file);
+                        //listBox1.Items.Add(tmpRes);
                     }
 
                 }
             }
             catch (Exception ex)
             {
-                listBox1.Items.Insert(0, ex.Message);
+                listBox1.Items.Add(ex.Message);
             }
         }
 
@@ -231,7 +242,7 @@ namespace PrepareImageFrm
             }
             catch (Exception e)
             {
-                listBox1.Items.Insert(0, e.Message);
+                listBox1.Items.Add(e.Message);
                 
             }
         }
@@ -240,6 +251,19 @@ namespace PrepareImageFrm
         {
             if (f_ShowInImgBox)
                 pictureBox2.Image = f_ImgInput.AsBitmap();
+            else
+            {
+                var tmpCnt = ExtractContours();
+                var contours = FilterContours(tmpCnt);
+                if (contours.Size == 2)
+                {
+                    listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(f_CurrentFile)}:{GetDistanceBeforeCenter(contours[0], contours[1])}");
+                }
+                else
+                {
+                    listBox1.Items.Add( $"{Path.GetFileNameWithoutExtension(f_CurrentFile)}: Contours count not is two");
+                }
+            }
         }
 
         private void Bw_DoWork(object sender, DoWorkEventArgs e)
@@ -271,7 +295,7 @@ namespace PrepareImageFrm
                 if (contours[i].Size < 5) continue;
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var perimeter = CvInvoke.ArcLength(contours[i], true);
-                if ((GetAspectRatio(rct) < 0.33f) && (perimeter>50.0f))
+                if ((GetAspectRatio(rct) < 0.33f) && (perimeter>150.0f))
                     filteredContours.Push(contours[i]);
             }
             return filteredContours;
@@ -290,6 +314,8 @@ namespace PrepareImageFrm
                 var approx = new VectorOfPoint();
                 CvInvoke.ApproxPolyDP(contours[i], approx, 0.1 * perimeter, true);
             }
+            temp.Dispose();
+            m.Dispose();
             return contours;
         }
 
