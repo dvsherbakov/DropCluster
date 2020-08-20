@@ -49,14 +49,15 @@ namespace PrepareImageFrm
 
         private void detectShapesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (f_ImgInput==null)
+            if (f_ImgInput == null)
             {
                 return;
-            } else
+            }
+            else
             {
                 try
                 {
-                    var temp = imgInput.SmoothGaussian(15).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(90),new Gray(255));
+                    var temp = f_ImgInput.SmoothGaussian(15).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(90), new Gray(255));
                     VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
                     Mat m = new Mat();
                     CvInvoke.FindContours(image: temp, contours, m, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
@@ -65,27 +66,28 @@ namespace PrepareImageFrm
                         double perimeter = CvInvoke.ArcLength(contours[i], true);
                         VectorOfPoint approx = new VectorOfPoint();
                         CvInvoke.ApproxPolyDP(contours[i], approx, 0.03 * perimeter, true);
-                        CvInvoke.DrawContours(imgInput, contours, i, new MCvScalar(0, 0, 255));
+                        CvInvoke.DrawContours(f_ImgInput, contours, i, new MCvScalar(0, 0, 255));
                         var rct = CvInvoke.FitEllipse(contours[i]);
-                        var aspct = getAspectRatio(rct);
+                        var aspct = GetAspectRatio(rct);
                         if (aspct < 0.33f)
-                            listBox1.Items.Insert(0, $"X: {rct.Center.X}, Y: {rct.Center.Y}, Width: {rct.Size.Width}, Height: {rct.Size.Height}, Aspect: {getAspectRatio(rct)}");
+                            listBox1.Items.Insert(0, $"X: {rct.Center.X}, Y: {rct.Center.Y}, Width: {rct.Size.Width}, Height: {rct.Size.Height}, Aspect: {GetAspectRatio(rct)}");
                     }
                     if (contours.Size == 2)
                     {
-                        listBox1.Items.Insert(0, getDistanceBeforeCntr(contours[0], contours[1]));
+                        listBox1.Items.Insert(0, GetDistanceBeforeCenter(contours[0], contours[1]));
                     }
                     else
                     {
-                        listBox1.Items.Insert(0, $"{currentFile}: Contours count not is two");
+                        listBox1.Items.Insert(0, $"{f_CurrentFile}: Contours count not is two");
                     }
 
-                pictureBox1.Image = f_ImgInput.AsBitmap();
-                //pictureBox2.Image = temp.AsBitmap();
-            }
-            catch (Exception ex)
-            {
-                listBox1.Items.Insert(0, ex.Message);
+                    pictureBox1.Image = f_ImgInput.AsBitmap();
+                    //pictureBox2.Image = temp.AsBitmap();
+                }
+                catch (Exception ex)
+                {
+                    listBox1.Items.Insert(0, ex.Message);
+                }
             }
         }
 
@@ -102,26 +104,26 @@ namespace PrepareImageFrm
             }
         }
 
-        private static float GetDistanceBeforeCenter(IInputArray a, IInputArray b)
+        float GetDistanceBeforeCenter(IInputArray a, IInputArray b)
         {
             var rctA = CvInvoke.FitEllipse(a);
             var rctB = CvInvoke.FitEllipse(b);
             return GetDistance(rctA.Center, rctB.Center);
         }
 
-        private static float GetDistance(PointF a, PointF b)
+        float GetDistance(PointF a, PointF b)
         {
 
             return (float)Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
 
         }
 
-        private void savePreparedToolStripMenuItem_Click(object sender, EventArgs e)
+        void savePreparedToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pictureBox1.Image.Save(@"output.jpeg", ImageFormat.Jpeg);
         }
 
-        private string PrepareFile(string filename)
+        string PrepareFile(string filename)
         {
             string res;
             try
@@ -182,7 +184,7 @@ namespace PrepareImageFrm
             return res;
         }
 
-        private void dirToolStripMenuItem_Click(object sender, EventArgs e)
+        void dirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
@@ -204,7 +206,7 @@ namespace PrepareImageFrm
             }
         }
 
-        private void SaveLogToolStripMenuItem_Click(object sender, EventArgs e)
+        void SaveLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var saveFile = new System.IO.StreamWriter($"{DateTime.Now.ToShortDateString()}.csv");
             foreach (var item in listBox1.Items)
@@ -213,7 +215,7 @@ namespace PrepareImageFrm
             }
         }
 
-        private void OpenFileAsync()
+        void OpenFileAsync()
         {
             try
             {
