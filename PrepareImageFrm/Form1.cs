@@ -56,7 +56,7 @@ namespace PrepareImageFrm
             {
                 try
                 {
-                    var temp = imgInput.SmoothGaussian(15).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(80),new Gray(255));
+                    var temp = imgInput.SmoothGaussian(15).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(90),new Gray(255));
                     VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
                     Mat m = new Mat();
                     CvInvoke.FindContours(image: temp, contours, m, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
