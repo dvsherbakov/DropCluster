@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,18 +20,21 @@ namespace PrepareImageFrm
     public partial class Form1 : Form
     {
         private Image<Bgr, byte> f_ImgInput;
+        private int binarizationThreshold = 130;
+        private int gaussianParam = 5;
+        private int maxAspectRatio = 33;
+        private int minPerimetherLen = 150;
         private string f_CurrentFile;
-        private bool f_ShowInImgBox;
-        private List<ImageResult> f_ImageResult;
+        
 
         public Form1()
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
-            f_ImageResult = new List<ImageResult>();
+            
         }
 
-        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
@@ -39,9 +43,10 @@ namespace PrepareImageFrm
                     RestoreDirectory = true
                 };
                 if (dialog.ShowDialog() != DialogResult.OK) return;
-                f_ShowInImgBox = true;
+                
                 f_CurrentFile = dialog.FileName;
-                OpenFileAsync();
+                f_ImgInput = await LoadFileAsync(f_CurrentFile);
+                pictureBox2.Image = f_ImgInput.AsBitmap();
             }
             catch (Exception ex)
             {
@@ -59,11 +64,6 @@ namespace PrepareImageFrm
             {
                 try
                 {
-                    //var temp = f_ImgInput.Convert<Gray, byte>().ThresholdBinaryInv(new Gray(80), new Gray(255));
-                    //VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
-                    //Mat m = new Mat();
-                    //CvInvoke.FindContours(image: temp, contours, m, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
-                    
                     var tmpCnt =ExtractContours();
                     var contours = FilterContours(tmpCnt);
                     if (contours.Size == 2)
@@ -79,6 +79,7 @@ namespace PrepareImageFrm
                         double perimeter = CvInvoke.ArcLength(contours[i], true);
                         VectorOfPoint approx = new VectorOfPoint();
                         CvInvoke.ApproxPolyDP(contours[i], approx, 0.03 * perimeter, true);
+                        
                         CvInvoke.DrawContours(f_ImgInput, contours, i, new MCvScalar(0, 0, 255));
                     }
                     pictureBox1.Image = f_ImgInput.AsBitmap();
@@ -113,9 +114,7 @@ namespace PrepareImageFrm
 
         float GetDistance(PointF a, PointF b)
         {
-
             return (float)Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
-
         }
 
         private void SavePreparedToolStripMenuItem_Click(object sender, EventArgs e)
@@ -123,89 +122,47 @@ namespace PrepareImageFrm
             pictureBox1.Image.Save(@"output.jpeg", ImageFormat.Jpeg);
         }
 
-        private void PrepareFile(string filename)
+        private async Task PrepareFile(string filename)
         {
-            //string res;
             try
             {
                 f_CurrentFile = filename;
                 //OpenFileAsync();
-                f_ImgInput = new Image<Bgr, byte>(filename);
+                f_ImgInput = await LoadFileAsync(filename);
                 var tmpCnt = ExtractContours();
                 var contours = FilterContours(tmpCnt);
                 if (contours.Size == 2)
                 {
-                    listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(f_CurrentFile)}:{GetDistanceBeforeCenter(contours[0], contours[1])}");
+                    listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(filename)}:{GetDistanceBeforeCenter(contours[0], contours[1])}");
                 }
                 else
                 {
-                    listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(f_CurrentFile)}: Contours count not is two");
+                    listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(filename)}: Contours count not is two");
                 }
                 f_ImgInput.Dispose();
-                //var temp = f_ImgInput.SmoothGaussian(15).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(80), new Gray(255));
-                //var contours = new VectorOfVectorOfPoint();
-                //var m = new Mat();
-                //CvInvoke.FindContours(image: temp, contours, m, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
-                //temp.Dispose();
-                //var filteredContours = new VectorOfVectorOfPoint();
-                //for (var i = 0; i < contours.Size; i++)
-                //{
-                //    var perimeter = CvInvoke.ArcLength(contours[i], true);
-                //    var approx = new VectorOfPoint();
-                //    CvInvoke.ApproxPolyDP(contours[i], approx, 0.1 * perimeter, true);
-                //    CvInvoke.DrawContours(f_ImgInput, contours, i, new MCvScalar(0, 0, 255));
-                //    if (contours[i].Size < 5) continue;
-                //    var rct = CvInvoke.FitEllipse(contours[i]);
-                //    if (GetAspectRatio(rct)<0.33f)
-                //        filteredContours.Push(contours[i]);
-                //}
-                ////contours.
-                //if (filteredContours.Size == 2)
-                //{
-                //    var rectA = new RotatedRect();
-                //    var rectB = new RotatedRect();
-                //    if (filteredContours[0].Size>=5) rectA = CvInvoke.FitEllipse(filteredContours[0]);
-                //    if (filteredContours[1].Size>=5) rectB = CvInvoke.FitEllipse(filteredContours[1]);
-
-                //    var aspectA = GetAspectRatio(rectA);
-                //    var aspectB = GetAspectRatio(rectB);
-                //    if ((aspectA < 0.33f) && (aspectB < 0.33f)) {
-                //        res =
-                //            $"{filename}:{rectA.Center.X}:{rectA.Center.Y}:{rectA.Size.Width}:{rectA.Size.Height}" +
-                //        $":{rectB.Center.X}:{rectB.Center.Y}:{rectB.Size.Width}:{rectB.Size.Height}" +
-                //        $":{GetDistanceBeforeCenter(contours[0], contours[1])}";
-                //    }
-                //    else
-                //    {
-                //        res = $"{filename}: Contours count not is two";
-                //    }
-                //}
-                //else
-                //{
-                //    res = $"{filename}: Contours count not is two";
-                //}
             }
             catch (Exception ex)
             {
                 listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(filename)}: {ex.Message}");
-                //res = $"{filename}: {ex.Message}";
+               
             }
 
-           // return res;
         }
 
-        private void DirToolStripMenuItem_Click(object sender, EventArgs e)
+        private async  void DirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                FolderBrowserDialog dialog = new FolderBrowserDialog();
+                FolderBrowserDialog dialog = new FolderBrowserDialog {
+                    SelectedPath = @"D:\+Data\Experiments"
+                };
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     var files = Directory.GetFiles(dialog.SelectedPath);
                     foreach (var file in files)
                     {
                         //var tmpRes = 
-                            PrepareFile(file);
+                            await PrepareFile(file);
                         //listBox1.Items.Add(tmpRes);
                     }
 
@@ -226,49 +183,14 @@ namespace PrepareImageFrm
             }
         }
 
-        void OpenFileAsync()
+        async Task<Image<Bgr, byte>> LoadFileAsync(string fileName)
         {
-            try
+            var res = await Task.Run(() =>
             {
-                var bw = new BackgroundWorker
-                {
-                    WorkerReportsProgress = false,
-                    WorkerSupportsCancellation = false,
-                   
-                };
-                bw.DoWork += Bw_DoWork;
-                bw.RunWorkerCompleted += Bw_RunWorkerCompleted;
-                bw.RunWorkerAsync();
-            }
-            catch (Exception e)
-            {
-                listBox1.Items.Add(e.Message);
-                
-            }
-        }
-
-        private void Bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (f_ShowInImgBox)
-                pictureBox2.Image = f_ImgInput.AsBitmap();
-            else
-            {
-                var tmpCnt = ExtractContours();
-                var contours = FilterContours(tmpCnt);
-                if (contours.Size == 2)
-                {
-                    listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(f_CurrentFile)}:{GetDistanceBeforeCenter(contours[0], contours[1])}");
-                }
-                else
-                {
-                    listBox1.Items.Add( $"{Path.GetFileNameWithoutExtension(f_CurrentFile)}: Contours count not is two");
-                }
-            }
-        }
-
-        private void Bw_DoWork(object sender, DoWorkEventArgs e)
-        {
-            f_ImgInput = new Image<Bgr, byte>(f_CurrentFile);
+                f_CurrentFile = fileName;
+                return new Image<Bgr, byte>(fileName);
+            });
+            return res;
         }
 
         private void HistToolStripMenuItem_Click(object sender, EventArgs e)
@@ -295,7 +217,7 @@ namespace PrepareImageFrm
                 if (contours[i].Size < 5) continue;
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var perimeter = CvInvoke.ArcLength(contours[i], true);
-                if ((GetAspectRatio(rct) < 0.33f) && (perimeter>150.0f))
+                if ((GetAspectRatio(rct) < maxAspectRatio/100f) && (perimeter> minPerimetherLen))
                     filteredContours.Push(contours[i]);
             }
             return filteredContours;
@@ -304,7 +226,7 @@ namespace PrepareImageFrm
         private VectorOfVectorOfPoint ExtractContours()
         {
             
-            var temp = f_ImgInput.Convert<Gray, byte>().ThresholdBinaryInv(new Gray(90),new Gray(255));
+            var temp = f_ImgInput.SmoothGaussian(gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(binarizationThreshold), new Gray(255));
             var contours = new VectorOfVectorOfPoint();
             var m = new Mat();
             CvInvoke.FindContours(image: temp, contours, m, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
@@ -322,8 +244,31 @@ namespace PrepareImageFrm
         private void GaussianToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var img = new Bitmap(pictureBox2.Image).ToImage<Gray, byte>();
-            var gaussian = img.SmoothGaussian(15).Convert<Gray, byte>();
-            pictureBox2.Image = gaussian.ToBitmap();
+            
+            var gaussian = img.SmoothGaussian(gaussianParam).Convert<Gray, byte>();
+            pictureBox1.Image = gaussian.ToBitmap();
+        }
+
+        private void BynaryzationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (f_ImgInput == null) return;
+            var temp = f_ImgInput.SmoothGaussian(gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(binarizationThreshold), new Gray(255));
+            pictureBox1.Image = temp.ToBitmap();
+        }
+
+        private void ApplyConvertParams(int bt, int gp, int mAs, int mp)
+        {
+            binarizationThreshold = bt;
+            gaussianParam = gp;
+            maxAspectRatio = mAs;
+            minPerimetherLen = mp;
+        }
+
+        private void DetectPaeamsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DetectParams dParams = new DetectParams(binarizationThreshold, gaussianParam, maxAspectRatio, minPerimetherLen);
+            dParams.OnAplyParam += ApplyConvertParams;
+            dParams.ShowDialog();
         }
     }
 }

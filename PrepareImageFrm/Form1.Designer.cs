@@ -42,9 +42,12 @@
             this.cLACHEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filtersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gaussianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bynaryzationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.paramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detectPaeamsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -76,7 +79,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.processToolStripMenuItem,
-            this.filtersToolStripMenuItem});
+            this.filtersToolStripMenuItem,
+            this.paramsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1916, 24);
@@ -163,7 +167,8 @@
             // filtersToolStripMenuItem
             // 
             this.filtersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gaussianToolStripMenuItem});
+            this.gaussianToolStripMenuItem,
+            this.bynaryzationToolStripMenuItem});
             this.filtersToolStripMenuItem.Name = "filtersToolStripMenuItem";
             this.filtersToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.filtersToolStripMenuItem.Text = "Filters";
@@ -171,9 +176,16 @@
             // gaussianToolStripMenuItem
             // 
             this.gaussianToolStripMenuItem.Name = "gaussianToolStripMenuItem";
-            this.gaussianToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.gaussianToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.gaussianToolStripMenuItem.Text = "Gaussian";
             this.gaussianToolStripMenuItem.Click += new System.EventHandler(this.GaussianToolStripMenuItem_Click);
+            // 
+            // bynaryzationToolStripMenuItem
+            // 
+            this.bynaryzationToolStripMenuItem.Name = "bynaryzationToolStripMenuItem";
+            this.bynaryzationToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.bynaryzationToolStripMenuItem.Text = "Bynaryzation";
+            this.bynaryzationToolStripMenuItem.Click += new System.EventHandler(this.BynaryzationToolStripMenuItem_Click);
             // 
             // listBox1
             // 
@@ -209,6 +221,21 @@
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(349, 317);
             this.treeView1.TabIndex = 4;
+            // 
+            // paramsToolStripMenuItem
+            // 
+            this.paramsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.detectPaeamsToolStripMenuItem});
+            this.paramsToolStripMenuItem.Name = "paramsToolStripMenuItem";
+            this.paramsToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.paramsToolStripMenuItem.Text = "Params";
+            // 
+            // detectPaeamsToolStripMenuItem
+            // 
+            this.detectPaeamsToolStripMenuItem.Name = "detectPaeamsToolStripMenuItem";
+            this.detectPaeamsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.detectPaeamsToolStripMenuItem.Text = "DetectPaeams";
+            this.detectPaeamsToolStripMenuItem.Click += new System.EventHandler(this.DetectPaeamsToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -249,6 +276,9 @@
         private System.Windows.Forms.ToolStripMenuItem gaussianToolStripMenuItem;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.ToolStripMenuItem bynaryzationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem paramsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem detectPaeamsToolStripMenuItem;
     }
 }
 
