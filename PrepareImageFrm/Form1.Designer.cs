@@ -38,6 +38,7 @@
             this.saveLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.processToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.repeatDirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.histToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cLACHEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filtersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,6 +49,7 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tvResults = new System.Windows.Forms.TreeView();
+            this.openSelectesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -91,6 +93,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
+            this.openSelectesToolStripMenuItem,
             this.detectShapesToolStripMenuItem,
             this.savePreparedToolStripMenuItem,
             this.saveLogToolStripMenuItem});
@@ -134,6 +137,7 @@
             // 
             this.processToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.dirToolStripMenuItem,
+            this.repeatDirToolStripMenuItem,
             this.histToolStripMenuItem,
             this.cLACHEToolStripMenuItem});
             this.processToolStripMenuItem.Name = "processToolStripMenuItem";
@@ -144,15 +148,23 @@
             // 
             this.dirToolStripMenuItem.Name = "dirToolStripMenuItem";
             this.dirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.dirToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.dirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.dirToolStripMenuItem.Text = "Dir...";
             this.dirToolStripMenuItem.Click += new System.EventHandler(this.DirToolStripMenuItem_Click);
+            // 
+            // repeatDirToolStripMenuItem
+            // 
+            this.repeatDirToolStripMenuItem.Name = "repeatDirToolStripMenuItem";
+            this.repeatDirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.repeatDirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.repeatDirToolStripMenuItem.Text = "Repeat dir";
+            this.repeatDirToolStripMenuItem.Click += new System.EventHandler(this.RepeatDirToolStripMenuItem_Click);
             // 
             // histToolStripMenuItem
             // 
             this.histToolStripMenuItem.Name = "histToolStripMenuItem";
             this.histToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.histToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.histToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.histToolStripMenuItem.Text = "Hist";
             this.histToolStripMenuItem.Click += new System.EventHandler(this.HistToolStripMenuItem_Click);
             // 
@@ -160,7 +172,7 @@
             // 
             this.cLACHEToolStripMenuItem.Name = "cLACHEToolStripMenuItem";
             this.cLACHEToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.cLACHEToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.cLACHEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.cLACHEToolStripMenuItem.Text = "CLACHE";
             this.cLACHEToolStripMenuItem.Click += new System.EventHandler(this.ClaSheToolStripMenuItem_Click);
             // 
@@ -237,6 +249,14 @@
             this.tvResults.Size = new System.Drawing.Size(349, 317);
             this.tvResults.TabIndex = 4;
             // 
+            // openSelectesToolStripMenuItem
+            // 
+            this.openSelectesToolStripMenuItem.Name = "openSelectesToolStripMenuItem";
+            this.openSelectesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
+            this.openSelectesToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.openSelectesToolStripMenuItem.Text = "Open Selectes";
+            this.openSelectesToolStripMenuItem.Click += new System.EventHandler(this.OpenSelectedToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -279,6 +299,8 @@
         private System.Windows.Forms.ToolStripMenuItem bynaryzationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem paramsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem detectPaeamsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem repeatDirToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openSelectesToolStripMenuItem;
     }
 }
 

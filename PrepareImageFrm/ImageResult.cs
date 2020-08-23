@@ -15,11 +15,9 @@ namespace PrepareImageFrm
         public string FileName { get; }
         private readonly List<VectorOfPoint> f_Contours;
         public int Pass { get; private set; }
-        public float Distance { 
-            get => GetDistanceBeforeCenter();
-        }
+        public float Distance => GetDistanceBeforeCenter();
 
-        private bool IsCorrect => f_Contours.Count == 2;
+        public bool IsCorrect => f_Contours.Count == 2;
 
         public ImageResult(string fileName, VectorOfVectorOfPoint listOfContours)
         {
@@ -32,24 +30,43 @@ namespace PrepareImageFrm
             }
         }
 
-        public PointF GetCenter(int i) => f_Contours.Count < i ? new PointF() : CvInvoke.FitEllipse(f_Contours[i]).Center;
+        private PointF GetCenter(int i) => f_Contours.Count < i ? new PointF() : CvInvoke.FitEllipse(f_Contours[i]).Center;
+
+        private string GetСenters()
+        {
+            if (f_Contours.Count == 0) return "Not centers";
+            var res = "Centers: ";
+            for (var i = 0; i < f_Contours.Count; i++)
+            {
+                res += $"{GetCenter(i)}: ";
+            }
+            return res;
+        }
 
         private SizeF GetSize(int i) => f_Contours.Count < i ? new SizeF() : CvInvoke.FitEllipse(f_Contours[i]).Size;
+
+        private string GetSizes()
+        {
+            if (f_Contours.Count == 0) return "Not sizes";
+            var res = "Sizes: ";
+            for (var i = 0; i < f_Contours.Count; i++)
+            {
+                res += $"{GetSize(i)}: ";
+            }
+            return res;
+        }
 
         private double GetPerimeter(int i) => f_Contours.Count < i ? 0 : CvInvoke.ArcLength(f_Contours[i], true);
 
         private string GetPerimeters()
         {
             if (f_Contours.Count == 0) return "Not perimeters";
-            else
+            var res = "Perimeters: ";
+            for (var i = 0; i < f_Contours.Count; i++)
             {
-                var res = "Perimeters: ";
-                for (var i = 0; i < f_Contours.Count; i++)
-                {
-                    res += $"{GetPerimeter(i)}: ";
-                }
-                return res;
+                res += $"{GetPerimeter(i)}: ";
             }
+            return res;
         }
 
         private float GetDistanceBeforeCenter()
@@ -79,11 +96,14 @@ namespace PrepareImageFrm
             var res = new TreeNode(Path.GetFileNameWithoutExtension(FileName))
             {
                 Name = FileName,
-                ForeColor = IsCorrect ? Color.LightGreen : Color.OrangeRed
+                ForeColor = IsCorrect ? Color.DarkGreen : Color.OrangeRed
             };
-            //res.Nodes.Add(IsCorrect ? "Correct" : "Not detected");
+            res.Nodes.Add($"Pass: {Pass}");
+            if (f_Contours.Count <= 0) return res;
             res.Nodes.Add(GetPerimeters());
             res.Nodes.Add(GetDistanceBeforeCenter().ToString(CultureInfo.InvariantCulture));
+            res.Nodes.Add(GetСenters());
+            res.Nodes.Add(GetSizes());
             return res;
         }
     }

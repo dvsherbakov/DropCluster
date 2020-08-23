@@ -40,14 +40,19 @@ namespace PrepareImageFrm
                 };
                 if (dialog.ShowDialog() != DialogResult.OK) return;
                 
-                f_CurrentFile = dialog.FileName;
-                f_ImgInput = await LoadFileAsync(f_CurrentFile);
-                pictureBox2.Image = f_ImgInput.AsBitmap();
+                await LoadFile(dialog.FileName);
             }
             catch (Exception ex)
             {
                 listBox1.Items.Add(ex.Message);
             }
+        }
+
+        private async Task LoadFile(string fileName)
+        {
+            f_CurrentFile = fileName;
+            f_ImgInput = await LoadFileAsync(fileName);
+            pictureBox2.Image = f_ImgInput.AsBitmap();
         }
 
         private void DetectShapesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -244,6 +249,28 @@ namespace PrepareImageFrm
             var dParams = new DetectParams(f_BinarizationThreshold, f_GaussianParam, f_MaxAspectRatio, f_MinPerimeterLen);
             dParams.OnApplyParam += ApplyConvertParams;
             dParams.ShowDialog();
+        }
+
+        private async void RepeatDirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var files = f_Storage.GetUndetectedItems;
+            foreach (var file in files)
+            {
+                await PrepareFile(file);
+            }
+        }
+
+        private async void OpenSelectedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var name = tvResults.SelectedNode.Name;
+                await LoadFile(name);
+            }
+            catch (Exception ex)
+            {
+                listBox1.Items.Add(ex.Message);
+            }
         }
     }
 }

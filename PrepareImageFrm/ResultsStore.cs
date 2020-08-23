@@ -32,5 +32,7 @@ namespace PrepareImageFrm
             f_Results.FirstOrDefault(x => x.FileName == result.FileName)?.UpdateContours(result.GetContours);
             return f_Results.FirstOrDefault(x => x.FileName == result.FileName);
         }
+
+        public IEnumerable<string> GetUndetectedItems => f_Results.Where(x => !x.IsCorrect).Select(x => x.FileName);
     }
 }
