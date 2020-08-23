@@ -7,30 +7,30 @@ using System.Windows.Forms.VisualStyles;
 
 namespace PrepareImageFrm
 {
-    class ResultsStore
+    internal class ResultsStore
     {
-        private readonly List<ImageResult> results;
+        private readonly List<ImageResult> f_Results;
 
         public ResultsStore()
         {
-            results = new List<ImageResult>();
+            f_Results = new List<ImageResult>();
         }
 
-        public bool Exists(string fileName)
+        private bool Exists(string fileName)
         {
-            return results.Where(x => x.FileName == fileName).Any();
+            return f_Results.Any(x => x.FileName == fileName);
         }
 
-        public void AddToStore(ImageResult result)
+        public ImageResult AddToStore(ImageResult result)
         {
             if (!Exists(result.FileName))
             {
-                results.Add(result);
+                f_Results.Add(result);
+                return result;
             }
-            else
-            {
-                results.Where(x => x.FileName == result.FileName).FirstOrDefault().UpdateContours(result.GetContours);
-            }
+
+            f_Results.FirstOrDefault(x => x.FileName == result.FileName)?.UpdateContours(result.GetContours);
+            return f_Results.FirstOrDefault(x => x.FileName == result.FileName);
         }
     }
 }
