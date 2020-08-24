@@ -38,7 +38,7 @@ namespace PrepareImageFrm
             var res = "Centers: ";
             for (var i = 0; i < f_Contours.Size; i++)
             {
-                res += $"{GetCenter(i)}: ";
+                res += $"{GetCenter(i).X}:{GetCenter(i).Y}:";
             }
             return res;
         }
@@ -51,7 +51,7 @@ namespace PrepareImageFrm
             var res = "Sizes: ";
             for (var i = 0; i < f_Contours.Size; i++)
             {
-                res += $"{GetSize(i)}: ";
+                res += $"{GetSize(i).Width}:{GetSize(i).Height}:";
             }
             return res;
         }
