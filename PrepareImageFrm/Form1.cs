@@ -140,6 +140,7 @@ namespace PrepareImageFrm
                     SelectedPath = @"D:\+Data\Experiments"
                 };
                 if (dialog.ShowDialog() != DialogResult.OK) return;
+                listBox1.Items.Add("Start directory encode");
                 var files = Directory.GetFiles(dialog.SelectedPath);
                 foreach (var file in files)
                 {
@@ -147,6 +148,8 @@ namespace PrepareImageFrm
                     await PrepareFile(file);
                     //listBox1.Items.Add(tmpRes);
                 }
+                listBox1.Items.Add("Finished directory encode");
+                listBox1.Items.Add($"Undetected: {f_Storage.GetUndetectedCount}");
             }
             catch (Exception ex)
             {
@@ -156,11 +159,16 @@ namespace PrepareImageFrm
 
         private void SaveLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var saveFile = new StreamWriter($"{DateTime.Now.ToShortDateString()}.csv");
-            foreach (var item in listBox1.Items)
+            var fileName = $"{DateTime.Now.ToShortDateString().Replace('.', '_')}_{DateTime.Now.ToShortTimeString().Replace(':', '_')}.csv";
+            var saveFile = new StreamWriter(fileName);
+            var results = f_Storage.GetStorageResult;
+            foreach (var item in results)
             {
-                saveFile.WriteLine(item.ToString());
+                saveFile.WriteLine(item);
             }
+            saveFile.Flush();
+            saveFile.Close();
+            listBox1.Items.Add($"Log {fileName} saved");
         }
 
         private async Task<Image<Bgr, byte>> LoadFileAsync(string fileName)
@@ -243,7 +251,7 @@ namespace PrepareImageFrm
             f_MaxAspectRatio = mAs;
             f_MinPerimeterLen = mp;
         }
-
+        
         private void DetectParamsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var dParams = new DetectParams(f_BinarizationThreshold, f_GaussianParam, f_MaxAspectRatio, f_MinPerimeterLen);
@@ -258,6 +266,8 @@ namespace PrepareImageFrm
             {
                 await PrepareFile(file);
             }
+            listBox1.Items.Add("Finished directory ReEncode");
+            listBox1.Items.Add($"Undetected: {f_Storage.GetUndetectedCount}");
         }
 
         private async void OpenSelectedToolStripMenuItem_Click(object sender, EventArgs e)
@@ -271,6 +281,12 @@ namespace PrepareImageFrm
             {
                 listBox1.Items.Add(ex.Message);
             }
+        }
+
+        private void clearResultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            f_Storage.ClearStorage();
+            tvResults.Nodes.Clear();
         }
     }
 }

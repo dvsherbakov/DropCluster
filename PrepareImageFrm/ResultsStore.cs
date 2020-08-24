@@ -34,5 +34,14 @@ namespace PrepareImageFrm
         }
 
         public IEnumerable<string> GetUndetectedItems => f_Results.Where(x => !x.IsCorrect).Select(x => x.FileName);
+
+        public int GetUndetectedCount => f_Results.Where(x => !x.IsCorrect).Count();
+
+        public IEnumerable<string> GetStorageResult => f_Results.OrderBy(x=>x.FileName).Select(x => x.ToString());
+
+        public void ClearStorage()
+        {
+            f_Results.Clear();
+        }
     }
 }
