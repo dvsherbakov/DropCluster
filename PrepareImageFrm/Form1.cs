@@ -18,6 +18,7 @@ namespace PrepareImageFrm
         private int f_GaussianParam = 5;
         private int f_MaxAspectRatio = 33;
         private int f_MinPerimeterLen = 150;
+        private int f_Zoom = 100;
         private string f_CurrentFile;
         private readonly ResultsStore f_Storage;
         
@@ -161,7 +162,7 @@ namespace PrepareImageFrm
         {
             var fileName = $"{DateTime.Now.ToShortDateString().Replace('.', '_')}_{DateTime.Now.ToShortTimeString().Replace(':', '_')}.csv";
             var saveFile = new StreamWriter(fileName);
-            var results = f_Storage.GetStorageResult;
+            var results = f_Storage.GetStorageResult(f_Zoom);
             foreach (var item in results)
             {
                 saveFile.WriteLine(item);
@@ -244,17 +245,18 @@ namespace PrepareImageFrm
             pictureBox1.Image = temp.ToBitmap();
         }
 
-        private void ApplyConvertParams(int bt, int gp, int mAs, int mp)
+        private void ApplyConvertParams(int bt, int gp, int mAs, int mp, int zm)
         {
             f_BinarizationThreshold = bt;
             f_GaussianParam = gp;
             f_MaxAspectRatio = mAs;
             f_MinPerimeterLen = mp;
+            f_Zoom = zm;
         }
         
         private void DetectParamsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dParams = new DetectParams(f_BinarizationThreshold, f_GaussianParam, f_MaxAspectRatio, f_MinPerimeterLen);
+            var dParams = new DetectParams(f_BinarizationThreshold, f_GaussianParam, f_MaxAspectRatio, f_MinPerimeterLen, f_Zoom);
             dParams.OnApplyParam += ApplyConvertParams;
             dParams.ShowDialog();
         }

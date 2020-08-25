@@ -40,12 +40,15 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.nudBT = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.nudZm = new System.Windows.Forms.NumericUpDown();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudMP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMAR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudBT)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudZm)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -54,7 +57,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(247, 212);
+            this.panel1.Size = new System.Drawing.Size(247, 210);
             this.panel1.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -65,13 +68,15 @@
             this.tableLayoutPanel1.Controls.Add(this.nudMP, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.nudMAR, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.nudGp, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.label3, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.button1, 0, 6);
             this.tableLayoutPanel1.Controls.Add(this.button2, 1, 6);
             this.tableLayoutPanel1.Controls.Add(this.nudBT, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label5, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.nudZm, 1, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -84,7 +89,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(247, 212);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(247, 210);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // nudMP
@@ -220,11 +225,41 @@
             0,
             0});
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label5.Location = new System.Drawing.Point(3, 120);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(117, 30);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Camera Zoom";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label5.Click += new System.EventHandler(this.label5_Click);
+            // 
+            // nudZm
+            // 
+            this.nudZm.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.nudZm.Location = new System.Drawing.Point(126, 125);
+            this.nudZm.Maximum = new decimal(new int[] {
+            112,
+            0,
+            0,
+            0});
+            this.nudZm.Name = "nudZm";
+            this.nudZm.Size = new System.Drawing.Size(118, 20);
+            this.nudZm.TabIndex = 15;
+            this.nudZm.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
             // DetectParams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(247, 212);
+            this.ClientSize = new System.Drawing.Size(247, 210);
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -237,6 +272,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudMAR)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudBT)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudZm)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -255,5 +291,7 @@
         private System.Windows.Forms.NumericUpDown nudMAR;
         private System.Windows.Forms.NumericUpDown nudGp;
         private System.Windows.Forms.NumericUpDown nudBT;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown nudZm;
     }
 }

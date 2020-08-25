@@ -45,13 +45,13 @@ namespace PrepareImageFrm
 
         private SizeF GetSize(int i) => f_Contours.Size < i ? new SizeF() : CvInvoke.FitEllipse(f_Contours[i]).Size;
 
-        private string GetSizes()
+        private string GetSizes(double zm)
         {
             if (f_Contours.Size == 0) return "Not sizes";
             var res = "Sizes: ";
             for (var i = 0; i < f_Contours.Size; i++)
             {
-                res += $"{GetSize(i).Width}:{GetSize(i).Height}:";
+                res += $"{GetSize(i).Width/zm}:{GetSize(i).Height/zm}:";
             }
             return res;
         }
@@ -106,11 +106,11 @@ namespace PrepareImageFrm
             res.Nodes.Add(GetPerimeters());
             res.Nodes.Add(GetDistanceBeforeCenter().ToString(CultureInfo.InvariantCulture));
             res.Nodes.Add(GetСenters());
-            res.Nodes.Add(GetSizes());
+            res.Nodes.Add(GetSizes(1));
             return res;
         }
 
-        public override string ToString() => IsCorrect ? $"{Path.GetFileNameWithoutExtension(FileName)}:{Pass}:{GetDistanceBeforeCenter().ToString(CultureInfo.InvariantCulture)}:{GetСenters()}:{GetSizes()}"
+        public string ToString(double zm) => IsCorrect ? $"{Path.GetFileNameWithoutExtension(FileName)}:{Pass}:{(GetDistanceBeforeCenter()/zm).ToString(CultureInfo.InvariantCulture)}:{GetСenters()}:{GetSizes(zm)}"
                 : $"{FileName}:No two contours";
     }
 }
