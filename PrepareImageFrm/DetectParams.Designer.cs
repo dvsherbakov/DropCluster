@@ -33,15 +33,17 @@
             this.nudMP = new System.Windows.Forms.NumericUpDown();
             this.nudMAR = new System.Windows.Forms.NumericUpDown();
             this.nudGp = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.nudBT = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.nudZm = new System.Windows.Forms.NumericUpDown();
+            this.nudObjectCount = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudMP)).BeginInit();
@@ -49,6 +51,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudGp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudBT)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudZm)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudObjectCount)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -57,7 +60,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(247, 210);
+            this.panel1.Size = new System.Drawing.Size(247, 241);
             this.panel1.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -77,6 +80,8 @@
             this.tableLayoutPanel1.Controls.Add(this.label4, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.label5, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.nudZm, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.nudObjectCount, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.label6, 0, 5);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -89,7 +94,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(247, 210);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(247, 241);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // nudMP
@@ -140,17 +145,6 @@
             0,
             0,
             0});
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(3, 90);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(117, 30);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Min perimether len";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label3
             // 
@@ -225,6 +219,17 @@
             0,
             0});
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label4.Location = new System.Drawing.Point(3, 90);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(117, 30);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Min perimether len";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -255,11 +260,41 @@
             0,
             0});
             // 
+            // nudObjectCount
+            // 
+            this.nudObjectCount.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.nudObjectCount.Location = new System.Drawing.Point(126, 155);
+            this.nudObjectCount.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.nudObjectCount.Name = "nudObjectCount";
+            this.nudObjectCount.Size = new System.Drawing.Size(118, 20);
+            this.nudObjectCount.TabIndex = 16;
+            this.nudObjectCount.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label6.Location = new System.Drawing.Point(3, 150);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(117, 30);
+            this.label6.TabIndex = 17;
+            this.label6.Text = "Object Count";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label6.Click += new System.EventHandler(this.label6_Click);
+            // 
             // DetectParams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(247, 210);
+            this.ClientSize = new System.Drawing.Size(247, 241);
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -273,6 +308,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudGp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudBT)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudZm)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudObjectCount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -293,5 +329,7 @@
         private System.Windows.Forms.NumericUpDown nudBT;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown nudZm;
+        private System.Windows.Forms.NumericUpDown nudObjectCount;
+        private System.Windows.Forms.Label label6;
     }
 }

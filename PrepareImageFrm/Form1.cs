@@ -19,6 +19,7 @@ namespace PrepareImageFrm
         private int f_MaxAspectRatio = 33;
         private int f_MinPerimeterLen = 150;
         private int f_Zoom = 100;
+        private int f_ObjectCount = 2;
         private string f_CurrentFile;
         private readonly ResultsStore f_Storage;
         
@@ -121,7 +122,7 @@ namespace PrepareImageFrm
 
         private void AddContoursToResCollection(string fileName, VectorOfVectorOfPoint contours)
         {
-            var result = f_Storage.AddToStore(new ImageResult(fileName, contours));
+            var result = f_Storage.AddToStore(new ImageResult(fileName, contours, f_ObjectCount));
             if (result.Pass == 1)
                 tvResults.Nodes.Add(result.GetResultNode());
             else
@@ -245,18 +246,19 @@ namespace PrepareImageFrm
             pictureBox1.Image = temp.ToBitmap();
         }
 
-        private void ApplyConvertParams(int bt, int gp, int mAs, int mp, int zm)
+        private void ApplyConvertParams(int bt, int gp, int mAs, int mp, int zm, int oc)
         {
             f_BinarizationThreshold = bt;
             f_GaussianParam = gp;
             f_MaxAspectRatio = mAs;
             f_MinPerimeterLen = mp;
             f_Zoom = zm;
+            f_ObjectCount = oc;
         }
         
         private void DetectParamsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dParams = new DetectParams(f_BinarizationThreshold, f_GaussianParam, f_MaxAspectRatio, f_MinPerimeterLen, f_Zoom);
+            var dParams = new DetectParams(f_BinarizationThreshold, f_GaussianParam, f_MaxAspectRatio, f_MinPerimeterLen, f_Zoom, f_ObjectCount);
             dParams.OnApplyParam += ApplyConvertParams;
             dParams.ShowDialog();
         }
