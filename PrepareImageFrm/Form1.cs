@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -22,14 +23,14 @@ namespace PrepareImageFrm
         private int f_ObjectCount = 2;
         private string f_CurrentFile;
         private readonly ResultsStore f_Storage;
-        
+
 
         public Form1()
         {
             InitializeComponent();
             WindowState = FormWindowState.Maximized;
             f_Storage = new ResultsStore();
-            
+
         }
 
         private async void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -41,7 +42,7 @@ namespace PrepareImageFrm
                     RestoreDirectory = true
                 };
                 if (dialog.ShowDialog() != DialogResult.OK) return;
-                
+
                 await LoadFile(dialog.FileName);
             }
             catch (Exception ex)
@@ -71,8 +72,10 @@ namespace PrepareImageFrm
                     var perimeter = CvInvoke.ArcLength(contours[i], true);
                     var approx = new VectorOfPoint();
                     CvInvoke.ApproxPolyDP(contours[i], approx, 0.03 * perimeter, true);
-
-                    CvInvoke.DrawContours(f_ImgInput, contours, i, new MCvScalar(0, 0, 255));
+                    //var rct = CvInvoke.FitEllipse(contours[i]);
+                    //Ellipse ellipse = new Ellipse(rct);
+                    //f_ImgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
+                    //CvInvoke.DrawContours(f_ImgInput, contours, i, new MCvScalar(150, 34, 98));
                 }
 
                 pictureBox1.Image = f_ImgInput.AsBitmap();
@@ -115,14 +118,25 @@ namespace PrepareImageFrm
             catch (Exception ex)
             {
                 listBox1.Items.Add($"{Path.GetFileNameWithoutExtension(filename)}: {ex.Message}");
-               
+
             }
 
         }
 
         private void AddContoursToResCollection(string fileName, VectorOfVectorOfPoint contours)
         {
-            var result = f_Storage.AddToStore(new ImageResult(fileName, contours, f_ObjectCount));
+            var sizes = new Dictionary<int, int>();
+            var bLst = new List<int[]>();
+            for (var i = 0; i < contours.Size; i++)
+            {
+                var brig = BrightnessShear(contours[i]);
+                bLst.Add(brig);
+                var rct = CvInvoke.FitEllipse(contours[i]);
+                var sz = (int)(rct.Size.Width + rct.Size.Height);
+                sizes.Add(i, sz);
+            }
+
+            var result = f_Storage.AddToStore(new ImageResult(fileName, contours, bLst.ToArray(), f_ObjectCount));
             if (result.Pass == 1)
                 tvResults.Nodes.Add(result.GetResultNode());
             else
@@ -132,13 +146,22 @@ namespace PrepareImageFrm
                     throw new InvalidOperationException());
                 tvResults.Nodes.Add(result.GetResultNode());
             }
+
+            var bigs = sizes.OrderByDescending(x => x.Value).Take(5).ToDictionary(x => x.Key, x => x.Value);
+
+            //BrightnessMultyShear(contours[5], "5fhfjk.csv");
+            //BrightnessMultyShear(contours[18], "18fhfjk.csv");
+            //BrightnessMultyShear(contours[26], "29fhfjk.csv");
+            //BrightnessMultyShear(contours[54], "54fhfjk.csv");
+            //BrightnessMultyShear(contours[69], "69fhfjk.csv");
         }
 
-        private async  void DirToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void DirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                var dialog = new FolderBrowserDialog {
+                var dialog = new FolderBrowserDialog
+                {
                     SelectedPath = @"D:\+Data\Experiments"
                 };
                 if (dialog.ShowDialog() != DialogResult.OK) return;
@@ -195,7 +218,7 @@ namespace PrepareImageFrm
         {
             var img = new Bitmap(pictureBox2.Image).ToImage<Gray, byte>();
             var output = new Mat();
-            CvInvoke.CLAHE(img, 50, new Size(8,8), output);
+            CvInvoke.CLAHE(img, 50, new Size(8, 8), output);
             pictureBox2.Image = output.ToBitmap();
         }
 
@@ -207,7 +230,7 @@ namespace PrepareImageFrm
                 if (contours[i].Size < 5) continue;
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var perimeter = CvInvoke.ArcLength(contours[i], true);
-                if ((GetAspectRatio(rct) < f_MaxAspectRatio/100f) && (perimeter> f_MinPerimeterLen))
+                if ((GetAspectRatio(rct) < f_MaxAspectRatio / 100f) && (perimeter > f_MinPerimeterLen))
                     filteredContours.Push(contours[i]);
             }
             return filteredContours;
@@ -215,7 +238,7 @@ namespace PrepareImageFrm
 
         private VectorOfVectorOfPoint ExtractContours(Image<Bgr, byte> inputImage)
         {
-            
+
             var temp = inputImage.SmoothGaussian(f_GaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(f_BinarizationThreshold), new Gray(255));
             var contours = new VectorOfVectorOfPoint();
             var m = new Mat();
@@ -234,7 +257,7 @@ namespace PrepareImageFrm
         private void GaussianToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var img = new Bitmap(pictureBox2.Image).ToImage<Gray, byte>();
-            
+
             var gaussian = img.SmoothGaussian(f_GaussianParam).Convert<Gray, byte>();
             pictureBox1.Image = gaussian.ToBitmap();
         }
@@ -255,7 +278,7 @@ namespace PrepareImageFrm
             f_Zoom = zm;
             f_ObjectCount = oc;
         }
-        
+
         private void DetectParamsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var dParams = new DetectParams(f_BinarizationThreshold, f_GaussianParam, f_MaxAspectRatio, f_MinPerimeterLen, f_Zoom, f_ObjectCount);
@@ -291,6 +314,65 @@ namespace PrepareImageFrm
         {
             f_Storage.ClearStorage();
             tvResults.Nodes.Clear();
+        }
+
+        private int[] BrightnessShear(VectorOfPoint contour)
+        {
+            var rct = CvInvoke.FitEllipse(contour);
+            var y = (int)rct.Center.Y;
+            var x0 = (int)(rct.Center.X - (rct.Size.Width + rct.Size.Height) / 4) - 15;
+            var x1 = (int)(rct.Center.X + (rct.Size.Width + rct.Size.Height) / 4) + 15;
+            var lst = new List<int>();
+
+            for (var x = x0; x <= x1; x++)
+            {
+                lst.Add(GetPixelBrightness(y, x));
+                var pixel = new Bgr(Color.AntiqueWhite);
+                //f_ImgInput[y, x] = pixel;
+            }
+            return lst.ToArray();
+        }
+
+        private void BrightnessMultyShear(VectorOfPoint contour)
+        {
+            
+
+            var rct = CvInvoke.FitEllipse(contour);
+            var rad = (rct.Size.Width + rct.Size.Height) / 4;
+            var yn = (int)rct.Center.Y;
+            var y0 = (int)(rct.Center.Y - rad) - 15;
+            var y1 = (int)(rct.Center.Y + rad) + 15;
+
+            var xn = (int)rct.Center.X;
+            var x0 = (int)(rct.Center.X - rad) - 15;
+            var x1 = (int)(rct.Center.X + rad) + 15;
+
+            var lstx = new List<int>();
+            for (var x = x0; x <= x1; x++)
+            {
+                lstx.Add(GetPixelBrightness(yn, x));
+            }
+
+            var lsty = new List<int>();
+            for (var y = y0; y <= y1; y++)
+            {
+                lsty.Add(GetPixelBrightness(y, xn));
+            }
+            
+
+        }
+
+
+
+        private int GetPixelBrightness(int X, int Y)
+        {
+            Bgr pixel = f_ImgInput[X, Y];
+            return (int)(pixel.Red + pixel.Green + pixel.Blue);
+        }
+
+        private void saveDetailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            f_Storage.SaveAllDetail();
         }
     }
 }

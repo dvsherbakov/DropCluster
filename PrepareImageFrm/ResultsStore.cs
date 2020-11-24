@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms.VisualStyles;
 
 namespace PrepareImageFrm
 {
@@ -45,6 +41,12 @@ namespace PrepareImageFrm
         public void ClearStorage()
         {
             f_Results.Clear();
+        }
+
+        public void SaveAllDetail()
+        {
+            foreach (var item in f_Results)
+                item.SaveDetailFile(item.FileName);
         }
     }
 }
