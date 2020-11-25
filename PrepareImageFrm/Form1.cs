@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Emgu.CV;
+using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 
@@ -15,12 +16,12 @@ namespace PrepareImageFrm
     public partial class Form1 : Form
     {
         private Image<Bgr, byte> f_ImgInput;
-        private int f_BinarizationThreshold = 130;
+        private int f_BinarizationThreshold = 60;
         private int f_GaussianParam = 5;
         private int f_MaxAspectRatio = 33;
-        private int f_MinPerimeterLen = 150;
-        private int f_Zoom = 100;
-        private int f_ObjectCount = 2;
+        private int f_MinPerimeterLen = 75;
+        private int f_Zoom = 112;
+        private int f_ObjectCount = 0;
         private string f_CurrentFile;
         private readonly ResultsStore f_Storage;
 
@@ -102,7 +103,7 @@ namespace PrepareImageFrm
 
         private void SavePreparedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox1.Image.Save(@"output.jpeg", ImageFormat.Jpeg);
+            pictureBox1.Image.Save($"{Path.GetFileNameWithoutExtension(f_CurrentFile)}.jpeg", ImageFormat.Jpeg);
         }
 
         private async Task PrepareFile(string filename)
@@ -129,7 +130,7 @@ namespace PrepareImageFrm
             var bLst = new List<int[]>();
             for (var i = 0; i < contours.Size; i++)
             {
-                var brig = BrightnessShear(contours[i]);
+                var brig = BrightnessMultyShear(contours[i]);
                 bLst.Add(brig);
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var sz = (int)(rct.Size.Width + rct.Size.Height);
@@ -147,13 +148,38 @@ namespace PrepareImageFrm
                 tvResults.Nodes.Add(result.GetResultNode());
             }
 
-            var bigs = sizes.OrderByDescending(x => x.Value).Take(5).ToDictionary(x => x.Key, x => x.Value);
+            var bigs = sizes.OrderByDescending(x => x.Value).Skip(10).Take(50).ToDictionary(x => x.Key, x => x.Value);
+            //var bigs = sizes.OrderByDescending(x => x.Value).Take(3).ToDictionary(x => x.Key, x => x.Value);
 
-            //BrightnessMultyShear(contours[5], "5fhfjk.csv");
-            //BrightnessMultyShear(contours[18], "18fhfjk.csv");
-            //BrightnessMultyShear(contours[26], "29fhfjk.csv");
-            //BrightnessMultyShear(contours[54], "54fhfjk.csv");
-            //BrightnessMultyShear(contours[69], "69fhfjk.csv");
+            var bList = new List<string>();
+            foreach (var pair in bigs)
+            {
+                var normDict = NormalizeBrightness(BrightnessMultyShear(contours[pair.Key]));
+                //horisontal
+               // var horDict = NormalizeBrightness(BrightnessHorShear(contours[pair.Key]));
+                var hShear = string.Join(":", normDict.Select(x => x.Value.ToString()).ToArray());
+                var indexes = string.Join(":", normDict.Select(x => x.Key.ToString()).ToArray());
+                //var verDict = NormalizeBrightness(BrightnessVertShear(contours[pair.Key]));
+                //var vShear = string.Join(":", verDict.Select(x => x.Value.ToString()).ToArray());
+                //string.Join(":", BrightnessMultyShear(contours[pair.Key]).Select(x => x.ToString()).ToArray());
+                bList.Add($"{pair.Key}:Br:{indexes}");
+                bList.Add($"{pair.Key}:Br:{hShear}");
+               // bList.Add($"{pair.Key}:Br:{vShear}");
+            }
+
+            using (TextWriter tw = new StreamWriter($"{Path.GetFileNameWithoutExtension(fileName)}.csv"))
+            {
+                foreach (String s in bList)
+                    tw.WriteLine(s);
+            }
+
+            foreach (var pair in bigs)
+            {
+                var rct = CvInvoke.FitEllipse(contours[pair.Key]);
+                Ellipse ellipse = new Ellipse(rct);
+                f_ImgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
+                CvInvoke.PutText(f_ImgInput, pair.Key.ToString(), new Point((int)(rct.Center.X + 30), (int)(rct.Center.Y + 50)), FontFace.HersheyComplex, 1.5, new Bgr(Color.AntiqueWhite).MCvScalar);
+            }
         }
 
         private async void DirToolStripMenuItem_Click(object sender, EventArgs e)
@@ -316,26 +342,55 @@ namespace PrepareImageFrm
             tvResults.Nodes.Clear();
         }
 
-        private int[] BrightnessShear(VectorOfPoint contour)
+        private int[] BrightnessHorShear(VectorOfPoint contour)
         {
             var rct = CvInvoke.FitEllipse(contour);
             var y = (int)rct.Center.Y;
-            var x0 = (int)(rct.Center.X - (rct.Size.Width + rct.Size.Height) / 4) - 15;
-            var x1 = (int)(rct.Center.X + (rct.Size.Width + rct.Size.Height) / 4) + 15;
+            //var xn = rct.Center.X;
+            var x0 = (int)(rct.Center.X - (rct.Size.Width + rct.Size.Height) / 4) - 30;
+            var x1 = (int)(rct.Center.X + (rct.Size.Width + rct.Size.Height) / 4) + 30;
             var lst = new List<int>();
 
             for (var x = x0; x <= x1; x++)
             {
                 lst.Add(GetPixelBrightness(y, x));
-                var pixel = new Bgr(Color.AntiqueWhite);
+                //if (Math.Abs(x - xn) <= 10)
+                //{
+                //    continue;
+                //}
+                //var pixel = new Bgr(Color.AntiqueWhite);
                 //f_ImgInput[y, x] = pixel;
             }
             return lst.ToArray();
         }
 
-        private void BrightnessMultyShear(VectorOfPoint contour)
+        private int[] BrightnessVertShear(VectorOfPoint contour)
         {
-            
+            var rct = CvInvoke.FitEllipse(contour);
+            var rad = (rct.Size.Width + rct.Size.Height) / 4;
+            var x = (int)rct.Center.X;
+            //var yn=(int)rct.Center.Y;
+            var y0 = (int)(rct.Center.Y - rad) - 30;
+            var y1 = (int)(rct.Center.Y + rad) + 30;
+            var lst = new List<int>();
+
+            for (var y = y0; y <= y1; y++)
+            {
+                
+                lst.Add(GetPixelBrightness(y, x));
+                //if (Math.Abs(y - yn) > 10)
+                //{
+                //    var pixel = new Bgr(Color.AntiqueWhite);
+                //    f_ImgInput[y, x] = pixel;
+                //}
+            }
+
+            return lst.ToArray();
+        }
+
+        private int[] BrightnessMultyShear(VectorOfPoint contour)
+        {
+
 
             var rct = CvInvoke.FitEllipse(contour);
             var rad = (rct.Size.Width + rct.Size.Height) / 4;
@@ -358,16 +413,43 @@ namespace PrepareImageFrm
             {
                 lsty.Add(GetPixelBrightness(y, xn));
             }
-            
 
+            var lst = new List<int>();
+            for (var i = 0; i < Math.Min(lstx.Count, lsty.Count); i++)
+            { lst.Add((int)((lstx[i] + lsty[i]) / 2.0)); }
+
+            return lst.ToArray();
         }
 
+        private Dictionary<int, double> NormalizeBrightness(int[] data)
+        {
+            var tr = 0d;
+            var centerIndex = (int)(data.Length / 2.0);
+            var t0 = data[centerIndex];
+            for (var i = 0; i < 5; i++)
+            {
+                tr += data[i] + data[data.Length - 1 - i];
+            }
+            tr /= 10.0;
 
+            var res = new Dictionary<int, double>();
+            for (var i = 0; i < data.Length; i++)
+            {
+                if (data[i] - tr <= 0) res.Add(i - centerIndex, 0d);
+                else res.Add(i - centerIndex, (data[i] - tr) / (t0 - tr));
+            }
+            return res;
+        }
 
         private int GetPixelBrightness(int X, int Y)
         {
-            Bgr pixel = f_ImgInput[X, Y];
-            return (int)(pixel.Red + pixel.Green + pixel.Blue);
+            if (X > 0 && Y > 0 && X < f_ImgInput.Size.Width && Y < f_ImgInput.Size.Height)
+            {
+                Bgr pixel = f_ImgInput[X, Y];
+                return (int)(pixel.Green);
+                //return (int)(pixel.Red + pixel.Green + pixel.Blue);
+            }
+            else return 0;
         }
 
         private void saveDetailToolStripMenuItem_Click(object sender, EventArgs e)
