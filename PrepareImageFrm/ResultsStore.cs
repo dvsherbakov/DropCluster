@@ -45,7 +45,7 @@ namespace PrepareImageFrm
 
         public IEnumerable<string> GetUndetectedItems => f_Results.Where(x => !x.IsCorrect).Select(x => x.FileName);
 
-        public int GetUndetectedCount => f_Results.Where(x => !x.IsCorrect).Count();
+        public int GetUndetectedCount => f_Results.Count(x => !x.IsCorrect);
 
         public IEnumerable<string> GetStorageResult(int zm)
         { 
@@ -60,7 +60,7 @@ namespace PrepareImageFrm
         public void SaveAllDetail()
         {
             foreach (var item in f_Results)
-                item.SaveDetailFile(item.FileName);
+                ImageResult.SaveDetailFile(item.FileName);
         }
     }
 }

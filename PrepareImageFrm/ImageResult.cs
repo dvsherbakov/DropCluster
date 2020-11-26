@@ -94,7 +94,7 @@ namespace PrepareImageFrm
             {
                 //получаем список объектов
                 var objList = new List<Emgu.CV.Structure.RotatedRect>();
-                for (int i = 0; i < f_Contours.Size; i++)
+                for (var i = 0; i < f_Contours.Size; i++)
                 {
                     objList.Add(CvInvoke.FitEllipse(f_Contours[i]));
                 }
@@ -125,14 +125,9 @@ namespace PrepareImageFrm
             Pass++;
         }
 
-        private string GetDistanceString(float[] data, double zm = 1)
+        private static string GetDistanceString(IEnumerable<float> data, double zm = 1)
         {
-            var res = "";
-            for (int i = 0; i < data.Length; i++)
-            {
-                res += $"{data[i] / zm}:";
-            }
-            return res;
+            return data.Aggregate("", (current, t) => current + $"{t / zm}:");
         }
 
         public VectorOfVectorOfPoint GetContours => f_Contours;
@@ -154,9 +149,14 @@ namespace PrepareImageFrm
             return res;
         }
 
-        private double ZoomKoef(double zm) => (4.65 * zm + 5.9) / 305;
+        private static double ZoomKoef(double zm) => (4.65 * zm + 5.9) / 305;
 
         public string ToString(double zm) => IsCorrect ? $"{Path.GetFileNameWithoutExtension(FileName)}:{Pass}:{GetDistanceString(GetDistanceBeforeCenter(), ZoomKoef(zm))}:{GetСenters()}:{GetSizes(ZoomKoef(zm))}"
                 : $"{FileName}:No two contours";
+
+        public static void SaveDetailFile(string fName)
+        {
+
+        }
     }
 }

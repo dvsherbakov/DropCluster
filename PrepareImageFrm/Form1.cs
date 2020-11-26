@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,9 +20,9 @@ namespace PrepareImageFrm
         private int f_BinarizationThreshold = 60;
         private int f_GaussianParam = 5;
         private int f_MaxAspectRatio = 33;
-        private int f_MinPerimeterLen = 75;
+        private int f_MinPerimeterLen = 120;
         private int f_Zoom = 112;
-        private int f_ObjectCount = 0;
+        private int f_ObjectCount;
         private string f_CurrentFile;
         private readonly ResultsStore f_Storage;
 
@@ -148,35 +149,40 @@ namespace PrepareImageFrm
                 tvResults.Nodes.Add(result.GetResultNode());
             }
 
-            var bigs = sizes.OrderByDescending(x => x.Value).Skip(10).Take(50).ToDictionary(x => x.Key, x => x.Value);
-            //var bigs = sizes.OrderByDescending(x => x.Value).Take(3).ToDictionary(x => x.Key, x => x.Value);
+            //var bigs = sizes.OrderByDescending(x => x.Value).Skip(10).Take(50).ToDictionary(x => x.Key, x => x.Value);
+            for (var i = 0; i < contours.Size; i++)
+            {
+                var rct = CvInvoke.FitEllipse(contours[i]);
+                var ellipse = new Ellipse(rct);
+                f_ImgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
+                CvInvoke.PutText(f_ImgInput, i.ToString(),
+                    new Point((int) (rct.Center.X + 30), (int) (rct.Center.Y + 50)), FontFace.HersheyComplex, 1.5,
+                    new Bgr(Color.AntiqueWhite).MCvScalar);
+            }
+        }
 
+        private void GetBrightessDrops(VectorOfVectorOfPoint contours, string fileName, Dictionary<int, int> bigs)
+        {
             var bList = new List<string>();
             foreach (var pair in bigs)
             {
                 var normDict = NormalizeBrightness(BrightnessMultyShear(contours[pair.Key]));
-                //horisontal
-               // var horDict = NormalizeBrightness(BrightnessHorShear(contours[pair.Key]));
-                var hShear = string.Join(":", normDict.Select(x => x.Value.ToString()).ToArray());
+                var hShear = string.Join(":", normDict.Select(x => x.Value.ToString(CultureInfo.InvariantCulture)).ToArray());
                 var indexes = string.Join(":", normDict.Select(x => x.Key.ToString()).ToArray());
-                //var verDict = NormalizeBrightness(BrightnessVertShear(contours[pair.Key]));
-                //var vShear = string.Join(":", verDict.Select(x => x.Value.ToString()).ToArray());
-                //string.Join(":", BrightnessMultyShear(contours[pair.Key]).Select(x => x.ToString()).ToArray());
                 bList.Add($"{pair.Key}:Br:{indexes}");
                 bList.Add($"{pair.Key}:Br:{hShear}");
-               // bList.Add($"{pair.Key}:Br:{vShear}");
             }
 
             using (TextWriter tw = new StreamWriter($"{Path.GetFileNameWithoutExtension(fileName)}.csv"))
             {
-                foreach (String s in bList)
+                foreach (var s in bList)
                     tw.WriteLine(s);
             }
 
             foreach (var pair in bigs)
             {
                 var rct = CvInvoke.FitEllipse(contours[pair.Key]);
-                Ellipse ellipse = new Ellipse(rct);
+                var ellipse = new Ellipse(rct);
                 f_ImgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
                 CvInvoke.PutText(f_ImgInput, pair.Key.ToString(), new Point((int)(rct.Center.X + 30), (int)(rct.Center.Y + 50)), FontFace.HersheyComplex, 1.5, new Bgr(Color.AntiqueWhite).MCvScalar);
             }
@@ -268,7 +274,7 @@ namespace PrepareImageFrm
             var temp = inputImage.SmoothGaussian(f_GaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(f_BinarizationThreshold), new Gray(255));
             var contours = new VectorOfVectorOfPoint();
             var m = new Mat();
-            CvInvoke.FindContours(image: temp, contours, m, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
+            CvInvoke.FindContours(image: temp, contours, m, RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
             for (var i = 0; i < contours.Size; i++)
             {
                 var perimeter = CvInvoke.ArcLength(contours[i], true);
@@ -342,7 +348,7 @@ namespace PrepareImageFrm
             tvResults.Nodes.Clear();
         }
 
-        private int[] BrightnessHorShear(VectorOfPoint contour)
+        private int[] BrightnessHorShear(IInputArray contour)
         {
             var rct = CvInvoke.FitEllipse(contour);
             var y = (int)rct.Center.Y;
@@ -441,18 +447,19 @@ namespace PrepareImageFrm
             return res;
         }
 
-        private int GetPixelBrightness(int X, int Y)
+        private int GetPixelBrightness(int x, int y)
         {
-            if (X > 0 && Y > 0 && X < f_ImgInput.Size.Width && Y < f_ImgInput.Size.Height)
+            if (x > 0 && y > 0 && x < f_ImgInput.Size.Width && y < f_ImgInput.Size.Height)
             {
-                Bgr pixel = f_ImgInput[X, Y];
+                var pixel = f_ImgInput[x, y];
                 return (int)(pixel.Green);
                 //return (int)(pixel.Red + pixel.Green + pixel.Blue);
             }
-            else return 0;
+
+            return 0;
         }
 
-        private void saveDetailToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
             f_Storage.SaveAllDetail();
         }

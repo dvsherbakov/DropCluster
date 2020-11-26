@@ -282,7 +282,7 @@
             this.saveDetailToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.S)));
             this.saveDetailToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.saveDetailToolStripMenuItem.Text = "Save Detail";
-            this.saveDetailToolStripMenuItem.Click += new System.EventHandler(this.saveDetailToolStripMenuItem_Click);
+            this.saveDetailToolStripMenuItem.Click += new System.EventHandler(this.SaveDetailToolStripMenuItem_Click);
             // 
             // Form1
             // 
