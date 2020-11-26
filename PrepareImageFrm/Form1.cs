@@ -17,6 +17,7 @@ namespace PrepareImageFrm
     public partial class Form1 : Form
     {
         private Image<Bgr, byte> f_ImgInput;
+        private ClusterPack f_ClusterPack;
         private int f_BinarizationThreshold = 60;
         private int f_GaussianParam = 5;
         private int f_MaxAspectRatio = 33;
@@ -32,7 +33,7 @@ namespace PrepareImageFrm
             InitializeComponent();
             WindowState = FormWindowState.Maximized;
             f_Storage = new ResultsStore();
-
+            f_ClusterPack = new ClusterPack();
         }
 
         private async void OpenToolStripMenuItem_Click(object sender, EventArgs e)
