@@ -110,9 +110,7 @@ namespace PrepareImageFrm
             return res;
         }
 
-        private double ZoomKoef(double zm) => (4.65 * zm + 5.9) / 305;
-
-        public string ToString(double zm) => IsCorrect ? $"{Path.GetFileNameWithoutExtension(FileName)}:{Pass}:{(GetDistanceBeforeCenter()/ZoomKoef(zm)).ToString(CultureInfo.InvariantCulture)}:{GetСenters()}:{GetSizes(ZoomKoef(zm))}"
+        public string ToString(double zm) => IsCorrect ? $"{Path.GetFileNameWithoutExtension(FileName)}:{Pass}:{(GetDistanceBeforeCenter()/zm).ToString(CultureInfo.InvariantCulture)}:{GetСenters()}:{GetSizes(zm)}"
                 : $"{FileName}:No two contours";
     }
 }
