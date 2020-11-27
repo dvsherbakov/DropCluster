@@ -22,7 +22,7 @@ namespace PrepareImageFrm
         private int f_GaussianParam = 5;
         private int f_MaxAspectRatio = 33;
         private int f_MinPerimeterLen = 120;
-        private int f_Zoom = 112;
+        private int f_Zoom = 60;
         private int f_ObjectCount;
         private string f_CurrentFile;
         private readonly ResultsStore f_Storage;
@@ -33,7 +33,7 @@ namespace PrepareImageFrm
             InitializeComponent();
             WindowState = FormWindowState.Maximized;
             f_Storage = new ResultsStore();
-            f_ClusterPack = new ClusterPack();
+            f_ClusterPack = new ClusterPack(f_Zoom);
         }
 
         private async void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -80,7 +80,7 @@ namespace PrepareImageFrm
                     //f_ImgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
                     //CvInvoke.DrawContours(f_ImgInput, contours, i, new MCvScalar(150, 34, 98));
                 }
-
+                BuildClusterPack(f_CurrentFile, contours);
                 pictureBox1.Image = f_ImgInput.AsBitmap();
                 //pictureBox2.Image = temp.AsBitmap();
             }
@@ -115,7 +115,8 @@ namespace PrepareImageFrm
                 f_CurrentFile = filename;
                 var inputImage = await LoadFileAsync(filename);
                 var contours = FilterContours(ExtractContours(inputImage));
-                AddContoursToResCollection(filename, contours);
+                //AddContoursToResCollection(filename, contours);
+                BuildClusterPack(filename, contours);
                 inputImage.Dispose();
             }
             catch (Exception ex)
@@ -124,6 +125,16 @@ namespace PrepareImageFrm
 
             }
 
+        }
+
+        private void BuildClusterPack(string fileName, VectorOfVectorOfPoint contours)
+        {
+            
+            f_ClusterPack.CreateNewCluster(fileName);
+            for (var i = 0; i < contours.Size; i++)
+            {
+                f_ClusterPack.AddElementToCurrent(CvInvoke.FitEllipse(contours[i]));
+            }
         }
 
         private void AddContoursToResCollection(string fileName, VectorOfVectorOfPoint contours)
@@ -198,6 +209,7 @@ namespace PrepareImageFrm
                     SelectedPath = @"D:\+Data\Experiments"
                 };
                 if (dialog.ShowDialog() != DialogResult.OK) return;
+                f_ClusterPack.Clear();
                 listBox1.Items.Add("Start directory encode");
                 var files = Directory.GetFiles(dialog.SelectedPath);
                 foreach (var file in files)
@@ -322,6 +334,7 @@ namespace PrepareImageFrm
         private async void RepeatDirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var files = f_Storage.GetUndetectedItems;
+            f_ClusterPack.Clear();
             foreach (var file in files)
             {
                 await PrepareFile(file);
@@ -463,6 +476,13 @@ namespace PrepareImageFrm
         private void SaveDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
             f_Storage.SaveAllDetail();
+        }
+
+        private async void drawTrajectoriesToolStripMenuItem_ClickAsync(object sender, EventArgs e)
+        {
+
+            pictureBox1.Image = f_ClusterPack.Trajectories().ToBitmap();
+            await f_ClusterPack.SaveExcelFile();
         }
     }
 }

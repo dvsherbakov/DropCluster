@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Emgu.CV.Structure;
 
 namespace PrepareImageFrm
@@ -11,7 +7,6 @@ namespace PrepareImageFrm
     {
         public int Id { get; set; }
         public RotatedRect Element { get; set; }
-
         public ClusterElement(int id, RotatedRect rect)
         {
             Id = id;

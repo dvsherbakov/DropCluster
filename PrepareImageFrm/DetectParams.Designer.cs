@@ -240,7 +240,7 @@
             this.label5.TabIndex = 14;
             this.label5.Text = "Camera Zoom";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label5.Click += new System.EventHandler(this.label5_Click);
+           
             // 
             // nudZm
             // 
@@ -288,7 +288,7 @@
             this.label6.TabIndex = 17;
             this.label6.Text = "Object Count";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label6.Click += new System.EventHandler(this.label6_Click);
+           
             // 
             // DetectParams
             // 

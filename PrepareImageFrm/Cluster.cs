@@ -11,7 +11,7 @@ namespace PrepareImageFrm
 {
     class Cluster
     {
-        private List<ClusterElement> f_Cluster;
+        private readonly List<ClusterElement> f_Cluster;
         private readonly string f_FileName;
         public string ClusterId => f_FileName;
         public int Count => f_Cluster.Count;
@@ -30,9 +30,13 @@ namespace PrepareImageFrm
 
         public int GetNearerId(RotatedRect el)
         {
-            if (f_Cluster!=null && f_Cluster.Count > 0)
+            if (f_Cluster != null && f_Cluster.Count > 0)
+            {
+                var tmp = f_Cluster.OrderBy(x => x.Range(el));
                 return f_Cluster.OrderBy(x => x.Range(el)).FirstOrDefault().Id;
+            }
             return -1;
         }
+
     }
 }
