@@ -48,6 +48,7 @@ namespace PrepareImageFrm
         public void Clear()
         {
             f_Clusters.Clear();
+            CurrentClusterId = "start";
         }
 
         private int GetMaxDropCount()

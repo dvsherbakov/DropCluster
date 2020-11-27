@@ -478,11 +478,11 @@ namespace PrepareImageFrm
             f_Storage.SaveAllDetail();
         }
 
-        private async void drawTrajectoriesToolStripMenuItem_ClickAsync(object sender, EventArgs e)
+        private void drawTrajectoriesToolStripMenuItem_ClickAsync(object sender, EventArgs e)
         {
 
             pictureBox1.Image = f_ClusterPack.Trajectories().ToBitmap();
-            await f_ClusterPack.SaveExcelFile();
+            //await f_ClusterPack.SaveExcelFile();
         }
     }
 }
