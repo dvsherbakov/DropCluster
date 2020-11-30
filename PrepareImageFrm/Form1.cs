@@ -17,7 +17,7 @@ namespace PrepareImageFrm
     public partial class Form1 : Form
     {
         private Image<Bgr, byte> f_ImgInput;
-        private ClusterPack f_ClusterPack;
+        private readonly ClusterPack f_ClusterPack;
         private int f_BinarizationThreshold = 60;
         private int f_GaussianParam = 5;
         private int f_MaxAspectRatio = 33;
@@ -356,7 +356,7 @@ namespace PrepareImageFrm
             }
         }
 
-        private void clearResultToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ClearResultToolStripMenuItem_Click(object sender, EventArgs e)
         {
             f_Storage.ClearStorage();
             tvResults.Nodes.Clear();
@@ -478,11 +478,11 @@ namespace PrepareImageFrm
             f_Storage.SaveAllDetail();
         }
 
-        private void drawTrajectoriesToolStripMenuItem_ClickAsync(object sender, EventArgs e)
+        private async void DrawTrajectoriesToolStripMenuItem_ClickAsync(object sender, EventArgs e)
         {
 
             pictureBox1.Image = f_ClusterPack.Trajectories().ToBitmap();
-            //await f_ClusterPack.SaveExcelFile();
+            await f_ClusterPack.SaveExcelFile();
         }
     }
 }

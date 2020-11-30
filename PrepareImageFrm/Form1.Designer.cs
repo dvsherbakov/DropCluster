@@ -138,7 +138,7 @@
             this.clearResultToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
             this.clearResultToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.clearResultToolStripMenuItem.Text = "Clear result";
-            this.clearResultToolStripMenuItem.Click += new System.EventHandler(this.clearResultToolStripMenuItem_Click);
+            this.clearResultToolStripMenuItem.Click += new System.EventHandler(this.ClearResultToolStripMenuItem_Click);
             // 
             // savePreparedToolStripMenuItem
             // 
@@ -293,7 +293,7 @@
             this.drawTrajectoriesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.J)));
             this.drawTrajectoriesToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.drawTrajectoriesToolStripMenuItem.Text = "Draw Trajectories";
-            this.drawTrajectoriesToolStripMenuItem.Click += new System.EventHandler(this.drawTrajectoriesToolStripMenuItem_ClickAsync);
+            this.drawTrajectoriesToolStripMenuItem.Click += new System.EventHandler(this.DrawTrajectoriesToolStripMenuItem_ClickAsync);
             // 
             // Form1
             // 

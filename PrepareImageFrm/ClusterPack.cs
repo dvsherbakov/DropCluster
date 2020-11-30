@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-using IronXL;
+using OfficeOpenXml;
 
 namespace PrepareImageFrm
 {
@@ -79,12 +79,12 @@ namespace PrepareImageFrm
 
         public Mat Trajectories()
         {
-            
+
             Mat res = new Mat(new Size(1000, 1000), DepthType.Cv8U, 3);
             res.SetTo(new MCvScalar(0));
             var colors = GenerateColorTable();
 
-            var pList = new List<List<PointF>>();
+            List<List<PointF>> pList = new List<List<PointF>>();
             for (var i = 0; i < GetMaxDropCount(); i++)
             {
                 var tmp = new List<PointF>();
@@ -122,33 +122,35 @@ namespace PrepareImageFrm
 
         public async Task SaveExcelFile()
         {
-             await Task.Run(() =>
-            {
+            await Task.Run(() =>
+           {
+               string fileName = f_PackId.Split('\\').LastOrDefault() + ".xlsx";
+               var zm = ZoomKoef;
+               FileInfo file = new FileInfo(fileName);
+               ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-                var fName = f_PackId.Split('\\').LastOrDefault();
-                var zm = ZoomKoef;
-                WorkBook xlsWorkbook = WorkBook.Create(ExcelFileFormat.XLS);
-                xlsWorkbook.Metadata.Author = "MetallHell";
+               using (ExcelPackage package = new ExcelPackage(file))
+               {
+                   var dict = GetPackDict();
 
-                var dict = GetPackDict();
+                   foreach (var cluster in f_Clusters)
+                   {
+                       ExcelWorksheet xlsSheet = package.Workbook.Worksheets.Add(cluster.ClusterId);
+                       var row = 2;
+                       foreach (ClusterElement item in cluster.GetList.OrderBy(x => x.Id))
+                       {
+                           xlsSheet.Cells[$"B{row}"].Value = item.Id;
+                           xlsSheet.Cells[$"C{row}"].Value = item.Element.Center.X / zm;
+                           xlsSheet.Cells[$"D{row}"].Value = item.Element.Center.Y / zm;
 
-                foreach (var pair in dict)
-                {
-                    WorkSheet xlsSheet = xlsWorkbook.CreateWorkSheet(pair.Key.ToString());
-                    var row = 2;
-                    foreach (var d in pair.Value)
-                    {
-                        xlsSheet[$"B{row}"].Value = d.Center.X / zm;
-                        xlsSheet[$"C{row}"].Value = d.Center.Y / zm;
+                           xlsSheet.Cells[$"F{row}"].Value = ((item.Element.Size.Width + item.Element.Size.Height) / 2) / zm;
 
-                        xlsSheet[$"F{row}"].Value = ((d.Size.Width + d.Size.Height) / 2) / zm;
-
-                        row++;
-                    }
-
-                    xlsWorkbook.SaveAs($"{fName}.xlsx");
-                }
-            });
+                           row++;
+                       }
+                   }
+                   package.Save();
+               }
+           });
 
         }
     }
