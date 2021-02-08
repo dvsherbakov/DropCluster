@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProbeImage", "ProbeImage\Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrepareImageFrm", "PrepareImageFrm\PrepareImageFrm.csproj", "{B02FD053-A16D-4DFA-B0D4-9AD7BFE6ADCF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TermoCsv", "TermoCsv\TermoCsv.csproj", "{E1B2E975-7CA5-4D0A-9C14-5D5FB66E63B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,14 @@ Global
 		{B02FD053-A16D-4DFA-B0D4-9AD7BFE6ADCF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B02FD053-A16D-4DFA-B0D4-9AD7BFE6ADCF}.Release|x64.ActiveCfg = Release|Any CPU
 		{B02FD053-A16D-4DFA-B0D4-9AD7BFE6ADCF}.Release|x64.Build.0 = Release|Any CPU
+		{E1B2E975-7CA5-4D0A-9C14-5D5FB66E63B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1B2E975-7CA5-4D0A-9C14-5D5FB66E63B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1B2E975-7CA5-4D0A-9C14-5D5FB66E63B9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E1B2E975-7CA5-4D0A-9C14-5D5FB66E63B9}.Debug|x64.Build.0 = Debug|Any CPU
+		{E1B2E975-7CA5-4D0A-9C14-5D5FB66E63B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1B2E975-7CA5-4D0A-9C14-5D5FB66E63B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1B2E975-7CA5-4D0A-9C14-5D5FB66E63B9}.Release|x64.ActiveCfg = Release|Any CPU
+		{E1B2E975-7CA5-4D0A-9C14-5D5FB66E63B9}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
