@@ -50,11 +50,12 @@
                 <Image x:Name="SrcImage"
                        MouseDown="OnImageMouseDown"
                        MouseMove="OnCanvasMouseMove"
-                       MouseUp="OnCanvasMouseUp"/>
+                      />
             </Viewbox>
             <Canvas Grid.Row="0"
                     Width="640"
                     Height="480"
+                    ClipToBounds="True"
                     x:Name="CanvasSubstrate"
                     MouseDown="OnCanvasMouseDown"
                     MouseMove="OnCanvasMouseMove"
