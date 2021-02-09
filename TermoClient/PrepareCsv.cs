@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
+using Drawing = System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Drawing;
+using System.Windows.Media.Imaging;
 
-namespace TermoCsv
+namespace TermoClient
 {
     class PrepareCsv
     {
@@ -14,7 +16,11 @@ namespace TermoCsv
         private float f_Min;
         private float f_Max;
         private float f_K;
-        private readonly Image f_Img;
+        private BitmapImage f_Img;
+        public BitmapImage Img
+        {
+            get => f_Img;
+        }
 
         public PrepareCsv()
         {
@@ -28,7 +34,7 @@ namespace TermoCsv
 
             using (var reader = new StreamReader(fName))
             {
-                
+
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
@@ -44,7 +50,7 @@ namespace TermoCsv
                 }
             }
             Height = result.Count;
-            
+
             GenerateBitmap(result.ToArray());
         }
 
@@ -52,7 +58,7 @@ namespace TermoCsv
         {
             TwoDimMinMax(data);
             Bitmap newBitmap = new Bitmap(Width, Height);
-                       
+
 
             for (int j = 0; j < Height; j++)
             {
@@ -64,21 +70,15 @@ namespace TermoCsv
                 }
             }
 
-            Image f_Img = (Image)newBitmap;
+            f_Img = BitmapToImageSource(newBitmap);
         }
-
-        public void SaveImage(string fName)
-        {
-            f_Img.Save(fName);
-        }
-
-        public Image GetImage => f_Img;
-        
+               
+        public BitmapImage GetImage => f_Img;
 
         private Color GetColorFromValue(float value)
         {
-            int R = (int)((255 * (value-f_Min)*f_K) / 100);
-            int B = (int)((255 * (100 - (value-f_Min) * f_K)) / 100);
+            int R = (int)((255 * (value - f_Min) * f_K) / 100);
+            int B = (int)((255 * (100 - (value - f_Min) * f_K)) / 100);
 
             return Color.FromArgb(R, 0, B);
         }
@@ -99,6 +99,22 @@ namespace TermoCsv
 
             var zLvl = f_Max - f_Min;
             f_K = 100 / zLvl;
+        }
+
+        public BitmapImage BitmapToImageSource(Bitmap bitmap)
+        {
+            using (MemoryStream memory = new MemoryStream())
+            {
+                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                memory.Position = 0;
+                BitmapImage bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = memory;
+                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapimage.EndInit();
+
+                return bitmapimage;
+            }
         }
     }
 }

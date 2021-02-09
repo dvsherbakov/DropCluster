@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace TermoClient.ViewModels
 {
@@ -34,7 +35,6 @@ namespace TermoClient.ViewModels
         }
 
         private string f_FileName;
-
         public string FileName
         {
             get => f_FileName;
@@ -43,9 +43,38 @@ namespace TermoClient.ViewModels
                 if (Set(ref f_FileName, value))
                 {
                     Debug.WriteLine($"test {f_FileName}");
+                    f_ImageData.OpenFile(value);
+                    ImgSource = f_ImageData.GetImage;
                 }
             }
         }
+
+        private BitmapImage f_ImgSource;
+        public BitmapImage ImgSource
+        {
+            get => f_ImgSource;
+            set => Set(ref f_ImgSource, value);
+        }
+
+        private double f_PanelX;
+        public double PanelX
+        {
+            get => f_PanelX;
+            set
+            {
+                Set(ref f_PanelX, value);
+                Debug.WriteLine(value);
+            }
+        }
+
+        private double f_PanelY;
+        public double PanelY
+        {
+            get => f_PanelY;
+            set => Set(ref f_PanelY, value);
+        }
+
+        private readonly PrepareCsv f_ImageData;
 
         #region Commands
         public ICommand QuitCommand { get; }
@@ -63,6 +92,8 @@ namespace TermoClient.ViewModels
             MinimizedCommand = new LambdaCommand(OnMinimizedCommandExecute);
             MaximizedCommand = new LambdaCommand(OnMaximizedCommandExecute);
             StandardSizeCommand = new LambdaCommand(OnStandardSizeCommand);
+
+            f_ImageData = new PrepareCsv();
         }
 
         private void OnQuitApp(object p)
@@ -85,7 +116,12 @@ namespace TermoClient.ViewModels
             WindowHeight = 680;
             WindowWidth = 840;
         }
-               
+
+        public void CanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Debug.WriteLine("Stop this");
+        }
+
 
     }
 }
