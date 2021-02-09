@@ -125,5 +125,62 @@ namespace TermoVisor
                 return f_RawData[y][x];
             return 0f;
         }
+
+        public float[] GetTempLine(int x0, int y0, int x1, int y1)
+        {
+            var tempList = new List<float>();
+
+            var dx = (x1 > x0) ? (x1 - x0) : (x0 - x1);
+            var dy = (y1 > y0) ? (y1 - y0) : (y0 - y1);
+            
+            var sx = (x1 >= x0) ? (1) : (-1);
+            var sy = (y1 >= y0) ? (1) : (-1);
+
+            if (dy < dx)
+            {
+                var d = (dy << 1) - dx;
+                var d1 = dy << 1;
+                var d2 = (dy - dx) << 1;
+                tempList.Add(GetTemp(x0, y0));
+                var x = x0 + sx;
+                var y = y0;
+                for (var i = 1; i <= dx; i++)
+                {
+                    if (d > 0)
+                    {
+                        d += d2;
+                        y += sy;
+                    }
+                    else
+                        d += d1;
+
+                    tempList.Add(GetTemp(x, y));
+                    x += sx;
+                }
+            }
+            else
+            {
+                var d = (dx << 1) - dy;
+                var d1 = dx << 1;
+                var d2 = (dx - dy) << 1;
+                tempList.Add(GetTemp(x0, y0));
+                var x = x0;
+                var y = y0 + sy;
+                for (var i = 1; i <= dy; i++)
+                {
+                    if (d > 0)
+                    {
+                        d += d2;
+                        x += sx;
+                    }
+                    else
+                        d += d1;
+                    tempList.Add(GetTemp(x, y));
+                    y += sy;
+                }
+            }
+
+            return tempList.ToArray();
+        }
     }
 }
