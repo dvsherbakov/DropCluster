@@ -33,6 +33,14 @@
                               Data="M16 0v6.5l-2.5-2.5-3 3-1.5-1.5 3-3-2.5-2.5zM7 10.5l-3 3 2.5 2.5h-6.5v-6.5l2.5 2.5 3-3z"/>
                     </Viewbox>
                 </Button>
+                <Button Click="SetClipBoard">
+                    <Viewbox Margin="2" Width="25" Height="25">
+                        <Path Stroke="SandyBrown"                         
+                              StrokeThickness="1"
+                              Fill="Transparent"
+                              Data="M14.5 2h-4.5c0-1.105-0.895-2-2-2s-2 0.895-2 2h-4.5c-0.276 0-0.5 0.224-0.5 0.5v13c0 0.276 0.224 0.5 0.5 0.5h13c0.276 0 0.5-0.224 0.5-0.5v-13c0-0.276-0.224-0.5-0.5-0.5zM8 1c0.552 0 1 0.448 1 1s-0.448 1-1 1c-0.552 0-1-0.448-1-1s0.448-1 1-1zM14 15h-12v-12h2v1.5c0 0.276 0.224 0.5 0.5 0.5h7c0.276 0 0.5-0.224 0.5-0.5v-1.5h2v12z"/>
+                    </Viewbox>
+                </Button>
 
             </ToolBar>
         </ToolBarTray>
@@ -44,28 +52,58 @@
             </Grid.RowDefinitions>
             <Viewbox Width="640" Height="480" 
                      Grid.Row="0" 
-                     x:Name="ImgContainer" 
-                     MouseMove="OnImageMouseMove"
-                     MouseUp ="OnCanvasMouseUp">
-                <Image x:Name="SrcImage"
-                       MouseDown="OnImageMouseDown"
-                       MouseMove="OnCanvasMouseMove"
-                      />
+                     x:Name="ImgContainer" >
+                <Image x:Name="SrcImage"/>
             </Viewbox>
+
+            <Canvas Grid.Row="0"
+                    Width="640"
+                    Height="480"
+                    ClipToBounds="True"
+                    x:Name="MarkersCanvas"
+            />
+            
             <Canvas Grid.Row="0"
                     Width="640"
                     Height="480"
                     ClipToBounds="True"
                     x:Name="CanvasSubstrate"
-                    MouseDown="OnCanvasMouseDown"
-                    MouseMove="OnCanvasMouseMove"
-                    MouseUp="OnCanvasMouseUp"
             />
+            <Canvas Grid.Row="0"
+                    Width="640"
+                    Height="480"
+                    ClipToBounds="True"
+                    x:Name="TopCover"
+                    MouseDown="OnTopCanvasMouseDown"
+                    MouseMove="OnTopCanvasMouseMove"
+                    MouseUp="OnTopCanvasMouseUp"
+            >
+                <Rectangle
+                    Width="640"
+                    Height="480"
+                    Fill="Transparent"
+                    Stroke="Transparent" StrokeThickness="0"
+                    Canvas.Left="0"
+                    Canvas.Top="0"/>
+            </Canvas>
             <Viewbox Grid.Row="1" Width="640" Height="80">
-
+                <Canvas x:Name="ChartCanvas" Width="640" Height="80" />
             </Viewbox>
             <Grid Grid.Row="2">
-                <TextBlock x:Name="Temperature"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="5*"/>
+                </Grid.ColumnDefinitions>
+                <WrapPanel Grid.Column="0" >
+                    <TextBlock x:Name="Temperature" Text="Текущая" Margin="5"/>
+                    <Button x:Name="Maximum" Content="Максимум" Margin="5" Click="SetMax"/>
+                    <Button x:Name="Minimum" Content="Минимум" Margin="5"/>
+                </WrapPanel>
+                <WrapPanel Grid.Column="1" >
+                    <TextBlock x:Name="ChartMax" Text="Максимальная по линии" Margin="5"/>
+                    <TextBlock x:Name="ChartMin" Text="Минимальная по линии" Margin="5"/>
+                    <TextBlock x:Name="ChartLen" Text="Количество точек" Margin="5"/>
+                </WrapPanel>
             </Grid>
         </Grid>
 

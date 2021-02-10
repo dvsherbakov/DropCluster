@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace TermoVisor
@@ -17,11 +13,17 @@ namespace TermoVisor
         private int Width { get; set; }
         private int Height { get; set; }
         private float f_Min;
+        public float MinTemp => f_Min;
         private float f_Max;
+        public float MaxTemp => f_Max;
         private float f_K;
         private BitmapImage f_Img;
         public BitmapImage Img => f_Img;
         private float[][] f_RawData;
+
+        public Point MinPoint { get; set; }
+        public Point MaxPoint { get; set; }
+
         public PrepareCsv()
         {
             Width = 0;
@@ -77,8 +79,10 @@ namespace TermoVisor
 
         public BitmapImage GetImage => f_Img;
 
-        private System.Drawing.Color GetColorFromValue(float value)
+        public System.Drawing.Color GetColorFromValue(float value)
         {
+            if (value == 0) return System.Drawing.Color.Transparent;
+
             var r = (int)((255 * (value - f_Min) * f_K) / 100);
             var b = (int)((255 * (100 - (value - f_Min) * f_K)) / 100);
 
@@ -94,8 +98,15 @@ namespace TermoVisor
             {
                 for (var i = 0; i < Height; i++)
                 {
-                    if (data[i][j] > f_Max) f_Max = data[i][j];
-                    if (data[i][j] < f_Min) f_Min = data[i][j];
+                    if (data[i][j] > f_Max) { 
+                        f_Max = data[i][j];
+                        MaxPoint = new Point(j, i);
+                    }
+                    if (data[i][j] < f_Min)
+                    {
+                        f_Min = data[i][j];
+                        MinPoint = new Point(j, i);
+                    }
                 }
             }
 
