@@ -142,15 +142,7 @@
                     <local:MouseBehaviour MouseX="{Binding PanelX, Mode=OneWayToSource}"
                                           MouseY="{Binding PanelY, Mode=OneWayToSource}" />
                 </i:Interaction.Behaviors>
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseMove">
-                        <cmd:EventToCommand
-                 Command="{Binding Main.MouseMoveCommand, Mode=OneWay}"
-                 EventArgsConverter="{StaticResource MouseButtonEventArgsToPointConverter}"
-                 EventArgsConverterParameter="{Binding ElementName=Image1}"
-                 PassEventArgsToCommand="True" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                
             </Canvas>
         </Grid>
     </DockPanel>
