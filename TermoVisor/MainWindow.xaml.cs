@@ -24,7 +24,7 @@ namespace TermoVisor
 
         private float[] f_CurrentLine;
 
-        private readonly float f_PointPerPixel = 33.5f;
+        // private readonly float f_PointPerPixel = 33.5f;
 
         public MainWindow()
         {
@@ -50,6 +50,11 @@ namespace TermoVisor
             f_ToolMode = 1;
             Maximum.Content = $"Максимальная: {CsvData.MaxTemp:F1}";
             Minimum.Content = $"Минимальная: {CsvData.MinTemp:F1}";
+            if ((f_PointOne.X + f_PointOne.Y > 0) || (f_PointTwo.X + f_PointTwo.Y > 0))
+            {
+                f_CurrentLine = CsvData.GetTempLine((int)f_PointOne.X, (int)f_PointOne.Y, (int)f_PointTwo.X, (int)f_PointTwo.Y);
+                DrawTempChart(f_CurrentLine);
+            }
         }
 
 
@@ -110,23 +115,49 @@ namespace TermoVisor
 
         private void OnTopCanvasMouseMove(object sender, MouseEventArgs e)
         {
+            var isShift = Keyboard.Modifiers == ModifierKeys.Shift;
+
             var position = Mouse.GetPosition(ImgContainer);
-            f_PosX = (int)position.X;
-            f_PosY = (int)position.Y;
+
+            if (isShift)
+            {
+                var dx = Math.Abs(f_PointOne.X - position.X);
+                var dy = Math.Abs(f_PointOne.Y - position.Y);
+
+                if (dy < dx)
+                {
+                    f_PosY = (int)f_PointOne.Y;
+                    f_PosX = (int)position.X;
+                }
+                else
+                {
+                    f_PosX = (int)f_PointOne.X;
+                    f_PosY = (int)position.Y;
+                }
+            }
+            else
+            {
+                f_PosX = (int)position.X;
+                f_PosY = (int)position.Y;
+            }
+
             var temp = CsvData.GetTemp(f_PosX, f_PosY);
             Temperature.Text = $"Текущая: {temp:F1}";
 
             if (f_ToolMode == 5 && f_DragPressed)
             {
                 CanvasSubstrate.Children.Clear();
+
                 var dx = f_DragPoint.X - position.X;
                 var dy = f_DragPoint.Y - position.Y;
-                if (!(GetDistance(position, f_PointTwo) < 15))
+                               
+
+                if (!(GetDistance(position, f_PointTwo) < 20))
                 {
                     f_PointOne.X -= dx;
                     f_PointOne.Y -= dy;
                 }
-                if (!(GetDistance(position, f_PointOne) < 15))
+                if (!(GetDistance(position, f_PointOne) < 20))
                 {
                     f_PointTwo.X -= dx;
                     f_PointTwo.Y -= dy;
@@ -163,7 +194,7 @@ namespace TermoVisor
             ChartCanvas.Children.Clear();
 
             var (max, min) = MaxValue(data);
-            var k = 80 / max;
+            var k = max == 0 ? 1 : 80 / max;
 
             for (var i = 0; i < data.Length; i++)
             {
@@ -253,6 +284,53 @@ namespace TermoVisor
         private static double GetDistance(Point p1, Point p2)
         {
             return Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
+        }
+
+        
+        private void RefreshLine()
+        {
+            CanvasSubstrate.Children.Clear();
+            AddLine(f_PointOne, f_PointTwo);
+            f_CurrentLine = CsvData.GetTempLine((int)f_PointOne.X, (int)f_PointOne.Y, (int)f_PointTwo.X, (int)f_PointTwo.Y);
+            DrawTempChart(f_CurrentLine);
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Up)
+            {
+                if (f_PointOne.Y>0 && f_PointTwo.Y>0)
+                {
+                    f_PointOne.Y--;
+                    f_PointTwo.Y--;
+                }
+            }
+            if (e.Key == Key.Down)
+            {
+                if (f_PointOne.Y < 480 && f_PointTwo.Y < 480)
+                {
+                    f_PointOne.Y++;
+                    f_PointTwo.Y++;
+                }
+            }
+            if (e.Key== Key.Left)
+            {
+                if (f_PointOne.X > 0 && f_PointTwo.X > 0)
+                {
+                    f_PointOne.X--;
+                    f_PointTwo.X--;
+                }
+            }
+            if (e.Key == Key.Right)
+            {
+                if (f_PointOne.X < 640 && f_PointTwo.X < 640)
+                {
+                    f_PointOne.X++;
+                    f_PointTwo.X++;
+                }
+            }
+
+            RefreshLine();
         }
     }
 }
