@@ -18,7 +18,7 @@ namespace PrepareImageFrm
     {
         private Image<Bgr, byte> f_ImgInput;
         private readonly ClusterPack f_ClusterPack;
-        private int f_BinarizationThreshold = 60;
+        private int f_BinaryzationThreshold = 60;
         private int f_GaussianParam = 5;
         private int f_MaxAspectRatio = 33;
         private int f_MinPerimeterLen = 120;
@@ -284,7 +284,7 @@ namespace PrepareImageFrm
         private VectorOfVectorOfPoint ExtractContours(Image<Bgr, byte> inputImage)
         {
 
-            var temp = inputImage.SmoothGaussian(f_GaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(f_BinarizationThreshold), new Gray(255));
+            var temp = inputImage.SmoothGaussian(f_GaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(f_BinaryzationThreshold), new Gray(255));
             var contours = new VectorOfVectorOfPoint();
             var m = new Mat();
             CvInvoke.FindContours(image: temp, contours, m, RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
@@ -310,13 +310,13 @@ namespace PrepareImageFrm
         private void BinarizationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (f_ImgInput == null) return;
-            var temp = f_ImgInput.SmoothGaussian(f_GaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(f_BinarizationThreshold), new Gray(255));
+            var temp = f_ImgInput.SmoothGaussian(f_GaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(f_BinaryzationThreshold), new Gray(255));
             pictureBox1.Image = temp.ToBitmap();
         }
 
         private void ApplyConvertParams(int bt, int gp, int mAs, int mp, int zm, int oc)
         {
-            f_BinarizationThreshold = bt;
+            f_BinaryzationThreshold = bt;
             f_GaussianParam = gp;
             f_MaxAspectRatio = mAs;
             f_MinPerimeterLen = mp;
@@ -326,7 +326,7 @@ namespace PrepareImageFrm
 
         private void DetectParamsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dParams = new DetectParams(f_BinarizationThreshold, f_GaussianParam, f_MaxAspectRatio, f_MinPerimeterLen, f_Zoom, f_ObjectCount);
+            var dParams = new DetectParams(f_BinaryzationThreshold, f_GaussianParam, f_MaxAspectRatio, f_MinPerimeterLen, f_Zoom, f_ObjectCount);
             dParams.OnApplyParam += ApplyConvertParams;
             dParams.ShowDialog();
         }

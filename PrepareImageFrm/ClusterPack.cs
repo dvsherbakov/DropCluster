@@ -80,11 +80,11 @@ namespace PrepareImageFrm
         public Mat Trajectories()
         {
 
-            Mat res = new Mat(new Size(1000, 1000), DepthType.Cv8U, 3);
+            var res = new Mat(new Size(1000, 1000), DepthType.Cv8U, 3);
             res.SetTo(new MCvScalar(0));
             var colors = GenerateColorTable();
 
-            List<List<PointF>> pList = new List<List<PointF>>();
+            var pList = new List<List<PointF>>();
             for (var i = 0; i < GetMaxDropCount(); i++)
             {
                 var tmp = new List<PointF>();
@@ -129,15 +129,15 @@ namespace PrepareImageFrm
                FileInfo file = new FileInfo(fileName);
                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-               using (ExcelPackage package = new ExcelPackage(file))
+               using (var package = new ExcelPackage(file))
                {
                    var dict = GetPackDict();
 
                    foreach (var cluster in f_Clusters)
                    {
-                       ExcelWorksheet xlsSheet = package.Workbook.Worksheets.Add(cluster.ClusterId);
+                       var xlsSheet = package.Workbook.Worksheets.Add(cluster.ClusterId);
                        var row = 2;
-                       foreach (ClusterElement item in cluster.GetList.OrderBy(x => x.Id))
+                       foreach (var item in cluster.GetList.OrderBy(x => x.Id))
                        {
                            xlsSheet.Cells[$"B{row}"].Value = item.Id;
                            xlsSheet.Cells[$"C{row}"].Value = item.Element.Center.X / zm;
