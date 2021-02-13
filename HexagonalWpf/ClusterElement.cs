@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Emgu.CV.Structure;
 
-namespace PrepareImageFrm
+namespace HexagonalWpf
 {
-    internal class ClusterElement
+    class ClusterElement
     {
         public int Id { get; }
         public RotatedRect Element { get; }
