@@ -61,5 +61,10 @@ namespace HexagonalWpf
         {
             RangeCanvas();
         }
+
+        private void CommandBinding_OnExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            Debug.WriteLine("Start prepare");
+        }
     }
 }

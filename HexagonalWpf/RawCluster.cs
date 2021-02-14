@@ -15,6 +15,7 @@ namespace HexagonalWpf
         public RawCluster(string fName)
         {
             f_FileName = fName;
+            f_Cluster = new Cluster(fName);
         }
     }
 }
