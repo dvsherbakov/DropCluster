@@ -13,8 +13,7 @@ namespace TestEMGU1
     internal class Chains
     {
         private readonly List<PointListItem> m_OriginsList;
-        private List<int> TmpIds;
-        private List<Graph> GraphChains;
+        private readonly List<Graph> GraphChains;
         private readonly PointListItem StartPoint;
 
         public Chains(List<PointListItem> originsList, PointListItem fPoint)

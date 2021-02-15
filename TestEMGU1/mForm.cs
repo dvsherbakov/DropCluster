@@ -16,7 +16,7 @@ namespace TestEMGU1
     public partial class FmMain : Form
     {
         private CircleF[] m_Circles;
-        private int m_MouseClickNo;
+        private readonly int m_MouseClickNo;
         private readonly List<PointListItem> m_ListCircles = new List<PointListItem>();
         private readonly List<PointListItem> m_OriginalCircles = new List<PointListItem>();
         private readonly List<PointF> m_Polygon = new List<PointF>();

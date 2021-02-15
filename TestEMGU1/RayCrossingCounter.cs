@@ -7,7 +7,7 @@ namespace TestEMGU1
     {
 
         private readonly PointF _p;
-        private int _crossingCount;
+        private readonly int _crossingCount;
         private bool _isPointOnSegment;
 
 

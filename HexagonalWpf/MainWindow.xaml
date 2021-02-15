@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HexagonalWpf"
         mc:Ignorable="d"
+
         Title="MainWindow" Height="450" Width="800">
     <Window.CommandBindings>
         <CommandBinding Command="Open" Executed="WindowBinding_OpenCommand" />
@@ -32,23 +33,30 @@
                           Command="local:WindowCommands.PrepareCurrent"></MenuItem>
             </MenuItem>
             <MenuItem Header="Settings" >
-                <MenuItem Header="Binarization Threshold">
-                    <TextBox Width="50"></TextBox>
+                <MenuItem  Header="Binarization Threshold" >
+                    <TextBox x:Name="tbBinarizationThreshold" Width="50" LostFocus="BinarizationThreshold_LostFocus"></TextBox>
+                </MenuItem>
+                <MenuItem Header="Gaussian Param" >
+                    <TextBox x:Name="tbGaussianParam" Width="50" LostFocus="GaussianParam_LostFocus"></TextBox>
+                </MenuItem>
+                <MenuItem Header="Max Aspect Ratio" >
+                    <TextBox x:Name="tbMaxAspectRatio" Width="50" LostFocus="MaxAspectRatio_LostFocus"></TextBox>
+                </MenuItem>
+                <MenuItem Header="Min Perimether Len" >
+                    <TextBox x:Name="tbMinPerimetherLen" Width="50" LostFocus="MinPerimetherLen_LostFocus"></TextBox>
+                </MenuItem>
+                <MenuItem Header="Camera Zoom" >
+                    <TextBox x:Name="tbCameraZoom" Width="50" LostFocus="MaxAspectRatio_LostFocus"></TextBox>
                 </MenuItem>
             </MenuItem>
+            
+                
+            
         </Menu>
         <Viewbox x:Name="ViewContainer" Grid.Row="1" SizeChanged="ViewContainer_OnSizeChanged">
             <Image x:Name="OriginalImage"></Image>
         </Viewbox>
-        <Canvas Grid.Row="1" x:Name="ObjectCanvas"
-               
-               >
-
-        </Canvas>
-        <Canvas Grid.Row="1" x:Name="EventCanvas"
-            
-                >
-            
-        </Canvas>
+        <Canvas Grid.Row="1" x:Name="ObjectCanvas"/>
+        <Canvas Grid.Row="1" x:Name="EventCanvas" />
     </Grid>
 </Window>
