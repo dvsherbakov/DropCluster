@@ -86,7 +86,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Cluster.cs" />
+    <Compile Include="Hexagon.cs" />
     <Compile Include="RawCluster.cs" />
+    <Compile Include="RelativePosition.cs" />
     <Compile Include="WindowCommands.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -20,6 +20,7 @@ namespace HexagonalWpf
         private double f_OrigWidth;
         private double f_OrigHeight;
         private double f_Ratio;
+        private RawCluster f_RawCluster;
         public MainWindow()
         {
             InitializeComponent();
@@ -71,19 +72,19 @@ namespace HexagonalWpf
             {
                 Width = ViewContainer.ActualWidth,
                 Height = ViewContainer.ActualHeight,
-                Stroke = new SolidColorBrush(Colors.SandyBrown),
+                Stroke = new SolidColorBrush(Colors.Transparent),
                 Fill = new SolidColorBrush(Colors.Transparent)
             };
             var objRect = new Rectangle
             {
                 Width = ViewContainer.ActualWidth,
                 Height = ViewContainer.ActualHeight,
-                Stroke = new SolidColorBrush(Colors.Salmon),
+                Stroke = new SolidColorBrush(Colors.Transparent),
                 Fill = new SolidColorBrush(Colors.Transparent)
             };
             EventCanvas.Children.Add(rect);
             ObjectCanvas.Children.Add(objRect);
-            f_Ratio = ((EventCanvas.Width / f_OrigWidth) + (EventCanvas.Height / f_OrigHeight))*0.98/2;
+            f_Ratio = ((EventCanvas.Width / f_OrigWidth) + (EventCanvas.Height / f_OrigHeight)) / 2;
         }
 
         private void ViewContainer_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -96,16 +97,17 @@ namespace HexagonalWpf
             Task.Run(() => PrepareFileAsync());
         }
 
+
         private async Task PrepareFileAsync()
         {
-            RawCluster cluster = new RawCluster(
+            f_RawCluster = new RawCluster(
                 f_CurrentFileName,
                 Properties.Settings.Default.GaussianParam,
                 Properties.Settings.Default.BinarizationThreshold,
                 Properties.Settings.Default.MaxAspectRatio,
                 Properties.Settings.Default.MinPerimetherLen);
-            await cluster.MakeCluster();
-            Dispatcher.Invoke(() => DrawUIObject(cluster.GetElements));
+            await f_RawCluster.MakeCluster();
+            Dispatcher.Invoke(() => DrawUIObject(f_RawCluster.GetElements));
         }
 
         private void DrawUIObject(IEnumerable<ClusterElement> elements)
@@ -115,27 +117,41 @@ namespace HexagonalWpf
             {
                 foreach (var element in elements)
                 {
-                    var wh = ((element.Element.Size.Width + element.Element.Size.Height) / 2) * f_Ratio;
-                    var uiElem = new Ellipse
-                    {
-                        Width = wh,
-                        Height = wh,
-                        StrokeThickness = 1,
-                        Stroke = new SolidColorBrush
-                        {
-                            Color = Colors.Blue
-                        }
-                    };
-
-                    Canvas.SetLeft(uiElem, element.Element.Center.X * f_Ratio);
-                    Canvas.SetTop(uiElem, element.Element.Center.Y * f_Ratio);
-
-                    ObjectCanvas.Children.Add(uiElem);
+                    DrawMarker(element, Colors.YellowGreen);
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void DrawMarker(ClusterElement element, Color color)
+        {
+            var wh = ((element.Element.Size.Width + element.Element.Size.Height) / 2) * f_Ratio;
+            var uiElem = new Ellipse
+            {
+                Width = wh,
+                Height = wh,
+                StrokeThickness = 1,
+                Stroke = new SolidColorBrush
+                {
+                    Color = color
+                }
+            };
+
+            Canvas.SetLeft(uiElem, (element.Element.Center.X - element.Element.Size.Width / 2) * f_Ratio);
+            Canvas.SetTop(uiElem, (element.Element.Center.Y - element.Element.Size.Height / 2) * f_Ratio);
+
+            ObjectCanvas.Children.Add(uiElem);
+        }
+
+        private void DrawHexagon(Hexagon h)
+        {
+            DrawMarker(h.Center, Colors.Azure);
+            foreach (var el in h.HList)
+            {
+                DrawMarker(el, Colors.SandyBrown);
             }
         }
 
@@ -167,6 +183,25 @@ namespace HexagonalWpf
         {
             if (int.TryParse(tbCameraZoom.Text, out int res))
                 Properties.Settings.Default.CameraZoom = res;
+        }
+
+        private void ViewContainer_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var position = Mouse.GetPosition(ViewContainer);
+            var pt = new Emgu.CV.Structure.RotatedRect(
+                    new System.Drawing.PointF((float)(position.X / f_Ratio), (float)(position.Y / f_Ratio)),
+                    new System.Drawing.SizeF(),
+                    0
+                );
+            if (f_RawCluster != null)
+            {
+                var markedElement = f_RawCluster.GetNearer(pt);
+                DrawMarker(markedElement, Colors.IndianRed);
+                f_RawCluster.CreateHexagon(markedElement);
+                DrawHexagon(f_RawCluster.Hexagon);
+                f_RawCluster.Hexagon.OverageLink();
+            }
+            
         }
     }
 }

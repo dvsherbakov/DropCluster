@@ -5,6 +5,7 @@ using Emgu.CV.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,10 @@ namespace HexagonalWpf
         private readonly int f_MaxAspectRatio;
         private readonly int f_MinPerimeterLen;
 
-        private Cluster f_Cluster;
+        private readonly Cluster f_Cluster;
+
+        public Hexagon Hexagon { get; private set; }
+
         public IEnumerable<ClusterElement> GetElements => f_Cluster.GetList;
         private readonly string f_FileName;
         private Image<Bgr, byte> f_CurrentImage;
@@ -108,6 +112,26 @@ namespace HexagonalWpf
                 //listBox1.Items.Add(ex.Message);
                 return 1.0f;
             }
+        }
+
+        public ClusterElement GetNearer(RotatedRect el)
+        {
+            return f_Cluster.GetNearer(el);
+        }
+
+        public PointF GetCenter()
+        {
+            return f_Cluster.GetCenter();
+        }
+
+        public RelativePosition GetRelativePosition(PointF pos)
+        {
+            return f_Cluster.GetRelativePos(pos);
+        }
+
+        public void CreateHexagon(ClusterElement el)
+        {
+            Hexagon = new Hexagon(el, f_Cluster.Get7(el.Element));
         }
     }
 }

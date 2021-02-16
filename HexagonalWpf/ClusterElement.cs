@@ -21,5 +21,7 @@ namespace HexagonalWpf
         {
             return (float)Math.Sqrt(Math.Pow(Element.Center.X - el.Center.X, 2) + Math.Pow(Element.Center.Y - el.Center.Y, 2));
         }
+
+        public double Diametr => (Element.Size.Width + Element.Size.Height) / 2;
     }
 }
