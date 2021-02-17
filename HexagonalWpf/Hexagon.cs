@@ -12,19 +12,22 @@ namespace HexagonalWpf
         private readonly ClusterElement f_Center;
         public ClusterElement Center => f_Center;
         private readonly List<ClusterElement> f_List;
-        private double f_OverageSize;
+        private readonly double f_AverageSize;
+        public double AverageSize => f_AverageSize;
+        public string FileName { get; set; }
         public IEnumerable<ClusterElement> HList => f_List;
 
-        public Hexagon(ClusterElement center, List<ClusterElement> list)
+        public Hexagon(ClusterElement center, List<ClusterElement> list, string fileName)
         {
-            f_OverageSize = list.Average(x => x.Diametr); ;
+            FileName = fileName;
+            f_AverageSize = list.Average(x => x.Diametr); 
             f_Center = center;
             _ = list.Remove(center);
             f_List = new List<ClusterElement>();
             f_List.AddRange(list);
         }
 
-        public void OverageLink()
+        public double AverageLink()
         {
             var tmpList = new List<ClusterElement>();
             tmpList.AddRange(f_List);
@@ -41,7 +44,8 @@ namespace HexagonalWpf
                 tmpList.Remove(fst);
             }
             resList.Add(last.Range(fst.Element));
-            Debug.WriteLine(resList.Average());
+            Debug.WriteLine($"Diametr: {f_AverageSize}, Distance: {resList.Average()}");
+            return resList.Average();
         }
 
 

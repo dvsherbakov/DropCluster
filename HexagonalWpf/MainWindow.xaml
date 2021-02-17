@@ -10,11 +10,17 @@
     <Window.CommandBindings>
         <CommandBinding Command="Open" Executed="WindowBinding_OpenCommand" />
         <CommandBinding Command="local:WindowCommands.PrepareCurrent" Executed="CommandBinding_OnExecuted"/>
+        <CommandBinding Command="local:WindowCommands.PrepareFolder" Executed="CommandBinding_PrepareFolder"/>
+        <CommandBinding Command="local:WindowCommands.DrawPath" Executed="CommandBinding_DrawPath"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
         <KeyBinding Key="D" Modifiers="Control" 
                     Command="local:WindowCommands.PrepareCurrent"/>
+        <KeyBinding Key="F" Modifiers="Control"
+                    Command="local:WindowCommands.PrepareFolder" />
+        <KeyBinding Key="P" Modifiers="Control"
+                    Command="local:WindowCommands.DrawPath" />
     </Window.InputBindings>
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
@@ -30,7 +36,11 @@
             </MenuItem>
             <MenuItem Header="Tools" >
                 <MenuItem Header="Prepare Current" InputGestureText="Ctrl+D" 
-                          Command="local:WindowCommands.PrepareCurrent"></MenuItem>
+                          Command="local:WindowCommands.PrepareCurrent"/>
+                <MenuItem Header="Prepare Folder" InputGestureText="Ctrl+F" 
+                          Command="local:WindowCommands.PrepareFolder"/>
+                <MenuItem Header="Draw Path" InputGestureText="Ctrl+P" 
+                          Command="local:WindowCommands.DrawPath"/>
             </MenuItem>
             <MenuItem Header="Settings" >
                 <MenuItem  Header="Binarization Threshold" >
@@ -46,7 +56,7 @@
                     <TextBox x:Name="tbMinPerimetherLen" Width="50" LostFocus="MinPerimetherLen_LostFocus"></TextBox>
                 </MenuItem>
                 <MenuItem Header="Camera Zoom" >
-                    <TextBox x:Name="tbCameraZoom" Width="50" LostFocus="MaxAspectRatio_LostFocus"></TextBox>
+                    <TextBox x:Name="tbCameraZoom" Width="50" LostFocus="CameraZoom_LostFocus"></TextBox>
                 </MenuItem>
             </MenuItem>
             

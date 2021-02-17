@@ -21,13 +21,18 @@ namespace HexagonalWpf
         private double f_OrigHeight;
         private double f_Ratio;
         private RawCluster f_RawCluster;
+        private RelativePosition f_RPosition;
+        private HexagonPack f_HexPack;
+
         public MainWindow()
         {
             InitializeComponent();
             Closing += App_Exit;
             tbBinarizationThreshold.Text = Properties.Settings.Default.BinarizationThreshold.ToString();
             tbGaussianParam.Text = Properties.Settings.Default.GaussianParam.ToString();
+            tbMaxAspectRatio.Text = Properties.Settings.Default.MaxAspectRatio.ToString();
             tbMinPerimetherLen.Text = Properties.Settings.Default.MinPerimetherLen.ToString();
+            tbCameraZoom.Text = Properties.Settings.Default.CameraZoom.ToString();
         }
 
 
@@ -95,6 +100,30 @@ namespace HexagonalWpf
         private void CommandBinding_OnExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             Task.Run(() => PrepareFileAsync());
+        }
+        private void CommandBinding_PrepareFolder(object sender, ExecutedRoutedEventArgs e)
+        {
+
+            f_HexPack = new HexagonPack(f_CurrentFileName, f_RPosition);
+            _ = Task.Run(() => f_HexPack.PrepareFolderAsync());
+        }
+
+        private void CommandBinding_DrawPath(object sender, ExecutedRoutedEventArgs e)
+        {
+            Debug.WriteLine("DrawPath");
+            var NewPolyline = new Polyline
+            {
+                Stroke = Brushes.LightGreen,
+                StrokeThickness = 2
+            };
+            foreach (var h in f_HexPack.HexList)
+            {
+                NewPolyline.Points.Add(new Point(h.Center.Element.Center.X * f_Ratio, h.Center.Element.Center.Y * f_Ratio));
+            }
+            ObjectCanvas.Children.Add(NewPolyline);
+
+            Task.Run(() => f_HexPack.SaveExcelFile());
+
         }
 
 
@@ -199,9 +228,10 @@ namespace HexagonalWpf
                 DrawMarker(markedElement, Colors.IndianRed);
                 f_RawCluster.CreateHexagon(markedElement);
                 DrawHexagon(f_RawCluster.Hexagon);
-                f_RawCluster.Hexagon.OverageLink();
+                f_RawCluster.Hexagon.AverageLink();
+                f_RPosition = f_RawCluster.GetRelativePosition(pt.Center);
             }
-            
+
         }
     }
 }

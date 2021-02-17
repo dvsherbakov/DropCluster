@@ -129,9 +129,14 @@ namespace HexagonalWpf
             return f_Cluster.GetRelativePos(pos);
         }
 
+        public PointF RelativeToPos(RelativePosition position)
+        {
+            return f_Cluster.RelativeToPos(position);
+        }
+
         public void CreateHexagon(ClusterElement el)
         {
-            Hexagon = new Hexagon(el, f_Cluster.Get7(el.Element));
+            Hexagon = new Hexagon(el, f_Cluster.Get7(el.Element), f_FileName);
         }
     }
 }

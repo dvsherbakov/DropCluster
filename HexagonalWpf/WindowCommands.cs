@@ -12,7 +12,11 @@ namespace HexagonalWpf
         static WindowCommands()
         {
             PrepareCurrent = new RoutedCommand("PrepareCurrent", typeof(MainWindow));
+            PrepareFolder = new RoutedCommand("PrepareFolder", typeof(MainWindow));
+            DrawPath = new RoutedCommand("DrawPath", typeof(MainWindow));
         }
         public static RoutedCommand PrepareCurrent { get; set; }
+        public static RoutedCommand PrepareFolder { get; set; }
+        public static RoutedCommand DrawPath { get; set; }
     }
 }
