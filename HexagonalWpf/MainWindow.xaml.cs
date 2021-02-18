@@ -146,7 +146,7 @@ namespace HexagonalWpf
             {
                 foreach (var element in elements)
                 {
-                    DrawMarker(element, Colors.YellowGreen);
+                    DrawMarker(element, Colors.Yellow);
                 }
             }
             catch (Exception ex)
@@ -162,7 +162,7 @@ namespace HexagonalWpf
             {
                 Width = wh,
                 Height = wh,
-                StrokeThickness = 1,
+                StrokeThickness = 2,
                 Stroke = new SolidColorBrush
                 {
                     Color = color
@@ -177,10 +177,10 @@ namespace HexagonalWpf
 
         private void DrawHexagon(Hexagon h)
         {
-            DrawMarker(h.Center, Colors.Azure);
+            DrawMarker(h.Center, Colors.LimeGreen);
             foreach (var el in h.HList)
             {
-                DrawMarker(el, Colors.SandyBrown);
+                DrawMarker(el, Colors.Red);
             }
         }
 
@@ -225,7 +225,7 @@ namespace HexagonalWpf
             if (f_RawCluster != null)
             {
                 var markedElement = f_RawCluster.GetNearer(pt);
-                DrawMarker(markedElement, Colors.IndianRed);
+                //DrawMarker(markedElement, Colors.Orange);
                 f_RawCluster.CreateHexagon(markedElement);
                 DrawHexagon(f_RawCluster.Hexagon);
                 f_RawCluster.Hexagon.AverageLink();
