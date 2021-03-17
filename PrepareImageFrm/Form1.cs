@@ -168,8 +168,8 @@ namespace PrepareImageFrm
                 var ellipse = new Ellipse(rct);
                 f_ImgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
                 CvInvoke.PutText(f_ImgInput, i.ToString(),
-                    new Point((int) (rct.Center.X + 30), (int) (rct.Center.Y + 50)), FontFace.HersheyComplex, 1.5,
-                    new Bgr(Color.AntiqueWhite).MCvScalar);
+                    new Point((int) (rct.Center.X + 10), (int) (rct.Center.Y + 20)), FontFace.HersheyComplex, 0.7,
+                    new Bgr(Color.DarkBlue).MCvScalar);
             }
         }
 

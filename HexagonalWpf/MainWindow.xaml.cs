@@ -146,7 +146,7 @@ namespace HexagonalWpf
             {
                 foreach (var element in elements)
                 {
-                    DrawMarker(element, Colors.Yellow);
+                    DrawMarker(element, Colors.Red);
                 }
             }
             catch (Exception ex)
@@ -162,7 +162,7 @@ namespace HexagonalWpf
             {
                 Width = wh,
                 Height = wh,
-                StrokeThickness = 2,
+                StrokeThickness = 4,
                 Stroke = new SolidColorBrush
                 {
                     Color = color
