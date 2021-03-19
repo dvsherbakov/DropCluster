@@ -115,7 +115,7 @@ namespace PrepareImageFrm
                 f_CurrentFile = filename;
                 var inputImage = await LoadFileAsync(filename);
                 var contours = FilterContours(ExtractContours(inputImage));
-                //AddContoursToResCollection(filename, contours);
+                AddContoursToResCollection(filename, contours);
                 BuildClusterPack(filename, contours);
                 inputImage.Dispose();
             }
@@ -169,7 +169,7 @@ namespace PrepareImageFrm
                 f_ImgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
                 CvInvoke.PutText(f_ImgInput, i.ToString(),
                     new Point((int) (rct.Center.X + 10), (int) (rct.Center.Y + 20)), FontFace.HersheyComplex, 0.7,
-                    new Bgr(Color.DarkBlue).MCvScalar);
+                    new Bgr(Color.LightCyan).MCvScalar);
             }
         }
 
