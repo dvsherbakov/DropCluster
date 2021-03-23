@@ -484,6 +484,23 @@ namespace PrepareImageFrm
             pictureBox1.Image = f_ClusterPack.Trajectories().ToBitmap();
             await f_ClusterPack.SaveExcelFile();
         }
+
+        private async void ScanBrigToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //var x = f_Storage
+                var name = tvResults?.SelectedNode?.Name ?? tvResults?.TopNode?.Name;
+                if (!(name is null))
+                {
+                    await LoadFile(name);
+                }
+            }
+            catch (Exception ex)
+            {
+                listBox1.Items.Add(ex.Message);
+            }
+        }
     }
 }
 

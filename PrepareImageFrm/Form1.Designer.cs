@@ -45,6 +45,7 @@
             this.repeatDirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.histToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cLACHEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawTrajectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filtersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gaussianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bynaryzationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,7 +54,7 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tvResults = new System.Windows.Forms.TreeView();
-            this.drawTrajectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.scanBrigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -176,7 +177,8 @@
             this.repeatDirToolStripMenuItem,
             this.histToolStripMenuItem,
             this.cLACHEToolStripMenuItem,
-            this.drawTrajectoriesToolStripMenuItem});
+            this.drawTrajectoriesToolStripMenuItem,
+            this.scanBrigToolStripMenuItem});
             this.processToolStripMenuItem.Name = "processToolStripMenuItem";
             this.processToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.J)));
             this.processToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
@@ -186,7 +188,7 @@
             // 
             this.dirToolStripMenuItem.Name = "dirToolStripMenuItem";
             this.dirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.dirToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.dirToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.dirToolStripMenuItem.Text = "Dir...";
             this.dirToolStripMenuItem.Click += new System.EventHandler(this.DirToolStripMenuItem_Click);
             // 
@@ -194,7 +196,7 @@
             // 
             this.repeatDirToolStripMenuItem.Name = "repeatDirToolStripMenuItem";
             this.repeatDirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.repeatDirToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.repeatDirToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.repeatDirToolStripMenuItem.Text = "Repeat dir";
             this.repeatDirToolStripMenuItem.Click += new System.EventHandler(this.RepeatDirToolStripMenuItem_Click);
             // 
@@ -202,7 +204,7 @@
             // 
             this.histToolStripMenuItem.Name = "histToolStripMenuItem";
             this.histToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.histToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.histToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.histToolStripMenuItem.Text = "Hist";
             this.histToolStripMenuItem.Click += new System.EventHandler(this.HistToolStripMenuItem_Click);
             // 
@@ -210,9 +212,17 @@
             // 
             this.cLACHEToolStripMenuItem.Name = "cLACHEToolStripMenuItem";
             this.cLACHEToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.cLACHEToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.cLACHEToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.cLACHEToolStripMenuItem.Text = "CLACHE";
             this.cLACHEToolStripMenuItem.Click += new System.EventHandler(this.ClaSheToolStripMenuItem_Click);
+            // 
+            // drawTrajectoriesToolStripMenuItem
+            // 
+            this.drawTrajectoriesToolStripMenuItem.Name = "drawTrajectoriesToolStripMenuItem";
+            this.drawTrajectoriesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.J)));
+            this.drawTrajectoriesToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.drawTrajectoriesToolStripMenuItem.Text = "Draw Trajectories";
+            this.drawTrajectoriesToolStripMenuItem.Click += new System.EventHandler(this.DrawTrajectoriesToolStripMenuItem_ClickAsync);
             // 
             // filtersToolStripMenuItem
             // 
@@ -226,14 +236,14 @@
             // gaussianToolStripMenuItem
             // 
             this.gaussianToolStripMenuItem.Name = "gaussianToolStripMenuItem";
-            this.gaussianToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gaussianToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.gaussianToolStripMenuItem.Text = "Gaussian";
             this.gaussianToolStripMenuItem.Click += new System.EventHandler(this.GaussianToolStripMenuItem_Click);
             // 
             // bynaryzationToolStripMenuItem
             // 
             this.bynaryzationToolStripMenuItem.Name = "bynaryzationToolStripMenuItem";
-            this.bynaryzationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bynaryzationToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.bynaryzationToolStripMenuItem.Text = "Bynaryzation";
             this.bynaryzationToolStripMenuItem.Click += new System.EventHandler(this.BinarizationToolStripMenuItem_Click);
             // 
@@ -248,7 +258,7 @@
             // detectPaeamsToolStripMenuItem
             // 
             this.detectPaeamsToolStripMenuItem.Name = "detectPaeamsToolStripMenuItem";
-            this.detectPaeamsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.detectPaeamsToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.detectPaeamsToolStripMenuItem.Text = "DetectPaeams";
             this.detectPaeamsToolStripMenuItem.Click += new System.EventHandler(this.DetectParamsToolStripMenuItem_Click);
             // 
@@ -287,13 +297,12 @@
             this.tvResults.Size = new System.Drawing.Size(348, 317);
             this.tvResults.TabIndex = 4;
             // 
-            // drawTrajectoriesToolStripMenuItem
+            // scanBrigToolStripMenuItem
             // 
-            this.drawTrajectoriesToolStripMenuItem.Name = "drawTrajectoriesToolStripMenuItem";
-            this.drawTrajectoriesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.J)));
-            this.drawTrajectoriesToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.drawTrajectoriesToolStripMenuItem.Text = "Draw Trajectories";
-            this.drawTrajectoriesToolStripMenuItem.Click += new System.EventHandler(this.DrawTrajectoriesToolStripMenuItem_ClickAsync);
+            this.scanBrigToolStripMenuItem.Name = "scanBrigToolStripMenuItem";
+            this.scanBrigToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.scanBrigToolStripMenuItem.Text = "Scan Brightness";
+            this.scanBrigToolStripMenuItem.Click += new System.EventHandler(this.ScanBrigToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -343,6 +352,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem saveDetailToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem drawTrajectoriesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem scanBrigToolStripMenuItem;
     }
 }
 

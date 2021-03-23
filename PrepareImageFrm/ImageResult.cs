@@ -12,10 +12,14 @@ namespace PrepareImageFrm
     public class ImageResult
     {
         public string FileName { get; }
-        private int f_ObjectCount { get; }
+        private readonly int f_ObjectCount;
         private readonly VectorOfVectorOfPoint f_Contours;
         public int Pass { get; private set; }
-        private int[][] f_Bribrightness { get; set; }
+        private readonly int[][] f_Bribrightness;
+        public int[][] Bribrightness
+        {
+            get => f_Bribrightness;
+        }
         public float[] Distance => GetDistanceBeforeCenter();
 
         public bool IsCorrect => f_ObjectCount > 0 ? f_Contours.Size == f_ObjectCount : f_Contours.Size > 0;
