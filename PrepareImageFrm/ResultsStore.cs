@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using OfficeOpenXml;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PrepareImageFrm
 {
@@ -7,6 +10,9 @@ namespace PrepareImageFrm
     {
         private readonly List<ImageResult> f_Results;
         private readonly SplineInterpolator f_Si;
+
+        public int Length => f_Results.Count();
+        public ImageResult this[int index] => f_Results[index];
 
         public ResultsStore()
         {
@@ -48,7 +54,7 @@ namespace PrepareImageFrm
         public int GetUndetectedCount => f_Results.Count(x => !x.IsCorrect);
 
         public IEnumerable<string> GetStorageResult(int zm)
-        { 
+        {
             return f_Results.OrderBy(x => x.FileName).Select(x => x.ToString(f_Si.GetValue(zm)));
         }
 
@@ -61,6 +67,44 @@ namespace PrepareImageFrm
         {
             foreach (var item in f_Results)
                 ImageResult.SaveDetailFile(item.FileName);
+        }
+
+        public async Task SaveExcelBrightness()
+        {
+            if (Length > 0)
+            {
+                await Task.Run(() =>
+                {//Выгрузка результатов сканирования яркости
+                    string fileName = new DirectoryInfo(f_Results.FirstOrDefault().FileName).Parent.Name + ".xlsx";
+
+                    FileInfo file = new FileInfo(fileName);
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                    using (var package = new ExcelPackage(file))
+                    {
+
+                        foreach (var res in f_Results)
+                        {//по всем снимкам
+                            var xlsSheet = package.Workbook.Worksheets.Add(Path.GetFileNameWithoutExtension(res.FileName));
+                            var row = 2;
+
+                            for (var i = 0; i < res.Bribrightness.Length; i++)
+                            { //по всем каплям
+                                var drop = res.Bribrightness[i];
+
+                                for (var k = (drop.Length / 2) - 1; k >= 0; k--)
+                                {
+                                    var value = (drop[drop.Length/2 + k] + drop[drop.Length/2 - k]) / 2;
+                                    xlsSheet.Cells[k + 3, row + 3].Value = value;
+                                }
+                                row++;
+
+                            }
+                        }
+                        package.Save();
+                    }
+                });
+            }
         }
     }
 }

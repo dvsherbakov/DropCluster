@@ -410,8 +410,6 @@ namespace PrepareImageFrm
 
         private int[] BrightnessMultyShear(VectorOfPoint contour)
         {
-
-
             var rct = CvInvoke.FitEllipse(contour);
             var rad = (rct.Size.Width + rct.Size.Height) / 4;
             var yn = (int)rct.Center.Y;
@@ -486,20 +484,9 @@ namespace PrepareImageFrm
         }
 
         private async void ScanBrigToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //var x = f_Storage
-                var name = tvResults?.SelectedNode?.Name ?? tvResults?.TopNode?.Name;
-                if (!(name is null))
-                {
-                    await LoadFile(name);
-                }
-            }
-            catch (Exception ex)
-            {
-                listBox1.Items.Add(ex.Message);
-            }
+        { //Выгрузка результатов сканирования яркости
+             await f_Storage.SaveExcelBrightness();
+
         }
     }
 }
