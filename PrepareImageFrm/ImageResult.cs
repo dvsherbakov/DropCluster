@@ -12,6 +12,7 @@ namespace PrepareImageFrm
     public class ImageResult
     {
         public string FileName { get; }
+        private long f_FileSize;
         private readonly int f_ObjectCount;
         private readonly VectorOfVectorOfPoint f_Contours;
         public int Pass { get; private set; }
@@ -24,9 +25,10 @@ namespace PrepareImageFrm
 
         public bool IsCorrect => f_ObjectCount > 0 ? f_Contours.Size == f_ObjectCount : f_Contours.Size > 0;
 
-        public ImageResult(string fileName, VectorOfVectorOfPoint listOfContours, int[][] bribrightness, int objectCount)
+        public ImageResult(string fileName, long fSize, VectorOfVectorOfPoint listOfContours, int[][] bribrightness, int objectCount)
         {
             FileName = fileName;
+            f_FileSize = fSize;
             Pass = 1;
             f_ObjectCount = objectCount;
             f_Contours = new VectorOfVectorOfPoint();

@@ -15,6 +15,7 @@ namespace PrepareImageFrm
     class ClusterPack
     {
         private readonly List<Cluster> f_Clusters;
+        public Cluster this[int index] => f_Clusters[index];
         private string f_PackId;
         public static int f_Zoom;
         public string CurrentClusterId { get; private set; }

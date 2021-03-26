@@ -25,6 +25,7 @@ namespace PrepareImageFrm
         private int f_Zoom = 60;
         private int f_ObjectCount;
         private string f_CurrentFile;
+        private long f_FileSize;
         private readonly ResultsStore f_Storage;
 
 
@@ -58,6 +59,7 @@ namespace PrepareImageFrm
         {
             f_CurrentFile = fileName;
             f_ImgInput = await LoadFileAsync(fileName);
+            f_FileSize = new FileInfo(fileName).Length;
             pictureBox2.Image = f_ImgInput.AsBitmap();
         }
 
@@ -68,7 +70,7 @@ namespace PrepareImageFrm
             {
                 var tmpCnt = ExtractContours(f_ImgInput);
                 var contours = FilterContours(tmpCnt);
-                AddContoursToResCollection(f_CurrentFile, contours);
+                AddContoursToResCollection(f_CurrentFile, f_FileSize, contours);
 
                 for (var i = 0; i < contours.Size; i++)
                 {
@@ -115,7 +117,8 @@ namespace PrepareImageFrm
                 f_CurrentFile = filename;
                 var inputImage = await LoadFileAsync(filename);
                 var contours = FilterContours(ExtractContours(inputImage));
-                AddContoursToResCollection(filename, contours);
+                var size = new FileInfo(filename).Length;
+                AddContoursToResCollection(filename, size, contours);
                 BuildClusterPack(filename, contours);
                 inputImage.Dispose();
             }
@@ -137,7 +140,7 @@ namespace PrepareImageFrm
             }
         }
 
-        private void AddContoursToResCollection(string fileName, VectorOfVectorOfPoint contours)
+        private void AddContoursToResCollection(string fileName, long size, VectorOfVectorOfPoint contours)
         {
             var sizes = new Dictionary<int, int>();
             var bLst = new List<int[]>();
@@ -150,7 +153,7 @@ namespace PrepareImageFrm
                 sizes.Add(i, sz);
             }
 
-            var result = f_Storage.AddToStore(new ImageResult(fileName, contours, bLst.ToArray(), f_ObjectCount));
+            var result = f_Storage.AddToStore(new ImageResult(fileName, size,  contours, bLst.ToArray(), f_ObjectCount));
             if (result.Pass == 1)
                 tvResults.Nodes.Add(result.GetResultNode());
             else

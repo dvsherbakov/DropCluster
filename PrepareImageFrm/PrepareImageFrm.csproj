@@ -73,6 +73,7 @@
     <Compile Include="Cluster.cs" />
     <Compile Include="ClusterElement.cs" />
     <Compile Include="ClusterPack.cs" />
+    <Compile Include="ClusterRect.cs" />
     <Compile Include="DetectParams.cs">
       <SubType>Form</SubType>
     </Compile>
