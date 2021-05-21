@@ -464,6 +464,7 @@ namespace PrepareImageFrm
 
         private int GetPixelBrightness(int x, int y)
         {
+            if (f_ImgInput == null) return 0;
             if (x > 0 && y > 0 && x < f_ImgInput.Size.Width && y < f_ImgInput.Size.Height)
             {
                 var pixel = f_ImgInput[x, y];

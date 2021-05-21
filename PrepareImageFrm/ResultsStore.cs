@@ -55,7 +55,8 @@ namespace PrepareImageFrm
 
         public IEnumerable<string> GetStorageResult(int zm)
         {
-            return f_Results.OrderBy(x => x.FileName).Select(x => x.ToString(f_Si.GetValue(zm)));
+            //return f_Results.OrderBy(x => x.FileName).Select(x => x.ToString(f_Si.GetValue(zm)));
+            return f_Results.OrderBy(x => x.FileName).Select(x => x.ToString(zm));
         }
 
         public void ClearStorage()
