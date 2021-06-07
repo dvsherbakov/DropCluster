@@ -1,61 +1,118 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace colorcanell
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
             var files = Directory.GetFiles(@"D:\+Data\Experiments\02.06.2021\02");
-            GetAvgChannels(files[1]);
+            foreach (var fileName in files)
+            {
+                GetAvgChannels(fileName);
+            }
+            
         }
 
-       
 
-        static void GetAvgChannels(string fileName)
+        private static void GetAvgChannels(string fileName)
         {
-
-            
+            var pe = new PictResult(fileName);
+            var rgb = pe.GetAverage();
         }
     }
 
-    class PictResult
+    internal class PictResult
     {
-        Bitmap f_Bitmap;
+        private readonly Bitmap _bitmap;
+        public string FileName { get; set; }
 
         public PictResult(string fileName)
         {
-            using (Stream BitmapStream = System.IO.File.Open(fileName, System.IO.FileMode.Open))
+            using (Stream bitmapStream = File.Open(fileName, FileMode.Open))
             {
-                Image img = Image.FromStream(BitmapStream);
-
-                f_Bitmap = new Bitmap(img);
+                var img = Image.FromStream(bitmapStream);
+                FileName = fileName;
+                _bitmap = new Bitmap(img);
             }
         }
 
-        private void GetArea(int x, int y)
+        public Channels GetArea(int x, int y)
         {
             int accR = 0, accG = 0, accB = 0;
             for (var cy = y; cy<y+5; cy++)
             {
                 for (var cx = x; cx<x+5; cx++)
                 {
-                    accR += f_Bitmap.GetPixel(cx, cy).R;
+                    accR += _bitmap.GetPixel(cx, cy).R;
+                    accG += _bitmap.GetPixel(cx, cy).G;
+                    accB += _bitmap.GetPixel(cx, cy).B;
                 }
             }
+            return new Channels
+            {
+                R = (byte)(accR / 25),
+                G = (byte)(accG / 25),
+                B = (byte)(accB / 25)
+            };
+        }
+
+        public Channels GetAverage()
+        {
+            var coords = new[] {new Size(50, 50), new Size(_bitmap.Size.Width-60, 50), new Size(_bitmap.Size.Width - 60, _bitmap.Size.Height-60), new Size(50, _bitmap.Size.Height - 60) };
+            int accR = 0, accG = 0, accB = 0;
+            foreach (var c in coords)
+            {
+                var tmp = GetArea(c.Width, c.Height);
+                accR += tmp.R;
+                accG += tmp.G;
+                accB += tmp.B;
+            }
+
+            return new Channels{R=(byte)(accR/4), G=(byte)(accG/4), B=(byte)(accB/4)};
         }
     }
 
-    class Channels
+    internal class Channels
     {
         public byte R { get; set; }
         public byte G { get; set; }
         public byte B { get; set; }
+    }
+
+    internal class ResultInfo : Channels
+    {
+        private string _fileName { get; set; }
+
+        public ResultInfo(string fileName, Channels ch)
+        {
+            _fileName = fileName;
+            R = ch.R;
+            G = ch.G;
+            B = ch.B;
+        }
+    }
+
+    internal class GroupResult
+    {
+        private readonly  List<ResultInfo> _channelsList;
+        public GroupResult(string pathName)
+        {
+            _channelsList = new List<ResultInfo>();
+            var files = Directory.GetFiles(pathName);
+            foreach (var fileName in files)
+            {
+               GetAvg(fileName);
+            }
+        }
+
+        private void GetAvg(string fName)
+        {
+            var pe = new PictResult(fName);
+            //return pe.GetAverage();
+        }
     }
 }
