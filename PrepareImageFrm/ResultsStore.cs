@@ -76,9 +76,9 @@ namespace PrepareImageFrm
             {
                 await Task.Run(() =>
                 {//Выгрузка результатов сканирования яркости
-                    string fileName = new DirectoryInfo(f_Results.FirstOrDefault().FileName).Parent.Name + ".xlsx";
+                    var fileName = new DirectoryInfo(f_Results.FirstOrDefault().FileName).Parent.Name + ".xlsx";
 
-                    FileInfo file = new FileInfo(fileName);
+                    var file = new FileInfo(fileName);
                     ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
                     using (var package = new ExcelPackage(file))
@@ -89,17 +89,14 @@ namespace PrepareImageFrm
                             var xlsSheet = package.Workbook.Worksheets.Add(Path.GetFileNameWithoutExtension(res.FileName));
                             var row = 2;
 
-                            for (var i = 0; i < res.Bribrightness.Length; i++)
-                            { //по всем каплям
-                                var drop = res.Bribrightness[i];
-
+                            foreach (var drop in res.Bribrightness)
+                            {
                                 for (var k = (drop.Length / 2) - 1; k >= 0; k--)
                                 {
                                     var value = (drop[drop.Length/2 + k] + drop[drop.Length/2 - k]) / 2;
                                     xlsSheet.Cells[k + 3, row + 3].Value = value;
                                 }
                                 row++;
-
                             }
                         }
                         package.Save();

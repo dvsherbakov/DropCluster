@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
-using System.Threading.Tasks;
+using OfficeOpenXml;
 
 namespace colorcanell
 {
@@ -9,19 +10,8 @@ namespace colorcanell
     {
         private static void Main()
         {
-            var files = Directory.GetFiles(@"D:\+Data\Experiments\02.06.2021\02");
-            foreach (var fileName in files)
-            {
-                GetAvgChannels(fileName);
-            }
-            
-        }
-
-
-        private static void GetAvgChannels(string fileName)
-        {
-            var pe = new PictResult(fileName);
-            var rgb = pe.GetAverage();
+            var res = new GroupResult(@"D:\+Data\Experiments\02.06.2021\02");
+            res.SaveResult(@"D:\+Data\Experiments\02.06.2021\02\res.xlsx");
         }
     }
 
@@ -35,7 +25,7 @@ namespace colorcanell
             using (Stream bitmapStream = File.Open(fileName, FileMode.Open))
             {
                 var img = Image.FromStream(bitmapStream);
-                FileName = fileName;
+                FileName = Path.GetFileName(fileName);
                 _bitmap = new Bitmap(img);
             }
         }
@@ -43,9 +33,9 @@ namespace colorcanell
         public Channels GetArea(int x, int y)
         {
             int accR = 0, accG = 0, accB = 0;
-            for (var cy = y; cy<y+5; cy++)
+            for (var cy = y; cy < y + 5; cy++)
             {
-                for (var cx = x; cx<x+5; cx++)
+                for (var cx = x; cx < x + 5; cx++)
                 {
                     accR += _bitmap.GetPixel(cx, cy).R;
                     accG += _bitmap.GetPixel(cx, cy).G;
@@ -62,7 +52,7 @@ namespace colorcanell
 
         public Channels GetAverage()
         {
-            var coords = new[] {new Size(50, 50), new Size(_bitmap.Size.Width-60, 50), new Size(_bitmap.Size.Width - 60, _bitmap.Size.Height-60), new Size(50, _bitmap.Size.Height - 60) };
+            var coords = new[] { new Size(50, 50), new Size(_bitmap.Size.Width - 60, 50), new Size(_bitmap.Size.Width - 60, _bitmap.Size.Height - 60), new Size(50, _bitmap.Size.Height - 60) };
             int accR = 0, accG = 0, accB = 0;
             foreach (var c in coords)
             {
@@ -72,8 +62,10 @@ namespace colorcanell
                 accB += tmp.B;
             }
 
-            return new Channels{R=(byte)(accR/4), G=(byte)(accG/4), B=(byte)(accB/4)};
+            return new Channels { R = (byte)(accR / 4), G = (byte)(accG / 4), B = (byte)(accB / 4) };
         }
+
+        public ResultInfo GetResultInfo => new ResultInfo(FileName, GetAverage());
     }
 
     internal class Channels
@@ -85,11 +77,11 @@ namespace colorcanell
 
     internal class ResultInfo : Channels
     {
-        private string _fileName { get; set; }
+        public string FileName { get; set; }
 
         public ResultInfo(string fileName, Channels ch)
         {
-            _fileName = fileName;
+            FileName = fileName;
             R = ch.R;
             G = ch.G;
             B = ch.B;
@@ -98,21 +90,44 @@ namespace colorcanell
 
     internal class GroupResult
     {
-        private readonly  List<ResultInfo> _channelsList;
+        private readonly List<ResultInfo> _channelsList;
         public GroupResult(string pathName)
         {
             _channelsList = new List<ResultInfo>();
             var files = Directory.GetFiles(pathName);
             foreach (var fileName in files)
             {
-               GetAvg(fileName);
+                GetAvg(fileName);
             }
         }
 
         private void GetAvg(string fName)
         {
             var pe = new PictResult(fName);
-            //return pe.GetAverage();
+            _channelsList.Add(pe.GetResultInfo);
+            Console.WriteLine(fName);
+        }
+
+        public void SaveResult(string fName)
+        {
+            var file = new FileInfo(fName);
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage(file))
+            {
+                var xlsSheet = package.Workbook.Worksheets.Add(Path.GetFileNameWithoutExtension("test"));
+                var row = 2;
+                foreach (var values in _channelsList)
+                {
+                    xlsSheet.Cells[row, 2].Value = values.FileName;
+                    xlsSheet.Cells[row, 3].Value = values.R;
+                    xlsSheet.Cells[row, 4].Value = values.G;
+                    xlsSheet.Cells[row, 5].Value = values.B;
+
+                    row++;
+                }
+                package.Save();
+            }
         }
     }
 }
