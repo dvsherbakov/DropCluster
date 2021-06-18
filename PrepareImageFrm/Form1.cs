@@ -411,7 +411,7 @@ namespace PrepareImageFrm
             return lst.ToArray();
         }
 
-        private int[] BrightnessMultyShear(VectorOfPoint contour)
+        private int[] BrightnessMultyShear(IInputArray contour)
         {
             var rct = CvInvoke.FitEllipse(contour);
             var rad = (rct.Size.Width + rct.Size.Height) / 4;
@@ -442,19 +442,19 @@ namespace PrepareImageFrm
             return lst.ToArray();
         }
 
-        private Dictionary<int, double> NormalizeBrightness(int[] data)
+        private Dictionary<int, double> NormalizeBrightness(IReadOnlyList<int> data)
         {
             var tr = 0d;
-            var centerIndex = (int)(data.Length / 2.0);
+            var centerIndex = (int)(data.Count / 2.0);
             var t0 = data[centerIndex];
             for (var i = 0; i < 5; i++)
             {
-                tr += data[i] + data[data.Length - 1 - i];
+                tr += data[i] + data[data.Count - 1 - i];
             }
             tr /= 10.0;
 
             var res = new Dictionary<int, double>();
-            for (var i = 0; i < data.Length; i++)
+            for (var i = 0; i < data.Count; i++)
             {
                 if (data[i] - tr <= 0) res.Add(i - centerIndex, 0d);
                 else res.Add(i - centerIndex, (data[i] - tr) / (t0 - tr));
@@ -465,14 +465,11 @@ namespace PrepareImageFrm
         private int GetPixelBrightness(int x, int y)
         {
             if (f_ImgInput == null) return 0;
-            if (x > 0 && y > 0 && x < f_ImgInput.Size.Width && y < f_ImgInput.Size.Height)
-            {
-                var pixel = f_ImgInput[x, y];
-                return (int)(pixel.Green);
-                //return (int)(pixel.Red + pixel.Green + pixel.Blue);
-            }
+            if (x <= 0 || y <= 0 || x >= f_ImgInput.Size.Width || y >= f_ImgInput.Size.Height) return 0;
+            var pixel = f_ImgInput[x, y];
+            return (int)(pixel.Green);
+            //return (int)(pixel.Red + pixel.Green + pixel.Blue);
 
-            return 0;
         }
 
         private void SaveDetailToolStripMenuItem_Click(object sender, EventArgs e)
