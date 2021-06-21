@@ -5,7 +5,7 @@ namespace PrepareImageFrm
 {
     internal class ClusterElement
     {
-        public int Id { get; }
+        public int Id { get; set;}
         public RotatedRect Element { get; }
         
         public ClusterElement(int id, RotatedRect rect)

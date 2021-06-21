@@ -48,5 +48,7 @@ namespace PrepareImageFrm
             return f_Cluster.OrderBy(x => x.GetRelativeElement(Edges).Range(relateElement.Element)).FirstOrDefault().Id;
         }
 
+        public int GenerateNextId() => new HashSet<int>(f_Cluster.Select(x=>x.Id)).Max()+1;
+
     }
 }
