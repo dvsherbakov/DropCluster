@@ -12,55 +12,49 @@ using OfficeOpenXml;
 
 namespace PrepareImageFrm
 {
-    class ClusterPack
+    internal class ClusterPack
     {
-        private readonly List<Cluster> f_Clusters;
-        public Cluster this[int index] => f_Clusters[index];
-        private string f_PackId;
-        public static int f_Zoom;
+        private readonly List<Cluster> _clusters;
+        public Cluster this[int index] => _clusters[index];
+        private string _packId;
+        public static int Zoom;
         public string CurrentClusterId { get; private set; }
         public string PrevClusterId { get; private set; }
-        private static double ZoomKoef => (4.65 * f_Zoom + 5.9) / 305;
+        private static double ZoomKoef => (4.65 * Zoom + 5.9) / 305;
 
         public ClusterPack(int zoom)
         {
-            f_Clusters = new List<Cluster>();
+            _clusters = new List<Cluster>();
             CurrentClusterId = "start";
-            f_Zoom = zoom;
+            Zoom = zoom;
         }
 
         public void CreateNewCluster(string clusterId)
         {
-            f_PackId = Path.GetDirectoryName(clusterId);
+            _packId = Path.GetDirectoryName(clusterId);
             PrevClusterId = CurrentClusterId;
             CurrentClusterId = Path.GetFileNameWithoutExtension(clusterId);
-            f_Clusters.Add(new Cluster(CurrentClusterId));
+            _clusters.Add(new Cluster(CurrentClusterId));
         }
 
         public void AddElementToCurrent(RotatedRect el)
         {
-            if (f_Clusters == null) return;
+            if (_clusters == null) return;
             var id = PrevClusterId == "start"
-                ? f_Clusters.FirstOrDefault(x => x.ClusterId == CurrentClusterId).Count
-                : f_Clusters.FirstOrDefault(x => x.ClusterId == PrevClusterId).GetNearerId(el);
-            f_Clusters.FirstOrDefault(x => x.ClusterId == CurrentClusterId)?.Add(new ClusterElement(id, el));
+                ? _clusters.FirstOrDefault(x => x.ClusterId == CurrentClusterId).Count
+                : _clusters.FirstOrDefault(x => x.ClusterId == PrevClusterId).GetNearerId(el);
+            _clusters.FirstOrDefault(x => x.ClusterId == CurrentClusterId)?.Add(new ClusterElement(id, el));
         }
 
         public void Clear()
         {
-            f_Clusters.Clear();
+            _clusters.Clear();
             CurrentClusterId = "start";
         }
 
         private int GetMaxDropCount()
         {
-            var res = 0;
-            foreach (var itm in f_Clusters)
-            {
-                if (res < itm.Count) res = itm.Count;
-            }
-
-            return res;
+            return _clusters.Select(itm => itm.Count).Prepend(0).Max();
         }
 
         private Color[] GenerateColorTable()
@@ -72,7 +66,7 @@ namespace PrepareImageFrm
                 var red = rand.Next(255);
                 var green = rand.Next(255);
                 var blue = rand.Next(255);
-                Color color = Color.FromArgb(1, red, green, blue);
+                var color = Color.FromArgb(1, red, green, blue);
                 res.Add(color);
             }
             return res.ToArray();
@@ -88,11 +82,7 @@ namespace PrepareImageFrm
             var pList = new List<List<PointF>>();
             for (var i = 0; i < GetMaxDropCount(); i++)
             {
-                var tmp = new List<PointF>();
-                foreach (var it in f_Clusters)
-                {
-                    tmp.Add(it.GetList.FirstOrDefault(x => x.Id == i).Element.Center);
-                }
+                var tmp = _clusters.Select(it => it.GetList.FirstOrDefault(x => x.Id == i).Element.Center).ToList();
                 pList.Add(tmp);
             }
 
@@ -110,11 +100,7 @@ namespace PrepareImageFrm
             var dict = new Dictionary<int, List<RotatedRect>>();
             for (var i = 0; i < GetMaxDropCount(); i++)
             {
-                var tmp = new List<RotatedRect>();
-                foreach (var it in f_Clusters)
-                {
-                    tmp.Add(it.GetList.FirstOrDefault(x => x.Id == i).Element);
-                }
+                var tmp = _clusters.Select(it => it.GetList.FirstOrDefault(x => x.Id == i).Element).ToList();
                 dict.Add(i, tmp);
             }
 
@@ -125,16 +111,16 @@ namespace PrepareImageFrm
         {
             await Task.Run(() =>
            {
-               string fileName = f_PackId.Split('\\').LastOrDefault() + ".xlsx";
+               var fileName = _packId.Split('\\').LastOrDefault() + ".xlsx";
                var zm = ZoomKoef;
-               FileInfo file = new FileInfo(fileName);
+               var file = new FileInfo(fileName);
                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
                using (var package = new ExcelPackage(file))
                {
-                   var dict = GetPackDict();
+                   //var dict = GetPackDict();
 
-                   foreach (var cluster in f_Clusters)
+                   foreach (var cluster in _clusters)
                    {
                        var xlsSheet = package.Workbook.Worksheets.Add(cluster.ClusterId);
                        var row = 2;
