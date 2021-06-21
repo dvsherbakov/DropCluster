@@ -36,7 +36,7 @@ namespace PrepareImageFrm
 
 
         public int GetNearerId(RotatedRect el)
-        {
+        { 
             if (f_Cluster == null || f_Cluster.Count <= 0) return -1;
             var tmp = f_Cluster.OrderBy(x => x.Range(el));
             return f_Cluster.OrderBy(x => x.Range(el)).FirstOrDefault().Id;

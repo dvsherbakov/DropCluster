@@ -41,7 +41,7 @@ namespace PrepareImageFrm
 
         private PointF GetCenter(int i) => f_Contours.Size < i ? new PointF() : CvInvoke.FitEllipse(f_Contours[i]).Center;
 
-        private string GetСenters()
+        private string GetCenters()
         {
             if (f_Contours.Size == 0) return "Not centers";
             var cycles = f_Contours.Size <= 20 ? f_Contours.Size : 20;
@@ -149,7 +149,7 @@ namespace PrepareImageFrm
             if (f_Contours.Size <= 0) return res;
             res.Nodes.Add(GetPerimeters());
             res.Nodes.Add(GetDistanceString(GetDistanceBeforeCenter()));
-            res.Nodes.Add(GetСenters());
+            res.Nodes.Add(GetCenters());
             res.Nodes.Add(GetSizes(1));
             res.Nodes.Add($"Count: {f_Contours.Size}");
             return res;
@@ -157,7 +157,7 @@ namespace PrepareImageFrm
 
         private static double ZoomKoef(double zm) => (4.65 * zm + 5.9) / 305;
 
-        public string ToString(double zm) => IsCorrect ? $"{Path.GetFileNameWithoutExtension(FileName)}:{Pass}:{GetDistanceString(GetDistanceBeforeCenter(), ZoomKoef(zm))}:{GetСenters()}:{GetSizes(ZoomKoef(zm))}"
+        public string ToString(double zm) => IsCorrect ? $"{Path.GetFileNameWithoutExtension(FileName)}:{Pass}:{GetDistanceString(GetDistanceBeforeCenter(), ZoomKoef(zm))}:{GetCenters()}:{GetSizes(ZoomKoef(zm))}"
                 : $"{FileName}:No two contours";
 
         public static void SaveDetailFile(string fName)

@@ -16,25 +16,25 @@ namespace PrepareImageFrm
 {
     public partial class Form1 : Form
     {
-        private Image<Bgr, byte> f_ImgInput;
-        private readonly ClusterPack f_ClusterPack;
-        private int f_BinarizationThreshold = 60;
-        private int f_GaussianParam = 5;
-        private int f_MaxAspectRatio = 33;
-        private int f_MinPerimeterLen = 120;
-        private int f_Zoom = 60;
-        private int f_ObjectCount;
-        private string f_CurrentFile;
-        private long f_FileSize;
-        private readonly ResultsStore f_Storage;
+        private Image<Bgr, ushort> _imgInput;
+        private readonly ClusterPack _clusterPack;
+        private int _binarizationThreshold = 80;
+        private int _gaussianParam = 3;
+        private int _maxAspectRatio = 25;
+        private int _minPerimeterLen = 60;
+        private int _zoom = 112;
+        private int _objectCount;
+        private string _currentFile;
+        private long _fileSize;
+        private readonly ResultsStore _storage;
 
 
         public Form1()
         {
             InitializeComponent();
             WindowState = FormWindowState.Maximized;
-            f_Storage = new ResultsStore();
-            f_ClusterPack = new ClusterPack(f_Zoom);
+            _storage = new ResultsStore();
+            _clusterPack = new ClusterPack(_zoom);
         }
 
         private async void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -57,20 +57,20 @@ namespace PrepareImageFrm
 
         private async Task LoadFile(string fileName)
         {
-            f_CurrentFile = fileName;
-            f_ImgInput = await LoadFileAsync(fileName);
-            f_FileSize = new FileInfo(fileName).Length;
-            pictureBox2.Image = f_ImgInput.AsBitmap();
+            _currentFile = fileName;
+            _imgInput = await LoadFileAsync(fileName);
+            _fileSize = new FileInfo(fileName).Length;
+            pictureBox2.Image = _imgInput.AsBitmap();
         }
 
         private void DetectShapesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (f_ImgInput == null) return;
+            if (_imgInput == null) return;
             try
             {
-                var tmpCnt = ExtractContours(f_ImgInput);
+                var tmpCnt = ExtractContours(_imgInput);
                 var contours = FilterContours(tmpCnt);
-                AddContoursToResCollection(f_CurrentFile, f_FileSize, contours);
+                AddContoursToResCollection(_currentFile, _fileSize, contours);
 
                 for (var i = 0; i < contours.Size; i++)
                 {
@@ -82,8 +82,8 @@ namespace PrepareImageFrm
                     //f_ImgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
                     //CvInvoke.DrawContours(f_ImgInput, contours, i, new MCvScalar(150, 34, 98));
                 }
-                BuildClusterPack(f_CurrentFile, contours);
-                pictureBox1.Image = f_ImgInput.AsBitmap();
+                BuildClusterPack(_currentFile, contours);
+                pictureBox1.Image = _imgInput.AsBitmap();
                 //pictureBox2.Image = temp.AsBitmap();
             }
             catch (Exception ex)
@@ -107,14 +107,14 @@ namespace PrepareImageFrm
 
         private void SavePreparedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox1.Image.Save($"{Path.GetFileNameWithoutExtension(f_CurrentFile)}.jpeg", ImageFormat.Jpeg);
+            pictureBox1.Image.Save($"{Path.GetFileNameWithoutExtension(_currentFile)}.jpeg", ImageFormat.Jpeg);
         }
 
         private async Task PrepareFile(string filename)
         {
             try
             {
-                f_CurrentFile = filename;
+                _currentFile = filename;
                 var inputImage = await LoadFileAsync(filename);
                 var contours = FilterContours(ExtractContours(inputImage));
                 var size = new FileInfo(filename).Length;
@@ -133,10 +133,10 @@ namespace PrepareImageFrm
         private void BuildClusterPack(string fileName, VectorOfVectorOfPoint contours)
         {
             
-            f_ClusterPack.CreateNewCluster(fileName);
+            _clusterPack.CreateNewCluster(fileName);
             for (var i = 0; i < contours.Size; i++)
             {
-                f_ClusterPack.AddElementToCurrent(CvInvoke.FitEllipse(contours[i]));
+                _clusterPack.AddElementToCurrent(CvInvoke.FitEllipse(contours[i]));
             }
         }
 
@@ -153,7 +153,7 @@ namespace PrepareImageFrm
                 sizes.Add(i, sz);
             }
 
-            var result = f_Storage.AddToStore(new ImageResult(fileName, size,  contours, bLst.ToArray(), f_ObjectCount));
+            var result = _storage.AddToStore(new ImageResult(fileName, size,  contours, bLst.ToArray(), _objectCount));
             if (result.Pass == 1)
                 tvResults.Nodes.Add(result.GetResultNode());
             else
@@ -169,8 +169,9 @@ namespace PrepareImageFrm
             {
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var ellipse = new Ellipse(rct);
-                f_ImgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
-                CvInvoke.PutText(f_ImgInput, i.ToString(),
+                if (_imgInput == null) continue;
+                _imgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
+                CvInvoke.PutText(_imgInput, i.ToString(),
                     new Point((int) (rct.Center.X + 10), (int) (rct.Center.Y + 20)), FontFace.HersheyComplex, 0.7,
                     new Bgr(Color.LightCyan).MCvScalar);
             }
@@ -198,8 +199,8 @@ namespace PrepareImageFrm
             {
                 var rct = CvInvoke.FitEllipse(contours[pair.Key]);
                 var ellipse = new Ellipse(rct);
-                f_ImgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
-                CvInvoke.PutText(f_ImgInput, pair.Key.ToString(), new Point((int)(rct.Center.X + 30), (int)(rct.Center.Y + 50)), FontFace.HersheyComplex, 1.5, new Bgr(Color.AntiqueWhite).MCvScalar);
+                _imgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
+                CvInvoke.PutText(_imgInput, pair.Key.ToString(), new Point((int)(rct.Center.X + 30), (int)(rct.Center.Y + 50)), FontFace.HersheyComplex, 1.5, new Bgr(Color.AntiqueWhite).MCvScalar);
             }
         }
 
@@ -212,7 +213,7 @@ namespace PrepareImageFrm
                     SelectedPath = @"D:\+Data\Experiments"
                 };
                 if (dialog.ShowDialog() != DialogResult.OK) return;
-                f_ClusterPack.Clear();
+                _clusterPack.Clear();
                 listBox1.Items.Add("Start directory encode");
                 var files = Directory.GetFiles(dialog.SelectedPath);
                 foreach (var file in files)
@@ -222,7 +223,7 @@ namespace PrepareImageFrm
                     //listBox1.Items.Add(tmpRes);
                 }
                 listBox1.Items.Add("Finished directory encode");
-                listBox1.Items.Add($"Undetected: {f_Storage.GetUndetectedCount}");
+                listBox1.Items.Add($"Undetected: {_storage.GetUndetectedCount}");
             }
             catch (Exception ex)
             {
@@ -234,7 +235,7 @@ namespace PrepareImageFrm
         {
             var fileName = $"{DateTime.Now.ToShortDateString().Replace('.', '_')}_{DateTime.Now.ToShortTimeString().Replace(':', '_')}.csv";
             var saveFile = new StreamWriter(fileName);
-            var results = f_Storage.GetStorageResult(f_Zoom);
+            var results = _storage.GetStorageResult(_zoom);
             foreach (var item in results)
             {
                 saveFile.WriteLine(item);
@@ -244,12 +245,12 @@ namespace PrepareImageFrm
             listBox1.Items.Add($"Log {fileName} saved");
         }
 
-        private async Task<Image<Bgr, byte>> LoadFileAsync(string fileName)
+        private async Task<Image<Bgr, ushort>> LoadFileAsync(string fileName)
         {
             var res = await Task.Run(() =>
             {
-                f_CurrentFile = fileName;
-                return new Image<Bgr, byte>(fileName);
+                _currentFile = fileName;
+                return new Image<Bgr, ushort>(fileName);
             });
             return res;
         }
@@ -278,16 +279,16 @@ namespace PrepareImageFrm
                 if (contours[i].Size < 5) continue;
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var perimeter = CvInvoke.ArcLength(contours[i], true);
-                if ((GetAspectRatio(rct) < f_MaxAspectRatio / 100f) && (perimeter > f_MinPerimeterLen))
+                if ((GetAspectRatio(rct) < _maxAspectRatio / 100f) && (perimeter > _minPerimeterLen) && (perimeter < 300))
                     filteredContours.Push(contours[i]);
             }
             return filteredContours;
         }
 
-        private VectorOfVectorOfPoint ExtractContours(Image<Bgr, byte> inputImage)
+        private VectorOfVectorOfPoint ExtractContours(Image<Bgr, ushort> inputImage)
         {
 
-            var temp = inputImage.SmoothGaussian(f_GaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(f_BinarizationThreshold), new Gray(255));
+            var temp = inputImage.SmoothGaussian(_gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_binarizationThreshold), new Gray(255));
             var contours = new VectorOfVectorOfPoint();
             var m = new Mat();
             CvInvoke.FindContours(image: temp, contours, m, RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
@@ -306,44 +307,44 @@ namespace PrepareImageFrm
         {
             var img = new Bitmap(pictureBox2.Image).ToImage<Gray, byte>();
 
-            var gaussian = img.SmoothGaussian(f_GaussianParam).Convert<Gray, byte>();
+            var gaussian = img.SmoothGaussian(_gaussianParam).Convert<Gray, byte>();
             pictureBox1.Image = gaussian.ToBitmap();
         }
 
         private void BinarizationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (f_ImgInput == null) return;
-            var temp = f_ImgInput.SmoothGaussian(f_GaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(f_BinarizationThreshold), new Gray(255));
+            if (_imgInput == null) return;
+            var temp = _imgInput.SmoothGaussian(_gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_binarizationThreshold), new Gray(255));
             pictureBox1.Image = temp.ToBitmap();
         }
 
         private void ApplyConvertParams(int bt, int gp, int mAs, int mp, int zm, int oc)
         {
-            f_BinarizationThreshold = bt;
-            f_GaussianParam = gp;
-            f_MaxAspectRatio = mAs;
-            f_MinPerimeterLen = mp;
-            f_Zoom = zm;
-            f_ObjectCount = oc;
+            _binarizationThreshold = bt;
+            _gaussianParam = gp;
+            _maxAspectRatio = mAs;
+            _minPerimeterLen = mp;
+            _zoom = zm;
+            _objectCount = oc;
         }
 
         private void DetectParamsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dParams = new DetectParams(f_BinarizationThreshold, f_GaussianParam, f_MaxAspectRatio, f_MinPerimeterLen, f_Zoom, f_ObjectCount);
+            var dParams = new DetectParams(_binarizationThreshold, _gaussianParam, _maxAspectRatio, _minPerimeterLen, _zoom, _objectCount);
             dParams.OnApplyParam += ApplyConvertParams;
             dParams.ShowDialog();
         }
 
         private async void RepeatDirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var files = f_Storage.GetUndetectedItems;
-            f_ClusterPack.Clear();
+            var files = _storage.GetUndetectedItems;
+            _clusterPack.Clear();
             foreach (var file in files)
             {
                 await PrepareFile(file);
             }
             listBox1.Items.Add("Finished directory ReEncode");
-            listBox1.Items.Add($"Undetected: {f_Storage.GetUndetectedCount}");
+            listBox1.Items.Add($"Undetected: {_storage.GetUndetectedCount}");
         }
 
         private async void OpenSelectedToolStripMenuItem_Click(object sender, EventArgs e)
@@ -361,7 +362,7 @@ namespace PrepareImageFrm
 
         private void ClearResultToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            f_Storage.ClearStorage();
+            _storage.ClearStorage();
             tvResults.Nodes.Clear();
         }
 
@@ -464,9 +465,9 @@ namespace PrepareImageFrm
 
         private int GetPixelBrightness(int x, int y)
         {
-            if (f_ImgInput == null) return 0;
-            if (x <= 0 || y <= 0 || x >= f_ImgInput.Size.Width || y >= f_ImgInput.Size.Height) return 0;
-            var pixel = f_ImgInput[x, y];
+            if (_imgInput == null) return 0;
+            if (x <= 0 || y <= 0 || x >= _imgInput.Size.Width || y >= _imgInput.Size.Height) return 0;
+            var pixel = _imgInput[x, y];
             return (int)(pixel.Green);
             //return (int)(pixel.Red + pixel.Green + pixel.Blue);
 
@@ -474,20 +475,25 @@ namespace PrepareImageFrm
 
         private void SaveDetailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            f_Storage.SaveAllDetail();
+            _storage.SaveAllDetail();
         }
 
         private async void DrawTrajectoriesToolStripMenuItem_ClickAsync(object sender, EventArgs e)
         {
 
-            pictureBox1.Image = f_ClusterPack.Trajectories().ToBitmap();
-            await f_ClusterPack.SaveExcelFile();
+            pictureBox1.Image = _clusterPack.Trajectories().ToBitmap();
+            await _clusterPack.SaveExcelFile();
         }
 
         private async void ScanBrigToolStripMenuItem_Click(object sender, EventArgs e)
         { //Выгрузка результатов сканирования яркости
-             await f_Storage.SaveExcelBrightness();
+             await _storage.SaveExcelBrightness();
 
+        }
+
+        private async void saveInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await _clusterPack.SaveDetailInfo();
         }
     }
 }

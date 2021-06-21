@@ -46,6 +46,7 @@
             this.histToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cLACHEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawTrajectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.scanBrigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filtersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gaussianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bynaryzationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +55,7 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tvResults = new System.Windows.Forms.TreeView();
-            this.scanBrigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -104,7 +105,8 @@
             this.savePreparedToolStripMenuItem,
             this.saveLogToolStripMenuItem,
             this.toolStripSeparator1,
-            this.saveDetailToolStripMenuItem});
+            this.saveDetailToolStripMenuItem,
+            this.saveInfoToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -224,6 +226,13 @@
             this.drawTrajectoriesToolStripMenuItem.Text = "Draw Trajectories";
             this.drawTrajectoriesToolStripMenuItem.Click += new System.EventHandler(this.DrawTrajectoriesToolStripMenuItem_ClickAsync);
             // 
+            // scanBrigToolStripMenuItem
+            // 
+            this.scanBrigToolStripMenuItem.Name = "scanBrigToolStripMenuItem";
+            this.scanBrigToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.scanBrigToolStripMenuItem.Text = "Scan Brightness";
+            this.scanBrigToolStripMenuItem.Click += new System.EventHandler(this.ScanBrigToolStripMenuItem_Click);
+            // 
             // filtersToolStripMenuItem
             // 
             this.filtersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -297,12 +306,12 @@
             this.tvResults.Size = new System.Drawing.Size(348, 317);
             this.tvResults.TabIndex = 4;
             // 
-            // scanBrigToolStripMenuItem
+            // saveInfoToolStripMenuItem
             // 
-            this.scanBrigToolStripMenuItem.Name = "scanBrigToolStripMenuItem";
-            this.scanBrigToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.scanBrigToolStripMenuItem.Text = "Scan Brightness";
-            this.scanBrigToolStripMenuItem.Click += new System.EventHandler(this.ScanBrigToolStripMenuItem_Click);
+            this.saveInfoToolStripMenuItem.Name = "saveInfoToolStripMenuItem";
+            this.saveInfoToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.saveInfoToolStripMenuItem.Text = "Save Info";
+            this.saveInfoToolStripMenuItem.Click += new System.EventHandler(this.saveInfoToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -353,6 +362,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveDetailToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem drawTrajectoriesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scanBrigToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveInfoToolStripMenuItem;
     }
 }
 

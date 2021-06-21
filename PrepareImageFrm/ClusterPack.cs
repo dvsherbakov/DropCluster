@@ -82,7 +82,11 @@ namespace PrepareImageFrm
             var pList = new List<List<PointF>>();
             for (var i = 0; i < GetMaxDropCount(); i++)
             {
-                var tmp = _clusters.Select(it => it.GetList.FirstOrDefault(x => x.Id == i).Element.Center).ToList();
+                var tmp = new List<PointF>();
+                foreach (var it in _clusters)
+                {
+                    tmp.Add(it.GetList.FirstOrDefault(x => x.Id == i).Element.Center);
+                }
                 pList.Add(tmp);
             }
 
@@ -105,6 +109,64 @@ namespace PrepareImageFrm
             }
 
             return dict;
+        }
+
+        public async Task SaveDetailInfo()
+        {
+            await Task.Run(() =>
+            {
+                var fileName = _packId.Split('\\').LastOrDefault() + ".xlsx";
+                const double zm = 0.8529; //ZoomKoef;
+                var file = new FileInfo(fileName);
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                var numbers = new HashSet<ushort>();
+
+                foreach (var item in _clusters.SelectMany(cluster => cluster.GetList))
+                {
+                    numbers.Add((ushort)item.Id);
+                }
+
+                using (var package = new ExcelPackage(file))
+                {
+                    var xlsSizes = package.Workbook.Worksheets.Add("Sizes");
+                    
+                    var row = 2;
+                    foreach (var cluster in _clusters)
+                    {
+                        var col = 3;
+                        foreach (var c in numbers)
+                        {
+                            if (cluster.GetList.Count(y => y.Id == c) > 0)
+                            {
+                                var candidat = cluster.GetList.FirstOrDefault(x => x.Id == c);
+                                xlsSizes.Cells[row, col].Value = ((candidat.Element.Size.Width + candidat.Element.Size.Height) / 2) / zm;
+                            }
+                            col++;
+                        }
+
+                        var xlsSheet = package.Workbook.Worksheets.Add(cluster.ClusterId);
+
+                        xlsSizes.Cells[row, 2].Value = cluster.ClusterId;
+                        
+                        var rowId = 2;
+                        foreach (var item in cluster.GetList.OrderByDescending(x => (x.Element.Size.Width + x.Element.Size.Height )))
+                        {
+                            
+                            xlsSheet.Cells[rowId, 2].Value = item.Id;
+                            xlsSheet.Cells[rowId, 3].Value = item.Element.Center.X;
+                            xlsSheet.Cells[rowId, 4].Value = item.Element.Center.Y;
+                            xlsSheet.Cells[rowId, 5].Value = ((item.Element.Size.Width + item.Element.Size.Height) / 2) / zm;
+                            
+                            xlsSheet.Cells[rowId, 8].Value = (item.Element.Size.Width + item.Element.Size.Height) / 2;
+                            rowId++;
+                        }
+
+                        row++;
+                    }
+                    package.Save();
+                }
+            });
         }
 
         public async Task SaveExcelFile()
