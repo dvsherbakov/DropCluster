@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Emgu.CV.Structure;
 
 namespace PrepareImageFrm
@@ -8,17 +9,22 @@ namespace PrepareImageFrm
     {
         private readonly List<ClusterElement> f_Cluster;
         public string ClusterId { get; }
+        private readonly int _clusterNo = 0;
+        public int ClusterNo => _clusterNo;
         public ClusterElement this[int index] => f_Cluster[index];
-        public ClusterRect Edges { get => GetEdges(); }
+        public ClusterRect Edges => GetEdges();
         public int Count => f_Cluster.Count;
+        
         public Cluster(string fName)
         {
             f_Cluster = new List<ClusterElement>();
             ClusterId = fName;
+             int.TryParse(new Regex(@"[^\d]").Replace(fName.Split('_').LastOrDefault() ?? string.Empty, string.Empty), out _clusterNo);
         }
 
         public void Add(ClusterElement el)
         {
+            el.ClusterNo = ClusterNo;
             f_Cluster.Add(el);
         }
 

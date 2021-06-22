@@ -19,7 +19,7 @@ namespace PrepareImageFrm
     {
         private Image<Bgr, ushort> _imgInput;
         private readonly ClusterPack _clusterPack;
-        private int _binarizationThreshold = 120;
+        private int _binarizationThreshold = 80;
         private int _gaussianParam = 3;
         private int _maxAspectRatio = 25;
         private int _minPerimeterLen = 60;
@@ -410,14 +410,14 @@ namespace PrepareImageFrm
         private int[] BrightnessMultyShear(IInputArray contour)
         {
             var rct = CvInvoke.FitEllipse(contour);
-            var rad = (rct.Size.Width + rct.Size.Height) / 4;
+            // var rad = (rct.Size.Width + rct.Size.Height) / 4;
             var yn = (int)rct.Center.Y;
-            var y0 = (int)(rct.Center.Y - rad) - 20;
-            var y1 = (int)(rct.Center.Y + rad) + 15;
+            var y0 = (int)(rct.Center.Y - 35) ;
+            var y1 = (int)(rct.Center.Y + 35) ;
 
             var xn = (int)rct.Center.X;
-            var x0 = (int)(rct.Center.X - rad) - 15;
-            var x1 = (int)(rct.Center.X + rad) + 15;
+            var x0 = (int)(rct.Center.X - 35) ;
+            var x1 = (int)(rct.Center.X + 35) ;
 
             var lstX = new List<int>();
             for (var x = x0; x <= x1; x++)
