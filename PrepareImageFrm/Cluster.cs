@@ -22,6 +22,15 @@ namespace PrepareImageFrm
             f_Cluster.Add(el);
         }
 
+        public void RemoveById(int id)
+        {
+            var can = f_Cluster.FirstOrDefault(x => x.Id == id);
+            if (can != null)
+            {
+                f_Cluster.Remove(can);
+            }
+        }
+
         private ClusterRect GetEdges()
         {
             var x1 = f_Cluster.Min(x => x.Element.Center.X);

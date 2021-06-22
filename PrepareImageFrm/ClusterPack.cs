@@ -113,16 +113,19 @@ namespace PrepareImageFrm
 
         private void ReOrderPack() 
         {
-            for (int i = 1; i<_clusters.Count; i++)
+            for (var i = 1; i<_clusters.Count; i++)
             {
-                var prev = _clusters[i-1];
-                var rect = _clusters[i].Edges;
+                var prev = new Cluster("Unknown");
+                foreach (var tmp in _clusters[i - 1].GetList)
+                {
+                    prev.Add(tmp);
+                };
+                //var rect = _clusters[i].Edges;
                 foreach (var elem in _clusters[i].GetList)
                 {
-                    var relative = elem.GetRelativeElement(rect);
-                    if (prev.Count>0){
-                        elem.Id = prev.GetRelativeNearerId(relative);
-                    } else elem.Id = _clusters[i].GenerateNextId();
+                    //var relative = elem.GetRelativeElement(rect);
+                    elem.Id = prev.Count>0 ? prev.GetNearerId(elem.Element) : _clusters[i].GenerateNextId();
+                    prev.RemoveById(elem.Id);
                 }
             }
         }
@@ -156,8 +159,10 @@ namespace PrepareImageFrm
                         {
                             if (cluster.GetList.Count(y => y.Id == c) > 0)
                             {
-                                var candidat = cluster.GetList.FirstOrDefault(x => x.Id == c);
-                                xlsSizes.Cells[row, col].Value = ((candidat.Element.Size.Width + candidat.Element.Size.Height) / 2) / zm;
+                                var candid = cluster.GetList.FirstOrDefault(x => x.Id == c);
+                                if (candid != null)
+                                    xlsSizes.Cells[row, col].Value =
+                                        ((candid.Element.Size.Width + candid.Element.Size.Height) / 2) / zm;
                             }
                             col++;
                         }
