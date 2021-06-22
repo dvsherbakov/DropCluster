@@ -37,13 +37,13 @@ namespace PrepareImageFrm
             _clusters.Add(new Cluster(CurrentClusterId));
         }
 
-        public void AddElementToCurrent(RotatedRect el)
+        public void AddElementToCurrent(RotatedRect el, int[] profile)
         {
             if (_clusters == null) return;
             var id = PrevClusterId == "start"
                 ? _clusters.FirstOrDefault(x => x.ClusterId == CurrentClusterId).Count
                 : _clusters.FirstOrDefault(x => x.ClusterId == PrevClusterId).GetNearerId(el);
-            _clusters.FirstOrDefault(x => x.ClusterId == CurrentClusterId)?.Add(new ClusterElement(id, el));
+            _clusters.FirstOrDefault(x => x.ClusterId == CurrentClusterId)?.Add(new ClusterElement(id, el, profile));
         }
 
         public void Clear()
@@ -137,10 +137,13 @@ namespace PrepareImageFrm
                         var col = 3;
                         foreach (var c in numbers)
                         {
+                            xlsSizes.Cells[1, col].Value = c;
                             if (cluster.GetList.Count(y => y.Id == c) > 0)
                             {
-                                var candidat = cluster.GetList.FirstOrDefault(x => x.Id == c);
-                                xlsSizes.Cells[row, col].Value = ((candidat.Element.Size.Width + candidat.Element.Size.Height) / 2) / zm;
+                                var candidate = cluster.GetList.FirstOrDefault(x => x.Id == c);
+                                if (candidate != null)
+                                    xlsSizes.Cells[row, col].Value =
+                                        ((candidate.Element.Size.Width + candidate.Element.Size.Height) / 2) / zm;
                             }
                             col++;
                         }
@@ -158,7 +161,13 @@ namespace PrepareImageFrm
                             xlsSheet.Cells[rowId, 4].Value = item.Element.Center.Y;
                             xlsSheet.Cells[rowId, 5].Value = ((item.Element.Size.Width + item.Element.Size.Height) / 2) / zm;
                             
+                            
                             xlsSheet.Cells[rowId, 8].Value = (item.Element.Size.Width + item.Element.Size.Height) / 2;
+
+                            for (var p = 0; p < item.Profile.Length; p++)
+                            {
+                                xlsSheet.Cells[rowId, 10 + p].Value = item.Profile[p];
+                            }
                             rowId++;
                         }
 

@@ -7,11 +7,13 @@ namespace PrepareImageFrm
     {
         public int Id { get; }
         public RotatedRect Element { get; }
+        public int[] Profile;
         
-        public ClusterElement(int id, RotatedRect rect)
+        public ClusterElement(int id, RotatedRect rect, int[] profile)
         {
             Id = id;
             Element = rect;
+            Profile = profile;
         }
 
         public float Range(RotatedRect el)
@@ -24,7 +26,7 @@ namespace PrepareImageFrm
             var tmpElement = Element;
             tmpElement.Center.X -= edges.X1;
             tmpElement.Center.Y -= edges.Y1;
-            ClusterElement res = new ClusterElement(Id, tmpElement);
+            var res = new ClusterElement(Id, tmpElement, Profile);
 
             return res;
         }

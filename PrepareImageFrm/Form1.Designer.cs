@@ -40,6 +40,7 @@
             this.saveLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.saveDetailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.processToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.repeatDirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,7 +56,6 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tvResults = new System.Windows.Forms.TreeView();
-            this.saveInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -81,6 +81,7 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // menuStrip1
             // 
@@ -171,6 +172,13 @@
             this.saveDetailToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.saveDetailToolStripMenuItem.Text = "Save Detail";
             this.saveDetailToolStripMenuItem.Click += new System.EventHandler(this.SaveDetailToolStripMenuItem_Click);
+            // 
+            // saveInfoToolStripMenuItem
+            // 
+            this.saveInfoToolStripMenuItem.Name = "saveInfoToolStripMenuItem";
+            this.saveInfoToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.saveInfoToolStripMenuItem.Text = "Save Info";
+            this.saveInfoToolStripMenuItem.Click += new System.EventHandler(this.saveInfoToolStripMenuItem_Click);
             // 
             // processToolStripMenuItem
             // 
@@ -305,13 +313,6 @@
             this.tvResults.Name = "tvResults";
             this.tvResults.Size = new System.Drawing.Size(348, 317);
             this.tvResults.TabIndex = 4;
-            // 
-            // saveInfoToolStripMenuItem
-            // 
-            this.saveInfoToolStripMenuItem.Name = "saveInfoToolStripMenuItem";
-            this.saveInfoToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.saveInfoToolStripMenuItem.Text = "Save Info";
-            this.saveInfoToolStripMenuItem.Click += new System.EventHandler(this.saveInfoToolStripMenuItem_Click);
             // 
             // Form1
             // 
