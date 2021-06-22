@@ -111,10 +111,30 @@ namespace PrepareImageFrm
             return dict;
         }
 
+        private void ReOrderPack() 
+        {
+            for (var i = 1; i<_clusters.Count; i++)
+            {
+                var prev = new Cluster("Unknown");
+                foreach (var tmp in _clusters[i - 1].GetList)
+                {
+                    prev.Add(tmp);
+                };
+                //var rect = _clusters[i].Edges;
+                foreach (var elem in _clusters[i].GetList)
+                {
+                    //var relative = elem.GetRelativeElement(rect);
+                    elem.Id = prev.Count>0 ? prev.GetNearerId(elem.Element) : _clusters[i].GenerateNextId();
+                    prev.RemoveById(elem.Id);
+                }
+            }
+        }
+
         public async Task SaveDetailInfo()
         {
             await Task.Run(() =>
             {
+                ReOrderPack();
                 var fileName = _packId.Split('\\').LastOrDefault() + ".xlsx";
                 const double zm = 0.8529; //ZoomKoef;
                 var file = new FileInfo(fileName);

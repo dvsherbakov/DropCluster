@@ -19,7 +19,7 @@ namespace PrepareImageFrm
     {
         private Image<Bgr, ushort> _imgInput;
         private readonly ClusterPack _clusterPack;
-        private int _binarizationThreshold = 80;
+        private int _binarizationThreshold = 120;
         private int _gaussianParam = 3;
         private int _maxAspectRatio = 25;
         private int _minPerimeterLen = 60;

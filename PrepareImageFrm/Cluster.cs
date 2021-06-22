@@ -22,6 +22,15 @@ namespace PrepareImageFrm
             f_Cluster.Add(el);
         }
 
+        public void RemoveById(int id)
+        {
+            var can = f_Cluster.FirstOrDefault(x => x.Id == id);
+            if (can != null)
+            {
+                f_Cluster.Remove(can);
+            }
+        }
+
         private ClusterRect GetEdges()
         {
             var x1 = f_Cluster.Min(x => x.Element.Center.X);
@@ -47,6 +56,8 @@ namespace PrepareImageFrm
             if (f_Cluster == null || f_Cluster.Count <= 0) return -1;
             return f_Cluster.OrderBy(x => x.GetRelativeElement(Edges).Range(relateElement.Element)).FirstOrDefault().Id;
         }
+
+        public int GenerateNextId() => new HashSet<int>(f_Cluster.Select(x=>x.Id)).Max()+1;
 
     }
 }
