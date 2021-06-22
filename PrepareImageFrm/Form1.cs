@@ -412,7 +412,7 @@ namespace PrepareImageFrm
             var rct = CvInvoke.FitEllipse(contour);
             var rad = (rct.Size.Width + rct.Size.Height) / 4;
             var yn = (int)rct.Center.Y;
-            var y0 = (int)(rct.Center.Y - rad) - 15;
+            var y0 = (int)(rct.Center.Y - rad) - 20;
             var y1 = (int)(rct.Center.Y + rad) + 15;
 
             var xn = (int)rct.Center.X;
