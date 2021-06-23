@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.TextFormatting;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -136,6 +137,7 @@ namespace PrepareImageFrm
             await Task.Run(() =>
             {
                 ReOrderPack();
+                //var tmp = _clusters[0].GetList;
                 var linearList = _clusters.SelectMany(c => c.GetList).ToList();
 
                 var fileName = _packId.Split('\\').LastOrDefault() + ".xlsx";
@@ -178,7 +180,7 @@ namespace PrepareImageFrm
 
                     var row = 12;
 
-                    foreach (var item in linearList.Where(x=>x.Diam>37&&x.Diam<38&&x.AverageBrightness<39000&&x.AverageBrightness>37000).OrderBy(y=>y.AverageBrightness))
+                    foreach (var item in linearList.Where(x=>x.Diam>34&&x.Diam<35&&x.AverageBrightness<39000&&x.AverageBrightness>37000).OrderBy(y=>y.AverageBrightness))
                     {
                         xlsDistribution.Cells[row, 2].Value = item.ClusterNo;
                         xlsDistribution.Cells[row, 3].Value = item.Id;
