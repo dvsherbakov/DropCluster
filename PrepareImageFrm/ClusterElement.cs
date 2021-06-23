@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Emgu.CV.Structure;
 
 namespace PrepareImageFrm
@@ -6,12 +7,27 @@ namespace PrepareImageFrm
     internal class ClusterElement
     {
         public int Id { get; set;}
+        public int ClusterNo { get; set; }
         public RotatedRect Element { get; }
-        
-        public ClusterElement(int id, RotatedRect rect)
+        public int[] Profile;
+
+        public double AverageBrightness => Profile.Average();
+
+        public float Diam => (Element.Size.Height + Element.Size.Width) / 2;
+
+        public ClusterElement(int id, RotatedRect rect, int[] profile)
         {
             Id = id;
             Element = rect;
+            Profile = profile;
+        }
+
+        public ClusterElement(int id, int cn, RotatedRect rect, int[] profile)
+        {
+            Id = id;
+            Element = rect;
+            ClusterNo = cn;
+            Profile = profile;
         }
 
         public float Range(RotatedRect el)
@@ -24,7 +40,7 @@ namespace PrepareImageFrm
             var tmpElement = Element;
             tmpElement.Center.X -= edges.X1;
             tmpElement.Center.Y -= edges.Y1;
-            ClusterElement res = new ClusterElement(Id, tmpElement);
+            var res = new ClusterElement(Id, ClusterNo,  tmpElement, Profile);
 
             return res;
         }

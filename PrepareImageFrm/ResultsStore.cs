@@ -1,4 +1,5 @@
-﻿using OfficeOpenXml;
+﻿using System;
+using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,15 +9,15 @@ namespace PrepareImageFrm
 {
     internal class ResultsStore
     {
-        private readonly List<ImageResult> f_Results;
-        private readonly SplineInterpolator f_Si;
+        private readonly List<ImageResult> _results;
+        private readonly SplineInterpolator _si;
 
-        public int Length => f_Results.Count();
-        public ImageResult this[int index] => f_Results[index];
+        public int Length => _results.Count();
+        public ImageResult this[int index] => _results[index];
 
         public ResultsStore()
         {
-            f_Results = new List<ImageResult>();
+            _results = new List<ImageResult>();
             var known = new Dictionary<double, double>
             {
                 {50.0, 7.74},
@@ -28,45 +29,50 @@ namespace PrepareImageFrm
                 {100.0, 15.47},
                 {112.0, 17.31},
             };
-            f_Si = new SplineInterpolator(known.OrderBy(x => x.Key)
+            _si = new SplineInterpolator(known.OrderBy(x => x.Key)
                 .ToDictionary(pair => pair.Key, pair => pair.Value));
         }
 
         private bool Exists(string fileName)
         {
-            return f_Results.Any(x => x.FileName == fileName);
+            return _results.Any(x => x.FileName == fileName);
         }
 
         public ImageResult AddToStore(ImageResult result)
         {
             if (!Exists(result.FileName))
             {
-                f_Results.Add(result);
+                _results.Add(result);
                 return result;
             }
 
-            f_Results.FirstOrDefault(x => x.FileName == result.FileName)?.UpdateContours(result.GetContours);
-            return f_Results.FirstOrDefault(x => x.FileName == result.FileName);
+            _results.FirstOrDefault(x => x.FileName == result.FileName)?.UpdateContours(result.GetContours);
+            return _results.FirstOrDefault(x => x.FileName == result.FileName);
         }
 
-        public IEnumerable<string> GetUndetectedItems => f_Results.Where(x => !x.IsCorrect).Select(x => x.FileName);
+        public IEnumerable<string> GetUndetectedItems => _results.Where(x => !x.IsCorrect).Select(x => x.FileName);
 
-        public int GetUndetectedCount => f_Results.Count(x => !x.IsCorrect);
+        public int GetUndetectedCount => _results.Count(x => !x.IsCorrect);
 
         public IEnumerable<string> GetStorageResult(int zm)
         {
-            //return f_Results.OrderBy(x => x.FileName).Select(x => x.ToString(f_Si.GetValue(zm)));
-            return f_Results.OrderBy(x => x.FileName).Select(x => x.ToString(zm));
+            //return _results.OrderBy(x => x.FileName).Select(x => x.ToString(_si.GetValue(zm)));
+            return _results.OrderBy(x => x.FileName).Select(x => x.ToString(zm));
+        }
+
+        public int[][] GetResult(int pointer)
+        {
+            return _results[pointer].Brightness;
         }
 
         public void ClearStorage()
         {
-            f_Results.Clear();
+            _results.Clear();
         }
 
         public void SaveAllDetail()
         {
-            foreach (var item in f_Results)
+            foreach (var item in _results)
                 ImageResult.SaveDetailFile(item.FileName);
         }
 
@@ -76,7 +82,7 @@ namespace PrepareImageFrm
             {
                 await Task.Run(() =>
                 {//Выгрузка результатов сканирования яркости
-                    var fileName = new DirectoryInfo(f_Results.FirstOrDefault().FileName).Parent.Name + ".xlsx";
+                    var fileName = new DirectoryInfo(_results.FirstOrDefault().FileName).Parent.Name + ".xlsx";
 
                     var file = new FileInfo(fileName);
                     ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -84,12 +90,12 @@ namespace PrepareImageFrm
                     using (var package = new ExcelPackage(file))
                     {
 
-                        foreach (var res in f_Results)
+                        foreach (var res in _results)
                         {//по всем снимкам
                             var xlsSheet = package.Workbook.Worksheets.Add(Path.GetFileNameWithoutExtension(res.FileName));
                             var row = 2;
 
-                            foreach (var drop in res.Bribrightness)
+                            foreach (var drop in res.Brightness)
                             {
                                 for (var k = (drop.Length / 2) - 1; k >= 0; k--)
                                 {

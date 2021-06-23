@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media.TextFormatting;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -18,7 +19,7 @@ namespace PrepareImageFrm
     {
         private Image<Bgr, ushort> _imgInput;
         private readonly ClusterPack _clusterPack;
-        private int _binarizationThreshold = 120;
+        private int _binarizationThreshold = 80;
         private int _gaussianParam = 3;
         private int _maxAspectRatio = 25;
         private int _minPerimeterLen = 60;
@@ -70,7 +71,7 @@ namespace PrepareImageFrm
             {
                 var tmpCnt = ExtractContours(_imgInput);
                 var contours = FilterContours(tmpCnt);
-                AddContoursToResCollection(_currentFile, _fileSize, contours);
+                AddContoursToResCollection(_currentFile, _fileSize, contours, true);
 
                 for (var i = 0; i < contours.Size; i++)
                 {
@@ -115,12 +116,12 @@ namespace PrepareImageFrm
             try
             {
                 _currentFile = filename;
-                var inputImage = await LoadFileAsync(filename);
-                var contours = FilterContours(ExtractContours(inputImage));
+                 _imgInput= await LoadFileAsync(filename);
+                var contours = FilterContours(ExtractContours(_imgInput));
                 var size = new FileInfo(filename).Length;
-                AddContoursToResCollection(filename, size, contours);
+                AddContoursToResCollection(filename, size, contours, false);
                 BuildClusterPack(filename, contours);
-                inputImage.Dispose();
+                _imgInput.Dispose();
             }
             catch (Exception ex)
             {
@@ -136,11 +137,13 @@ namespace PrepareImageFrm
             _clusterPack.CreateNewCluster(fileName);
             for (var i = 0; i < contours.Size; i++)
             {
-                _clusterPack.AddElementToCurrent(CvInvoke.FitEllipse(contours[i]));
+                var profile = BrightnessMultyShear(contours[i]);
+                // var profile1 = _storage.GetResult(i);
+                _clusterPack.AddElementToCurrent(CvInvoke.FitEllipse(contours[i]), profile);
             }
         }
 
-        private void AddContoursToResCollection(string fileName, long size, VectorOfVectorOfPoint contours)
+        private void AddContoursToResCollection(string fileName, long size, VectorOfVectorOfPoint contours, bool drawing)
         {
             var sizes = new Dictionary<int, int>();
             var bLst = new List<int[]>();
@@ -164,16 +167,19 @@ namespace PrepareImageFrm
                 tvResults.Nodes.Add(result.GetResultNode());
             }
 
-            //var bigs = sizes.OrderByDescending(x => x.Value).Skip(10).Take(50).ToDictionary(x => x.Key, x => x.Value);
-            for (var i = 0; i < contours.Size; i++)
+            if (!drawing) return;
             {
-                var rct = CvInvoke.FitEllipse(contours[i]);
-                var ellipse = new Ellipse(rct);
-                if (_imgInput == null) continue;
-                _imgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
-                CvInvoke.PutText(_imgInput, i.ToString(),
-                    new Point((int) (rct.Center.X + 10), (int) (rct.Center.Y + 20)), FontFace.HersheyComplex, 0.7,
-                    new Bgr(Color.LightCyan).MCvScalar);
+                //var bigs = sizes.OrderByDescending(x => x.Value).Skip(10).Take(50).ToDictionary(x => x.Key, x => x.Value);
+                for (var i = 0; i < contours.Size; i++)
+                {
+                    var rct = CvInvoke.FitEllipse(contours[i]);
+                    var ellipse = new Ellipse(rct);
+                    if (_imgInput == null) continue;
+                    _imgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
+                    CvInvoke.PutText(_imgInput, i.ToString(),
+                        new Point((int) (rct.Center.X + 10), (int) (rct.Center.Y + 20)), FontFace.HersheyComplex, 0.7,
+                        new Bgr(Color.LightCyan).MCvScalar);
+                }
             }
         }
 
@@ -378,17 +384,11 @@ namespace PrepareImageFrm
             for (var x = x0; x <= x1; x++)
             {
                 lst.Add(GetPixelBrightness(y, x));
-                //if (Math.Abs(x - xn) <= 10)
-                //{
-                //    continue;
-                //}
-                //var pixel = new Bgr(Color.AntiqueWhite);
-                //f_ImgInput[y, x] = pixel;
             }
             return lst.ToArray();
         }
 
-        private int[] BrightnessVertShear(VectorOfPoint contour)
+        private int[] BrightnessVertShear(IInputArray contour)
         {
             var rct = CvInvoke.FitEllipse(contour);
             var rad = (rct.Size.Width + rct.Size.Height) / 4;
@@ -402,11 +402,6 @@ namespace PrepareImageFrm
             {
                 
                 lst.Add(GetPixelBrightness(y, x));
-                //if (Math.Abs(y - yn) > 10)
-                //{
-                //    var pixel = new Bgr(Color.AntiqueWhite);
-                //    f_ImgInput[y, x] = pixel;
-                //}
             }
 
             return lst.ToArray();
@@ -415,30 +410,30 @@ namespace PrepareImageFrm
         private int[] BrightnessMultyShear(IInputArray contour)
         {
             var rct = CvInvoke.FitEllipse(contour);
-            var rad = (rct.Size.Width + rct.Size.Height) / 4;
+            // var rad = (rct.Size.Width + rct.Size.Height) / 4;
             var yn = (int)rct.Center.Y;
-            var y0 = (int)(rct.Center.Y - rad) - 15;
-            var y1 = (int)(rct.Center.Y + rad) + 15;
+            var y0 = (int)(rct.Center.Y - 35) ;
+            var y1 = (int)(rct.Center.Y + 35) ;
 
             var xn = (int)rct.Center.X;
-            var x0 = (int)(rct.Center.X - rad) - 15;
-            var x1 = (int)(rct.Center.X + rad) + 15;
+            var x0 = (int)(rct.Center.X - 35) ;
+            var x1 = (int)(rct.Center.X + 35) ;
 
-            var lstx = new List<int>();
+            var lstX = new List<int>();
             for (var x = x0; x <= x1; x++)
             {
-                lstx.Add(GetPixelBrightness(yn, x));
+                lstX.Add(GetPixelBrightness(yn, x));
             }
 
-            var lsty = new List<int>();
+            var lstY = new List<int>();
             for (var y = y0; y <= y1; y++)
             {
-                lsty.Add(GetPixelBrightness(y, xn));
+                lstY.Add(GetPixelBrightness(y, xn));
             }
 
             var lst = new List<int>();
-            for (var i = 0; i < Math.Min(lstx.Count, lsty.Count); i++)
-            { lst.Add((int)((lstx[i] + lsty[i]) / 2.0)); }
+            for (var i = 0; i < Math.Min(lstX.Count, lstY.Count); i++)
+            { lst.Add((int)((lstX[i] + lstY[i]) / 2.0)); }
 
             return lst.ToArray();
         }
@@ -468,7 +463,7 @@ namespace PrepareImageFrm
             if (_imgInput == null) return 0;
             if (x <= 0 || y <= 0 || x >= _imgInput.Size.Width || y >= _imgInput.Size.Height) return 0;
             var pixel = _imgInput[x, y];
-            return (int)(pixel.Green);
+            return (int)(new List<double>() { pixel.Green, pixel.Blue, pixel.Red }).Average();
             //return (int)(pixel.Red + pixel.Green + pixel.Blue);
 
         }
@@ -494,6 +489,11 @@ namespace PrepareImageFrm
         private async void saveInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             await _clusterPack.SaveDetailInfo();
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

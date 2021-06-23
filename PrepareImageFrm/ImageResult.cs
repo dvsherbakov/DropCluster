@@ -14,74 +14,70 @@ namespace PrepareImageFrm
         public string FileName { get; }
         private long f_FileSize;
         private readonly int f_ObjectCount;
-        private readonly VectorOfVectorOfPoint f_Contours;
         public int Pass { get; private set; }
-        private readonly int[][] f_Bribrightness;
-        public int[][] Bribrightness
-        {
-            get => f_Bribrightness;
-        }
+        public int[][] Brightness { get; }
+
         public float[] Distance => GetDistanceBeforeCenter();
 
-        public bool IsCorrect => f_ObjectCount > 0 ? f_Contours.Size == f_ObjectCount : f_Contours.Size > 0;
+        public bool IsCorrect => f_ObjectCount > 0 ? GetContours.Size == f_ObjectCount : GetContours.Size > 0;
 
-        public ImageResult(string fileName, long fSize, VectorOfVectorOfPoint listOfContours, int[][] bribrightness, int objectCount)
+        public ImageResult(string fileName, long fSize, VectorOfVectorOfPoint listOfContours, int[][] brightness, int objectCount)
         {
             FileName = fileName;
             f_FileSize = fSize;
             Pass = 1;
             f_ObjectCount = objectCount;
-            f_Contours = new VectorOfVectorOfPoint();
-            f_Bribrightness = bribrightness;
+            GetContours = new VectorOfVectorOfPoint();
+            Brightness = brightness;
             for (var i = 0; i < listOfContours.Size; i++)
             {
-                f_Contours.Push(listOfContours[i]);
+                GetContours.Push(listOfContours[i]);
             }
         }
 
-        private PointF GetCenter(int i) => f_Contours.Size < i ? new PointF() : CvInvoke.FitEllipse(f_Contours[i]).Center;
+        private PointF GetCenter(int i) => GetContours.Size < i ? new PointF() : CvInvoke.FitEllipse(GetContours[i]).Center;
 
         private string GetCenters()
         {
-            if (f_Contours.Size == 0) return "Not centers";
-            var cycles = f_Contours.Size <= 20 ? f_Contours.Size : 20;
+            if (GetContours.Size == 0) return "Not centers";
+            var cycles = GetContours.Size <= 20 ? GetContours.Size : 20;
             var res = "Centers: ";
             for (var i = 0; i < cycles; i++)
             {
                 res += $"{GetCenter(i).X}:{GetCenter(i).Y}:";
             }
 
-            if (f_Contours.Size <= 20) return res;
+            if (GetContours.Size <= 20) return res;
             else return res + " ...";
         }
 
-        private SizeF GetSize(int i) => f_Contours.Size < i ? new SizeF() : CvInvoke.FitEllipse(f_Contours[i]).Size;
+        private SizeF GetSize(int i) => GetContours.Size < i ? new SizeF() : CvInvoke.FitEllipse(GetContours[i]).Size;
 
         private string GetSizes(double zm)
         {
-            if (f_Contours.Size == 0) return "Not sizes";
+            if (GetContours.Size == 0) return "Not sizes";
             var res = "Sizes: ";
-            var cycles = f_Contours.Size <= 20 ? f_Contours.Size : 20;
+            var cycles = GetContours.Size <= 20 ? GetContours.Size : 20;
             for (var i = 0; i < cycles; i++)
             {
                 res += $"{GetSize(i).Width / zm}:{GetSize(i).Height / zm}:";
             }
-            if (f_Contours.Size <= 20) return res;
+            if (GetContours.Size <= 20) return res;
             else return res + " ...";
         }
 
-        private double GetPerimeter(int i) => f_Contours.Size < i ? 0 : CvInvoke.ArcLength(f_Contours[i], true);
+        private double GetPerimeter(int i) => GetContours.Size < i ? 0 : CvInvoke.ArcLength(GetContours[i], true);
 
         private string GetPerimeters()
         {
-            if (f_Contours.Size == 0) return "Not perimeters";
+            if (GetContours.Size == 0) return "Not perimeters";
             var res = "Perimeters: ";
-            var cycles = f_Contours.Size <= 20 ? f_Contours.Size : 20;
+            var cycles = GetContours.Size <= 20 ? GetContours.Size : 20;
             for (var i = 0; i < cycles; i++)
             {
                 res += $"{GetPerimeter(i)}: ";
             }
-            if (f_Contours.Size <= 20) return res;
+            if (GetContours.Size <= 20) return res;
             else return res + " ...";
         }
 
@@ -89,20 +85,20 @@ namespace PrepareImageFrm
         {
             var res = new List<float>();
             if (f_ObjectCount == 0) return new float[] { 0f };
-            if (f_Contours.Size != f_ObjectCount) res.Add(0f);
+            if (GetContours.Size != f_ObjectCount) res.Add(0f);
             if (f_ObjectCount == 2)
             {
-                var rctA = CvInvoke.FitEllipse(f_Contours[0]);
-                var rctB = CvInvoke.FitEllipse(f_Contours[1]);
+                var rctA = CvInvoke.FitEllipse(GetContours[0]);
+                var rctB = CvInvoke.FitEllipse(GetContours[1]);
                 res.Add(GetDistance(rctA.Center, rctB.Center));
             }
             else
             {
                 //получаем список объектов
                 var objList = new List<Emgu.CV.Structure.RotatedRect>();
-                for (var i = 0; i < f_Contours.Size; i++)
+                for (var i = 0; i < GetContours.Size; i++)
                 {
-                    objList.Add(CvInvoke.FitEllipse(f_Contours[i]));
+                    objList.Add(CvInvoke.FitEllipse(GetContours[i]));
                 }
                 //Берем пары объектов с похожими X координатами для определения расстояния
                 while (objList.Count >= 1)
@@ -123,10 +119,10 @@ namespace PrepareImageFrm
 
         public void UpdateContours(VectorOfVectorOfPoint newList)
         {
-            f_Contours.Clear();
+            GetContours.Clear();
             for (var i = 0; i < newList.Size; i++)
             {
-                f_Contours.Push(newList[i]);
+                GetContours.Push(newList[i]);
             }
             Pass++;
         }
@@ -136,22 +132,22 @@ namespace PrepareImageFrm
             return data.Aggregate("", (current, t) => current + $"{t / zm}:");
         }
 
-        public VectorOfVectorOfPoint GetContours => f_Contours;
+        public VectorOfVectorOfPoint GetContours { get; }
 
         public TreeNode GetResultNode()
         {
             var res = new TreeNode(Path.GetFileNameWithoutExtension(FileName))
             {
-                Name = FileName,
+                Name = FileName ?? string.Empty,
                 ForeColor = IsCorrect ? Color.DarkGreen : Color.OrangeRed
             };
             res.Nodes.Add($"Pass: {Pass}");
-            if (f_Contours.Size <= 0) return res;
+            if (GetContours.Size <= 0) return res;
             res.Nodes.Add(GetPerimeters());
             res.Nodes.Add(GetDistanceString(GetDistanceBeforeCenter()));
             res.Nodes.Add(GetCenters());
             res.Nodes.Add(GetSizes(1));
-            res.Nodes.Add($"Count: {f_Contours.Size}");
+            res.Nodes.Add($"Count: {GetContours.Size}");
             return res;
         }
 
