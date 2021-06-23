@@ -7,17 +7,17 @@ namespace PrepareImageFrm
 {
     internal class Cluster
     {
-        private readonly List<ClusterElement> f_Cluster;
+        public readonly List<ClusterElement> ClusterList;
         public string ClusterId { get; }
         private readonly int _clusterNo = 0;
         public int ClusterNo => _clusterNo;
-        public ClusterElement this[int index] => f_Cluster[index];
+        public ClusterElement this[int index] => ClusterList[index];
         public ClusterRect Edges => GetEdges();
-        public int Count => f_Cluster.Count;
+        public int Count => ClusterList.Count;
         
         public Cluster(string fName)
         {
-            f_Cluster = new List<ClusterElement>();
+            ClusterList = new List<ClusterElement>();
             ClusterId = fName;
              int.TryParse(new Regex(@"[^\d]").Replace(fName.Split('_').LastOrDefault() ?? string.Empty, string.Empty), out _clusterNo);
         }
@@ -25,45 +25,45 @@ namespace PrepareImageFrm
         public void Add(ClusterElement el)
         {
             el.ClusterNo = ClusterNo;
-            f_Cluster.Add(el);
+            ClusterList.Add(el);
         }
 
         public void RemoveById(int id)
         {
-            var can = f_Cluster.FirstOrDefault(x => x.Id == id);
+            var can = ClusterList.FirstOrDefault(x => x.Id == id);
             if (can != null)
             {
-                f_Cluster.Remove(can);
+                ClusterList.Remove(can);
             }
         }
 
         private ClusterRect GetEdges()
         {
-            var x1 = f_Cluster.Min(x => x.Element.Center.X);
-            var x2 = f_Cluster.Max(x => x.Element.Center.X);
-            var y1 = f_Cluster.Min(x => x.Element.Center.Y);
-            var y2 = f_Cluster.Max(x => x.Element.Center.Y);
+            var x1 = ClusterList.Min(x => x.Element.Center.X);
+            var x2 = ClusterList.Max(x => x.Element.Center.X);
+            var y1 = ClusterList.Min(x => x.Element.Center.Y);
+            var y2 = ClusterList.Max(x => x.Element.Center.Y);
 
             return new ClusterRect(x1, y1, x2, y2);
         }
-        public IEnumerable<ClusterElement> GetList => f_Cluster;
+        public IEnumerable<ClusterElement> GetList => ClusterList;
 
 
 
         public int GetNearerId(RotatedRect el)
         { 
-            if (f_Cluster == null || f_Cluster.Count <= 0) return -1;
-            var tmp = f_Cluster.OrderBy(x => x.Range(el));
-            return f_Cluster.OrderBy(x => x.Range(el)).FirstOrDefault().Id;
+            if (ClusterList == null || ClusterList.Count <= 0) return -1;
+            var tmp = ClusterList.OrderBy(x => x.Range(el));
+            return ClusterList.OrderBy(x => x.Range(el)).FirstOrDefault().Id;
         }
 
         public int GetRelativeNearerId(ClusterElement relateElement)
         {
-            if (f_Cluster == null || f_Cluster.Count <= 0) return -1;
-            return f_Cluster.OrderBy(x => x.GetRelativeElement(Edges).Range(relateElement.Element)).FirstOrDefault().Id;
+            if (ClusterList == null || ClusterList.Count <= 0) return -1;
+            return ClusterList.OrderBy(x => x.GetRelativeElement(Edges).Range(relateElement.Element)).FirstOrDefault().Id;
         }
 
-        public int GenerateNextId() => new HashSet<int>(f_Cluster.Select(x=>x.Id)).Max()+1;
+        public int GenerateNextId() => new HashSet<int>(ClusterList.Select(x=>x.Id)).Max()+1;
 
     }
 }

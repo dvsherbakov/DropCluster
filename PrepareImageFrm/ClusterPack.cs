@@ -138,7 +138,14 @@ namespace PrepareImageFrm
             {
                 ReOrderPack();
                 //var tmp = _clusters[0].GetList;
-                var linearList = _clusters.SelectMany(c => c.GetList).ToList();
+                var linearList = new List<ClusterElement>();
+                foreach (var c in _clusters)
+                {
+                    foreach (var it in c.ClusterList)
+                    {
+                        linearList.Add(it);
+                    }
+                }
 
                 var fileName = _packId.Split('\\').LastOrDefault() + ".xlsx";
                 const double zm = 0.8529; //ZoomKoef;
@@ -180,7 +187,7 @@ namespace PrepareImageFrm
 
                     var row = 12;
 
-                    foreach (var item in linearList.Where(x=>x.Diam>34&&x.Diam<35&&x.AverageBrightness<39000&&x.AverageBrightness>37000).OrderBy(y=>y.AverageBrightness))
+                    foreach (var item in linearList.Where(x=>x.Diam>38&&x.Diam<39&&x.AverageBrightness>40000&&x.AverageBrightness<42000).OrderBy(y=>y.AverageBrightness))
                     {
                         xlsDistribution.Cells[row, 2].Value = item.ClusterNo;
                         xlsDistribution.Cells[row, 3].Value = item.Id;
