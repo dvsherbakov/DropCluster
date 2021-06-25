@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.TextFormatting;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -136,7 +137,15 @@ namespace PrepareImageFrm
             await Task.Run(() =>
             {
                 ReOrderPack();
-                var linearList = _clusters.SelectMany(c => c.GetList).ToList();
+                //var tmp = _clusters[0].GetList;
+                var linearList = new List<ClusterElement>();
+                foreach (var c in _clusters)
+                {
+                    foreach (var it in c.ClusterList)
+                    {
+                        linearList.Add(it);
+                    }
+                }
 
                 var fileName = _packId.Split('\\').LastOrDefault() + ".xlsx";
 
