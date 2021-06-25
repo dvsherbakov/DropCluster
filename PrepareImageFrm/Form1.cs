@@ -216,7 +216,7 @@ namespace PrepareImageFrm
             {
                 var dialog = new FolderBrowserDialog
                 {
-                    SelectedPath = @"D:\+Data\Experiments"
+                    SelectedPath = @"E:\+Data\Clusters\white"
                 };
                 if (dialog.ShowDialog() != DialogResult.OK) return;
                 _clusterPack.Clear();
@@ -407,17 +407,31 @@ namespace PrepareImageFrm
             return lst.ToArray();
         }
 
+        private OctoShear GetComlexShear(IInputArray contour)
+        {
+            const int size = 100;
+            var rct = CvInvoke.FitEllipse(contour);
+            var result = new OctoShear(size);
+
+            for (var i = 1; i < size; i++)
+            {
+                result.Dict[1][i] = rct.Center
+            }
+
+            return result;
+        }
+
         private int[] BrightnessMultyShear(IInputArray contour)
         {
             var rct = CvInvoke.FitEllipse(contour);
             // var rad = (rct.Size.Width + rct.Size.Height) / 4;
             var yn = (int)rct.Center.Y;
-            var y0 = (int)(rct.Center.Y - 35) ;
-            var y1 = (int)(rct.Center.Y + 35) ;
+            var y0 = (int)(rct.Center.Y - 50) ;
+            var y1 = (int)(rct.Center.Y + 50) ;
 
             var xn = (int)rct.Center.X;
-            var x0 = (int)(rct.Center.X - 35) ;
-            var x1 = (int)(rct.Center.X + 35) ;
+            var x0 = (int)(rct.Center.X - 50) ;
+            var x1 = (int)(rct.Center.X + 50) ;
 
             var lstX = new List<int>();
             for (var x = x0; x <= x1; x++)

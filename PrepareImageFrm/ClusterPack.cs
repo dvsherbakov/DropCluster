@@ -112,9 +112,9 @@ namespace PrepareImageFrm
             return dict;
         }
 
-        private void ReOrderPack() 
+        private void ReOrderPack()
         {
-            for (var i = 1; i<_clusters.Count; i++)
+            for (var i = 1; i < _clusters.Count; i++)
             {
                 var prev = new Cluster("Unknown");
                 foreach (var tmp in _clusters[i - 1].GetList)
@@ -125,7 +125,7 @@ namespace PrepareImageFrm
                 foreach (var elem in _clusters[i].GetList)
                 {
                     //var relative = elem.GetRelativeElement(rect);
-                    elem.Id = prev.Count>0 ? prev.GetNearerId(elem.Element) : _clusters[i].GenerateNextId();
+                    elem.Id = prev.Count > 0 ? prev.GetNearerId(elem.Element) : _clusters[i].GenerateNextId();
                     prev.RemoveById(elem.Id);
                 }
             }
@@ -139,6 +139,12 @@ namespace PrepareImageFrm
                 var linearList = _clusters.SelectMany(c => c.GetList).ToList();
 
                 var fileName = _packId.Split('\\').LastOrDefault() + ".xlsx";
+
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+
                 const double zm = 0.8529; //ZoomKoef;
                 var file = new FileInfo(fileName);
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -178,18 +184,19 @@ namespace PrepareImageFrm
 
                     var row = 12;
 
-                    foreach (var item in linearList.Where(x=>x.Diam>37&&x.Diam<38&&x.AverageBrightness<39000&&x.AverageBrightness>37000).OrderBy(y=>y.AverageBrightness))
+                    //foreach (var item in linearList.Where(x=>x.Diam>38&&x.Diam<39&&x.AverageBrightness<27000&&x.AverageBrightness>25000).OrderBy(y=>y.AverageBrightness))
+                    foreach (var item in linearList.Where(x=>x.AverageBrightness < 27950 && x.AverageBrightness > 27700).OrderBy(x=>x.Diam))
                     {
                         xlsDistribution.Cells[row, 2].Value = item.ClusterNo;
                         xlsDistribution.Cells[row, 3].Value = item.Id;
                         xlsDistribution.Cells[row, 4].Value = item.Element.Center.X;
                         xlsDistribution.Cells[row, 5].Value = item.Element.Center.Y;
                         xlsDistribution.Cells[row, 6].Value = item.AverageBrightness;
-                        xlsDistribution.Cells[row, 7].Value = item.Diam/zm;
+                        xlsDistribution.Cells[row, 7].Value = item.Diam / zm;
 
                         for (var q = 0; q < item.Profile.Length; q++)
                         {
-                            xlsDistribution.Cells[row, 9+q].Value = item.Profile[q];
+                            xlsDistribution.Cells[row, 9 + q].Value = item.Profile[q];
                         }
 
                         row++;
