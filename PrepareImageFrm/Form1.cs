@@ -78,10 +78,6 @@ namespace PrepareImageFrm
                     var perimeter = CvInvoke.ArcLength(contours[i], true);
                     var approx = new VectorOfPoint();
                     CvInvoke.ApproxPolyDP(contours[i], approx, 0.03 * perimeter, true);
-                    //var rct = CvInvoke.FitEllipse(contours[i]);
-                    //Ellipse ellipse = new Ellipse(rct);
-                    //f_ImgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
-                    //CvInvoke.DrawContours(f_ImgInput, contours, i, new MCvScalar(150, 34, 98));
                 }
                 BuildClusterPack(_currentFile, contours);
                 pictureBox1.Image = _imgInput.AsBitmap();
@@ -116,7 +112,7 @@ namespace PrepareImageFrm
             try
             {
                 _currentFile = filename;
-                 _imgInput= await LoadFileAsync(filename);
+                _imgInput = await LoadFileAsync(filename);
                 var contours = FilterContours(ExtractContours(_imgInput));
                 var size = new FileInfo(filename).Length;
                 AddContoursToResCollection(filename, size, contours, false);
@@ -133,7 +129,7 @@ namespace PrepareImageFrm
 
         private void BuildClusterPack(string fileName, VectorOfVectorOfPoint contours)
         {
-            
+
             _clusterPack.CreateNewCluster(fileName);
             for (var i = 0; i < contours.Size; i++)
             {
@@ -156,7 +152,7 @@ namespace PrepareImageFrm
                 sizes.Add(i, sz);
             }
 
-            var result = _storage.AddToStore(new ImageResult(fileName, size,  contours, bLst.ToArray(), _objectCount));
+            var result = _storage.AddToStore(new ImageResult(fileName, size, contours, bLst.ToArray(), _objectCount));
             if (result.Pass == 1)
                 tvResults.Nodes.Add(result.GetResultNode());
             else
@@ -167,18 +163,40 @@ namespace PrepareImageFrm
                 tvResults.Nodes.Add(result.GetResultNode());
             }
 
+            var _lst = new List<OctoShear>();
+
+
             if (!drawing) return;
             {
+
                 //var bigs = sizes.OrderByDescending(x => x.Value).Skip(10).Take(50).ToDictionary(x => x.Key, x => x.Value);
                 for (var i = 0; i < contours.Size; i++)
                 {
+                    //tmpList.Add(string.Join(":", GetComplexShear(contours[i]).GetProfile()));
+                    _lst.Add(GetComplexShear(contours[i]));
                     var rct = CvInvoke.FitEllipse(contours[i]);
                     var ellipse = new Ellipse(rct);
                     if (_imgInput == null) continue;
                     _imgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
                     CvInvoke.PutText(_imgInput, i.ToString(),
-                        new Point((int) (rct.Center.X + 10), (int) (rct.Center.Y + 20)), FontFace.HersheyComplex, 0.7,
+                        new Point((int)(rct.Center.X + 10), (int)(rct.Center.Y + 20)), FontFace.HersheyComplex, 0.7,
                         new Bgr(Color.LightCyan).MCvScalar);
+                }
+
+                const double zm = 0.8529;
+                var tmpList = new List<string>();
+                foreach (var itm in _lst.OrderByDescending(x => x.Diam))
+                {
+                    tmpList.Add("---");
+                    tmpList.AddRange(itm.Dict.Keys.Select(profDictKey => $"{itm.Diam/zm}:{itm.AvgBrightest()}:{string.Join(":", itm.Dict[profDictKey])}"));
+                    tmpList.Add("-");
+                    tmpList.Add($"{itm.Diam/zm}:{itm.AvgBrightest()}:{string.Join(":", itm.GetProfile())}");
+                }
+
+                using (TextWriter tw = new StreamWriter($"{Path.GetFileNameWithoutExtension(fileName)}.csv"))
+                {
+                    foreach (var s in tmpList)
+                        tw.WriteLine(s);
                 }
             }
         }
@@ -400,22 +418,30 @@ namespace PrepareImageFrm
 
             for (var y = y0; y <= y1; y++)
             {
-                
+
                 lst.Add(GetPixelBrightness(y, x));
             }
 
             return lst.ToArray();
         }
 
-        private OctoShear GetComlexShear(IInputArray contour)
+        private OctoShear GetComplexShear(IInputArray contour)
         {
-            const int size = 100;
+            const int size = 50;
             var rct = CvInvoke.FitEllipse(contour);
-            var result = new OctoShear(size);
+            var cb = GetPixelBrightness((int)rct.Center.Y, (int)rct.Center.X);
+            var result = new OctoShear(size, (uint)cb, rct);
 
             for (var i = 1; i < size; i++)
             {
-                result.Dict[1][i] = rct.Center
+                result.Dict[1][i] = (uint)GetPixelBrightness((int)rct.Center.Y + i, (int)rct.Center.X);
+                result.Dict[2][i] = (uint)GetPixelBrightness((int)rct.Center.Y + i, (int)rct.Center.X - i);
+                result.Dict[3][i] = (uint)GetPixelBrightness((int)rct.Center.Y, (int)rct.Center.X - i);
+                result.Dict[4][i] = (uint)GetPixelBrightness((int)rct.Center.Y - i, (int)rct.Center.X - i);
+                result.Dict[5][i] = (uint)GetPixelBrightness((int)rct.Center.Y - i, (int)rct.Center.X);
+                result.Dict[6][i] = (uint)GetPixelBrightness((int)rct.Center.Y - i, (int)rct.Center.X + i);
+                result.Dict[7][i] = (uint)GetPixelBrightness((int)rct.Center.Y, (int)rct.Center.X + i);
+                result.Dict[8][i] = (uint)GetPixelBrightness((int)rct.Center.Y + i, (int)rct.Center.X + i);
             }
 
             return result;
@@ -426,12 +452,12 @@ namespace PrepareImageFrm
             var rct = CvInvoke.FitEllipse(contour);
             // var rad = (rct.Size.Width + rct.Size.Height) / 4;
             var yn = (int)rct.Center.Y;
-            var y0 = (int)(rct.Center.Y - 50) ;
-            var y1 = (int)(rct.Center.Y + 50) ;
+            var y0 = (int)(rct.Center.Y - 50);
+            var y1 = (int)(rct.Center.Y + 50);
 
             var xn = (int)rct.Center.X;
-            var x0 = (int)(rct.Center.X - 50) ;
-            var x1 = (int)(rct.Center.X + 50) ;
+            var x0 = (int)(rct.Center.X - 50);
+            var x1 = (int)(rct.Center.X + 50);
 
             var lstX = new List<int>();
             for (var x = x0; x <= x1; x++)
@@ -477,6 +503,8 @@ namespace PrepareImageFrm
             if (_imgInput == null) return 0;
             if (x <= 0 || y <= 0 || x >= _imgInput.Size.Width || y >= _imgInput.Size.Height) return 0;
             var pixel = _imgInput[x, y];
+            //var intensity = new Emgu.CV.Structure.Bgr(65535, 65535, 0);
+            //_imgInput[x, y] = intensity;
             return (int)(new List<double>() { pixel.Green, pixel.Blue, pixel.Red }).Average();
             //return (int)(pixel.Red + pixel.Green + pixel.Blue);
 
@@ -496,7 +524,7 @@ namespace PrepareImageFrm
 
         private async void ScanBrigToolStripMenuItem_Click(object sender, EventArgs e)
         { //Выгрузка результатов сканирования яркости
-             await _storage.SaveExcelBrightness();
+            await _storage.SaveExcelBrightness();
 
         }
 

@@ -112,7 +112,7 @@ namespace colorcanell
         public void SaveResult(string fName)
         {
             var file = new FileInfo(fName);
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            ExcelPackage.LicenseContext = System.ComponentModel.LicenseContext.NonCommercial;
 
             using (var package = new ExcelPackage(file))
             {
