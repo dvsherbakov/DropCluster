@@ -184,14 +184,7 @@ namespace PrepareImageFrm
                 }
 
                 const double zm = 0.8529;
-                var tmpList = new List<string>();
-                foreach (var itm in _lst.OrderByDescending(x => x.Diam))
-                {
-                    tmpList.Add("---");
-                    tmpList.AddRange(itm.Dict.Keys.Select(profDictKey => $"{itm.Diam/zm}:{itm.AvgBrightest()}:{string.Join(":", itm.Dict[profDictKey])}"));
-                    tmpList.Add("-");
-                    tmpList.Add($"{itm.Diam/zm}:{itm.AvgBrightest()}:{string.Join(":", itm.GetProfile())}");
-                }
+                var tmpList = _lst.OrderByDescending(x => x.Diam).Select(itm => $"{itm.Diam / zm}:{itm.AvgBrightest()}:{string.Join(":", itm.GetProfile())}").ToList();
 
                 using (TextWriter tw = new StreamWriter($"{Path.GetFileNameWithoutExtension(fileName)}.csv"))
                 {
@@ -434,14 +427,14 @@ namespace PrepareImageFrm
 
             for (var i = 1; i < size; i++)
             {
-                result.Dict[1][i] = (uint)GetPixelBrightness((int)rct.Center.Y + i, (int)rct.Center.X);
-                result.Dict[2][i] = (uint)GetPixelBrightness((int)rct.Center.Y + i, (int)rct.Center.X - i);
-                result.Dict[3][i] = (uint)GetPixelBrightness((int)rct.Center.Y, (int)rct.Center.X - i);
-                result.Dict[4][i] = (uint)GetPixelBrightness((int)rct.Center.Y - i, (int)rct.Center.X - i);
-                result.Dict[5][i] = (uint)GetPixelBrightness((int)rct.Center.Y - i, (int)rct.Center.X);
-                result.Dict[6][i] = (uint)GetPixelBrightness((int)rct.Center.Y - i, (int)rct.Center.X + i);
-                result.Dict[7][i] = (uint)GetPixelBrightness((int)rct.Center.Y, (int)rct.Center.X + i);
-                result.Dict[8][i] = (uint)GetPixelBrightness((int)rct.Center.Y + i, (int)rct.Center.X + i);
+                result.Dict[1][i] = (uint)GetPixelBrightness((int)(rct.Center.Y + i), (int)rct.Center.X);
+                result.Dict[2][i] = (uint)GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
+                result.Dict[3][i] = (uint)GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X - i));
+                result.Dict[4][i] = (uint)GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
+                result.Dict[5][i] = (uint)GetPixelBrightness((int)(rct.Center.Y - i), (int)rct.Center.X);
+                result.Dict[6][i] = (uint)GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
+                result.Dict[7][i] = (uint)GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X + i));
+                result.Dict[8][i] = (uint)GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
             }
 
             return result;
