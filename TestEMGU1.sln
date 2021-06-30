@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexagonalWpf", "HexagonalWp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "colorcanell", "colorcanell\colorcanell.csproj", "{6B2ABFDB-45CB-45E3-8E84-2FB6C0CF2599}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeterminationOfBrightness", "DeterminationOfBrightness\DeterminationOfBrightness.csproj", "{4ACC24A6-4026-40BC-AA83-69476A534694}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,14 @@ Global
 		{6B2ABFDB-45CB-45E3-8E84-2FB6C0CF2599}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6B2ABFDB-45CB-45E3-8E84-2FB6C0CF2599}.Release|x64.ActiveCfg = Release|Any CPU
 		{6B2ABFDB-45CB-45E3-8E84-2FB6C0CF2599}.Release|x64.Build.0 = Release|Any CPU
+		{4ACC24A6-4026-40BC-AA83-69476A534694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ACC24A6-4026-40BC-AA83-69476A534694}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ACC24A6-4026-40BC-AA83-69476A534694}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4ACC24A6-4026-40BC-AA83-69476A534694}.Debug|x64.Build.0 = Debug|Any CPU
+		{4ACC24A6-4026-40BC-AA83-69476A534694}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ACC24A6-4026-40BC-AA83-69476A534694}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ACC24A6-4026-40BC-AA83-69476A534694}.Release|x64.ActiveCfg = Release|Any CPU
+		{4ACC24A6-4026-40BC-AA83-69476A534694}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
