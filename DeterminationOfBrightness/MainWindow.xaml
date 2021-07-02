@@ -14,8 +14,18 @@
     <Window.InputBindings>
         <KeyBinding Modifiers="Control" Key="Q" Command="{Binding QuitCommand}"/>
     </Window.InputBindings>
-    
-    <Grid>
 
-    </Grid>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{Binding CaptionFile}">
+                <MenuItem Header="{Binding CaptionOpen}" Command="{Binding QuitCommand}"/>
+                
+                <Separator/>
+                <MenuItem Header="{Binding CaptionExit}" Command="{Binding QuitCommand}"/>
+            </MenuItem>
+            <MenuItem Header="{Binding CaptionParams}">
+                <MenuItem Header="{Binding CaptionRecognize}"/>
+            </MenuItem>
+        </Menu>
+    </DockPanel>
 </Window>

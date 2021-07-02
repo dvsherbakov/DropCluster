@@ -11,6 +11,11 @@ namespace DeterminationOfBrightness
     {
         public ICommand QuitCommand { get; }
 
+        public string CaptionFile => Properties.Resources.CaptionFIle;
+        public string CaptionOpen => Properties.Resources.CaptionOpen;
+        public string CaptionExit => Properties.Resources.CaptionExit;
+        public string CaptionParams => Properties.Resources.CaptionParams;
+        public string CaptionRecognize => Properties.Resources.CaptionRecognize;
         public MainWindowModel()
         {
             QuitCommand = new LambdaCommand(p => Application.Current.Shutdown());
