@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -133,7 +132,7 @@ namespace PrepareImageFrm
             _clusterPack.CreateNewCluster(fileName);
             for (var i = 0; i < contours.Size; i++)
             {
-                var profile = BrightnessMultyShear(contours[i]);
+                var profile = BrightnessMultiShear(contours[i]);
                 // var profile1 = _storage.GetResult(i);
                 _clusterPack.AddElementToCurrent(CvInvoke.FitEllipse(contours[i]), profile);
             }
@@ -145,7 +144,7 @@ namespace PrepareImageFrm
             var bLst = new List<int[]>();
             for (var i = 0; i < contours.Size; i++)
             {
-                var brig = BrightnessMultyShear(contours[i]);
+                var brig = BrightnessMultiShear(contours[i]);
                 bLst.Add(brig);
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var sz = (int)(rct.Size.Width + rct.Size.Height);
@@ -163,7 +162,7 @@ namespace PrepareImageFrm
                 tvResults.Nodes.Add(result.GetResultNode());
             }
 
-            var _lst = new List<OctoShear>();
+            var lst = new List<OctoShear>();
 
 
             if (!drawing) return;
@@ -173,7 +172,7 @@ namespace PrepareImageFrm
                 for (var i = 0; i < contours.Size; i++)
                 {
                     //tmpList.Add(string.Join(":", GetComplexShear(contours[i]).GetProfile()));
-                    _lst.Add(GetComplexShear(contours[i]));
+                    lst.Add(GetComplexShear(contours[i]));
                     var rct = CvInvoke.FitEllipse(contours[i]);
                     var ellipse = new Ellipse(rct);
                     if (_imgInput == null) continue;
@@ -184,40 +183,13 @@ namespace PrepareImageFrm
                 }
 
                 const double zm = 0.8529;
-                var tmpList = _lst.OrderByDescending(x => x.Diam).Select(itm => $"{itm.Diam / zm}:{itm.AvgBrightest()}:{string.Join(":", itm.GetProfile())}").ToList();
+                var tmpList = lst.OrderByDescending(x => x.Diam).Select(itm => $"{itm.Diam / zm}:{itm.AvgBrightest()}:{string.Join(":", itm.GetProfile())}").ToList();
 
                 using (TextWriter tw = new StreamWriter($"{Path.GetFileNameWithoutExtension(fileName)}.csv"))
                 {
                     foreach (var s in tmpList)
                         tw.WriteLine(s);
                 }
-            }
-        }
-
-        private void GetBrightessDrops(VectorOfVectorOfPoint contours, string fileName, Dictionary<int, int> bigs)
-        {
-            var bList = new List<string>();
-            foreach (var pair in bigs)
-            {
-                var normDict = NormalizeBrightness(BrightnessMultyShear(contours[pair.Key]));
-                var hShear = string.Join(":", normDict.Select(x => x.Value.ToString(CultureInfo.InvariantCulture)).ToArray());
-                var indexes = string.Join(":", normDict.Select(x => x.Key.ToString()).ToArray());
-                bList.Add($"{pair.Key}:Br:{indexes}");
-                bList.Add($"{pair.Key}:Br:{hShear}");
-            }
-
-            using (TextWriter tw = new StreamWriter($"{Path.GetFileNameWithoutExtension(fileName)}.csv"))
-            {
-                foreach (var s in bList)
-                    tw.WriteLine(s);
-            }
-
-            foreach (var pair in bigs)
-            {
-                var rct = CvInvoke.FitEllipse(contours[pair.Key]);
-                var ellipse = new Ellipse(rct);
-                _imgInput.Draw(ellipse, new Bgr(Color.Yellow), 2);
-                CvInvoke.PutText(_imgInput, pair.Key.ToString(), new Point((int)(rct.Center.X + 30), (int)(rct.Center.Y + 50)), FontFace.HersheyComplex, 1.5, new Bgr(Color.AntiqueWhite).MCvScalar);
             }
         }
 
@@ -383,41 +355,6 @@ namespace PrepareImageFrm
             tvResults.Nodes.Clear();
         }
 
-        private int[] BrightnessHorShear(IInputArray contour)
-        {
-            var rct = CvInvoke.FitEllipse(contour);
-            var y = (int)rct.Center.Y;
-            //var xn = rct.Center.X;
-            var x0 = (int)(rct.Center.X - (rct.Size.Width + rct.Size.Height) / 4) - 30;
-            var x1 = (int)(rct.Center.X + (rct.Size.Width + rct.Size.Height) / 4) + 30;
-            var lst = new List<int>();
-
-            for (var x = x0; x <= x1; x++)
-            {
-                lst.Add(GetPixelBrightness(y, x));
-            }
-            return lst.ToArray();
-        }
-
-        private int[] BrightnessVertShear(IInputArray contour)
-        {
-            var rct = CvInvoke.FitEllipse(contour);
-            var rad = (rct.Size.Width + rct.Size.Height) / 4;
-            var x = (int)rct.Center.X;
-            //var yn=(int)rct.Center.Y;
-            var y0 = (int)(rct.Center.Y - rad) - 30;
-            var y1 = (int)(rct.Center.Y + rad) + 30;
-            var lst = new List<int>();
-
-            for (var y = y0; y <= y1; y++)
-            {
-
-                lst.Add(GetPixelBrightness(y, x));
-            }
-
-            return lst.ToArray();
-        }
-
         private OctoShear GetComplexShear(IInputArray contour)
         {
             const int size = 50;
@@ -440,7 +377,33 @@ namespace PrepareImageFrm
             return result;
         }
 
-        private int[] BrightnessMultyShear(IInputArray contour)
+
+
+        private uint AroundAverageBrightness(IInputArray contour)
+        {
+
+            const int size = 30;
+            var tmp = CvInvoke.FitEllipse(contour);
+            var x = (int)tmp.Center.X + 70;
+            var y = (int)tmp.Center.X + 70;
+            var cb = GetPixelBrightness(y, x);
+            var result = new OctoShear(size, (uint)cb, tmp);
+
+            for (var i = 1; i < size; i++)
+            {
+                result.Dict[1][i] = (uint)GetPixelBrightness(y + i, x);
+                result.Dict[2][i] = (uint)GetPixelBrightness((int)(y + (i * 0.7071)), (int)(x - (i * 0.7071)));
+                result.Dict[3][i] = (uint)GetPixelBrightness(y, x - i);
+                result.Dict[4][i] = (uint)GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x - (i * 0.7071)));
+                result.Dict[5][i] = (uint)GetPixelBrightness(y - i, x);
+                result.Dict[6][i] = (uint)GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x + (i * 0.7071)));
+                result.Dict[7][i] = (uint)GetPixelBrightness(y, x + i);
+                result.Dict[8][i] = (uint)GetPixelBrightness((int)(y + (i * 0.7071)), (int)(x + (i * 0.7071)));
+            }
+            return result.AvgBrightest();
+        }
+
+        private int[] BrightnessMultiShear(IInputArray contour)
         {
             var rct = CvInvoke.FitEllipse(contour);
             // var rad = (rct.Size.Width + rct.Size.Height) / 4;
@@ -533,32 +496,3 @@ namespace PrepareImageFrm
     }
 }
 
-
-
-//let src = cv.imread('canvasInput');
-//let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
-//cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
-//cv.threshold(src, src, 100, 200, cv.THRESH_BINARY);
-//let contours = new cv.MatVector();
-//let hierarchy = new cv.Mat();
-//cv.findContours(src, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
-//let hull = new cv.Mat();
-//let defect = new cv.Mat();
-//let cnt = contours.get(0);
-//let lineColor = new cv.Scalar(255, 0, 0);
-//let circleColor = new cv.Scalar(255, 255, 255);
-//cv.convexHull(cnt, hull, false, false);
-//cv.convexityDefects(cnt, hull, defect);
-//for (let i = 0; i < defect.rows; ++i)
-//{
-//    let start = new cv.Point(cnt.data32S[defect.data32S[i * 4] * 2],
-//                             cnt.data32S[defect.data32S[i * 4] * 2 + 1]);
-//    let end = new cv.Point(cnt.data32S[defect.data32S[i * 4 + 1] * 2],
-//                           cnt.data32S[defect.data32S[i * 4 + 1] * 2 + 1]);
-//    let far = new cv.Point(cnt.data32S[defect.data32S[i * 4 + 2] * 2],
-//                           cnt.data32S[defect.data32S[i * 4 + 2] * 2 + 1]);
-//    cv.line(dst, start, end, lineColor, 2, cv.LINE_AA, 0);
-//    cv.circle(dst, far, 3, circleColor, -1);
-//}
-//cv.imshow('canvasOutput', dst);
-//src.delete(); dst.delete(); hierarchy.delete(); contours.delete(); hull.delete(); defect.delete();
