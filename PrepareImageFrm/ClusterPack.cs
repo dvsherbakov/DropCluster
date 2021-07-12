@@ -36,13 +36,13 @@ namespace PrepareImageFrm
             _clusters.Add(new Cluster(CurrentClusterId));
         }
 
-        public void AddElementToCurrent(RotatedRect el, int[] profile)
+        public void AddElementToCurrent(RotatedRect el, int[] profile, uint avg = 0)
         {
             if (_clusters == null) return;
             var id = PrevClusterId == "start"
                 ? _clusters.FirstOrDefault(x => x.ClusterId == CurrentClusterId).Count
                 : _clusters.FirstOrDefault(x => x.ClusterId == PrevClusterId).GetNearerId(el);
-            _clusters.FirstOrDefault(x => x.ClusterId == CurrentClusterId)?.Add(new ClusterElement(id, el, profile));
+            _clusters.FirstOrDefault(x => x.ClusterId == CurrentClusterId)?.Add(new ClusterElement(id, el, profile, avg));
         }
 
         public void Clear()
@@ -84,7 +84,10 @@ namespace PrepareImageFrm
                 var tmp = new List<PointF>();
                 foreach (var it in _clusters)
                 {
-                    tmp.Add(it.GetList.FirstOrDefault(x => x.Id == i).Element.Center);
+                    if (it.GetList.Count(x => x.Id == i) > 0)
+                    {
+                        tmp.Add(it.GetList.FirstOrDefault(x => x.Id == i).Element.Center);
+                    }
                 }
                 pList.Add(tmp);
             }
@@ -151,62 +154,100 @@ namespace PrepareImageFrm
                     File.Delete(fileName);
                 }
 
-                const double zm = 0.8529; //ZoomKoef;
+                const double zm = 0.8529;
+
                 var file = new FileInfo(fileName);
-                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-                var numbers = new HashSet<ushort>();
-
-                foreach (var item in _clusters.SelectMany(cluster => cluster.GetList))
+                var pList = new List<List<ClusterElement>>();
+                for (var i = 0; i < GetMaxDropCount(); i++)
                 {
-                    numbers.Add((ushort)item.Id);
+                    var tmp = new List<ClusterElement>();
+                    foreach (var it in _clusters)
+                    {
+                        if (it.GetList.Count(x => x.Id == i) > 0)
+                        {
+                            tmp.Add(it.GetList.FirstOrDefault(x => x.Id == i));
+                        }
+                    }
+                    pList.Add(tmp);
                 }
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
                 using (var package = new ExcelPackage(file))
                 {
-                    var xlsDistribution = package.Workbook.Worksheets.Add("Distribution");
-                    var xlsSizes = package.Workbook.Worksheets.Add("Sizes");
-
-                    var dColumn = 3;
-                    for (var ds = Math.Ceiling(linearList.Max(x => x.Diam));
-                        ds > linearList.Min(x => x.Diam);
-                        ds -= 0.5)
+                    var dropId = 1;
+                    foreach (var lst in pList)
                     {
-                        xlsDistribution.Cells[2, dColumn].Value = ds;
-                        xlsDistribution.Cells[3, dColumn].Value =
-                            linearList.Count(x => x.Diam < ds && x.Diam > ds - 0.5);
-                        dColumn++;
-                    }
-
-                    dColumn = 3;
-                    for (var br = Math.Ceiling(linearList.Max(x => x.AverageBrightness));
-                        br > linearList.Min(x => x.AverageBrightness);
-                        br -= 1000)
-                    {
-                        xlsDistribution.Cells[7, dColumn].Value = br;
-                        xlsDistribution.Cells[8, dColumn].Value = linearList.Count(x => x.AverageBrightness < br && x.AverageBrightness > br - 1000);
-                        dColumn++;
-                    }
-
-                    var row = 12;
-
-                    //foreach (var item in linearList.Where(x=>x.Diam>38&&x.Diam<39&&x.AverageBrightness<27000&&x.AverageBrightness>25000).OrderBy(y=>y.AverageBrightness))
-                    foreach (var item in linearList.Where(x=>x.AverageBrightness < 27950 && x.AverageBrightness > 27700).OrderBy(x=>x.Diam))
-                    {
-                        xlsDistribution.Cells[row, 2].Value = item.ClusterNo;
-                        xlsDistribution.Cells[row, 3].Value = item.Id;
-                        xlsDistribution.Cells[row, 4].Value = item.Element.Center.X;
-                        xlsDistribution.Cells[row, 5].Value = item.Element.Center.Y;
-                        xlsDistribution.Cells[row, 6].Value = item.AverageBrightness;
-                        xlsDistribution.Cells[row, 7].Value = item.Diam / zm;
-
-                        for (var q = 0; q < item.Profile.Length; q++)
+                        var xlsDistribution = package.Workbook.Worksheets.Add(dropId.ToString());
+                        dropId++;
+                        var row = 12;
+                        foreach (var item in lst)
                         {
-                            xlsDistribution.Cells[row, 9 + q].Value = item.Profile[q];
-                        }
+                            xlsDistribution.Cells[row, 2].Value = item.ClusterNo;
+                            xlsDistribution.Cells[row, 3].Value = item.Id;
+                            xlsDistribution.Cells[row, 4].Value = item.Element.Center.X;
+                            xlsDistribution.Cells[row, 5].Value = item.Element.Center.Y;
+                            xlsDistribution.Cells[row, 6].Value = item.AverageBrightness;
+                            xlsDistribution.Cells[row, 7].Value = item.Diam / zm;
+                            xlsDistribution.Cells[row, 8].Value = item.BackgroundAvg;
 
-                        row++;
+                            //for (var q = 0; q < item.Profile.Length; q++)
+                            //{
+                            //    xlsDistribution.Cells[row, 10 + q].Value = item.Profile[q];
+                            //}
+
+                            xlsDistribution.Cells[row, 10].Value = item.Profile.Take(15).Average(x=>x);
+
+                            row++;
+                        }
                     }
+
+
+
+
+                    //var xlsSizes = package.Workbook.Worksheets.Add("Sizes");
+
+                    //var dColumn = 3;
+                    //for (var ds = Math.Ceiling(linearList.Max(x => x.Diam));
+                    //    ds > linearList.Min(x => x.Diam);
+                    //    ds -= 0.5)
+                    //{
+                    //    xlsDistribution.Cells[2, dColumn].Value = ds;
+                    //    xlsDistribution.Cells[3, dColumn].Value =
+                    //        linearList.Count(x => x.Diam < ds && x.Diam > ds - 0.5);
+                    //    dColumn++;
+                    //}
+
+                    //dColumn = 3;
+                    //for (var br = Math.Ceiling(linearList.Max(x => x.AverageBrightness));
+                    //    br > linearList.Min(x => x.AverageBrightness);
+                    //    br -= 1000)
+                    //{
+                    //    xlsDistribution.Cells[7, dColumn].Value = br;
+                    //    xlsDistribution.Cells[8, dColumn].Value = linearList.Count(x => x.AverageBrightness < br && x.AverageBrightness > br - 1000);
+                    //    dColumn++;
+                    //}
+
+                    //var row = 12;
+
+                    ////foreach (var item in linearList.Where(x=>x.Diam>38&&x.Diam<39&&x.AverageBrightness<27000&&x.AverageBrightness>25000).OrderBy(y=>y.AverageBrightness))
+                    //foreach (var item in linearList.Where(x=>x.AverageBrightness < 27950 && x.AverageBrightness > 27700).OrderBy(x=>x.Diam))
+                    //{
+                    //    xlsDistribution.Cells[row, 2].Value = item.ClusterNo;
+                    //    xlsDistribution.Cells[row, 3].Value = item.Id;
+                    //    xlsDistribution.Cells[row, 4].Value = item.Element.Center.X;
+                    //    xlsDistribution.Cells[row, 5].Value = item.Element.Center.Y;
+                    //    xlsDistribution.Cells[row, 6].Value = item.AverageBrightness;
+                    //    xlsDistribution.Cells[row, 7].Value = item.Diam / zm;
+
+                    //    for (var q = 0; q < item.Profile.Length; q++)
+                    //    {
+                    //        xlsDistribution.Cells[row, 9 + q].Value = item.Profile[q];
+                    //    }
+
+                    //    row++;
+                    //}
                     //foreach (var cluster in _clusters)
                     //{
                     //    var col = 3;
@@ -262,27 +303,27 @@ namespace PrepareImageFrm
                var file = new FileInfo(fileName);
                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-               using (var package = new ExcelPackage(file))
-               {
-                   //var dict = GetPackDict();
+               //using (var package = new ExcelPackage(file))
+               //{
+               //    //var dict = GetPackDict();
 
-                   foreach (var cluster in _clusters)
-                   {
-                       var xlsSheet = package.Workbook.Worksheets.Add(cluster.ClusterId);
-                       var row = 2;
-                       foreach (var item in cluster.GetList.OrderBy(x => x.Id))
-                       {
-                           xlsSheet.Cells[$"B{row}"].Value = item.Id;
-                           xlsSheet.Cells[$"C{row}"].Value = item.Element.Center.X / zm;
-                           xlsSheet.Cells[$"D{row}"].Value = item.Element.Center.Y / zm;
+               //    foreach (var cluster in _clusters)
+               //    {
+               //        var xlsSheet = package.Workbook.Worksheets.Add(cluster.ClusterId);
+               //        var row = 2;
+               //        foreach (var item in cluster.GetList.OrderBy(x => x.Id))
+               //        {
+               //            xlsSheet.Cells[$"B{row}"].Value = item.Id;
+               //            xlsSheet.Cells[$"C{row}"].Value = item.Element.Center.X / zm;
+               //            xlsSheet.Cells[$"D{row}"].Value = item.Element.Center.Y / zm;
 
-                           xlsSheet.Cells[$"F{row}"].Value = ((item.Element.Size.Width + item.Element.Size.Height) / 2) / zm;
+               //            xlsSheet.Cells[$"F{row}"].Value = ((item.Element.Size.Width + item.Element.Size.Height) / 2) / zm;
 
-                           row++;
-                       }
-                   }
-                   package.Save();
-               }
+               //            row++;
+               //        }
+               //    }
+               //    package.Save();
+               //}
            });
 
         }

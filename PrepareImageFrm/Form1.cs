@@ -132,9 +132,10 @@ namespace PrepareImageFrm
             _clusterPack.CreateNewCluster(fileName);
             for (var i = 0; i < contours.Size; i++)
             {
-                var profile = BrightnessMultiShear(contours[i]);
+                var profile = GetComplexShear(contours[i]).GetProfile();
+                var bgr = AroundAverageBrightness(contours[i]);
                 // var profile1 = _storage.GetResult(i);
-                _clusterPack.AddElementToCurrent(CvInvoke.FitEllipse(contours[i]), profile);
+                _clusterPack.AddElementToCurrent(CvInvoke.FitEllipse(contours[i]), profile, bgr);
             }
         }
 
@@ -181,6 +182,9 @@ namespace PrepareImageFrm
                         new Point((int)(rct.Center.X + 10), (int)(rct.Center.Y + 20)), FontFace.HersheyComplex, 0.7,
                         new Bgr(Color.LightCyan).MCvScalar);
                 }
+
+                // var el = new Ellipse(new PointF(100, 900), new SizeF(50, 50), 0);
+                // _imgInput.Draw(el, new Bgr(Color.Yellow), 4);
 
                 const double zm = 0.8529;
                 var tmpList = lst.OrderByDescending(x => x.Diam).Select(itm => $"{itm.Diam / zm}:{itm.AvgBrightest()}:{string.Join(":", itm.GetProfile())}").ToList();
@@ -360,20 +364,19 @@ namespace PrepareImageFrm
             const int size = 50;
             var rct = CvInvoke.FitEllipse(contour);
             var cb = GetPixelBrightness((int)rct.Center.Y, (int)rct.Center.X);
-            var result = new OctoShear(size, (uint)cb, rct);
+            var result = new OctoShear(size, (int)cb, rct);
 
             for (var i = 1; i < size; i++)
             {
-                result.Dict[1][i] = (uint)GetPixelBrightness((int)(rct.Center.Y + i), (int)rct.Center.X);
-                result.Dict[2][i] = (uint)GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
-                result.Dict[3][i] = (uint)GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X - i));
-                result.Dict[4][i] = (uint)GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
-                result.Dict[5][i] = (uint)GetPixelBrightness((int)(rct.Center.Y - i), (int)rct.Center.X);
-                result.Dict[6][i] = (uint)GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
-                result.Dict[7][i] = (uint)GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X + i));
-                result.Dict[8][i] = (uint)GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
+                result.Dict[1][i] = (int)GetPixelBrightness((int)(rct.Center.Y + i), (int)rct.Center.X);
+                result.Dict[2][i] = (int)GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
+                result.Dict[3][i] = (int)GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X - i));
+                result.Dict[4][i] = (int)GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
+                result.Dict[5][i] = (int)GetPixelBrightness((int)(rct.Center.Y - i), (int)rct.Center.X);
+                result.Dict[6][i] = (int)GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
+                result.Dict[7][i] = (int)GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X + i));
+                result.Dict[8][i] = (int)GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
             }
-
             return result;
         }
 
@@ -384,21 +387,21 @@ namespace PrepareImageFrm
 
             const int size = 30;
             var tmp = CvInvoke.FitEllipse(contour);
-            var x = (int)tmp.Center.X + 70;
-            var y = (int)tmp.Center.X + 70;
+            var x = 100;//(int)tmp.Center.X + 70;
+            var y = 900;//(int)tmp.Center.X + 70;
             var cb = GetPixelBrightness(y, x);
-            var result = new OctoShear(size, (uint)cb, tmp);
+            var result = new OctoShear(size, (int)cb, tmp);
 
             for (var i = 1; i < size; i++)
             {
-                result.Dict[1][i] = (uint)GetPixelBrightness(y + i, x);
-                result.Dict[2][i] = (uint)GetPixelBrightness((int)(y + (i * 0.7071)), (int)(x - (i * 0.7071)));
-                result.Dict[3][i] = (uint)GetPixelBrightness(y, x - i);
-                result.Dict[4][i] = (uint)GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x - (i * 0.7071)));
-                result.Dict[5][i] = (uint)GetPixelBrightness(y - i, x);
-                result.Dict[6][i] = (uint)GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x + (i * 0.7071)));
-                result.Dict[7][i] = (uint)GetPixelBrightness(y, x + i);
-                result.Dict[8][i] = (uint)GetPixelBrightness((int)(y + (i * 0.7071)), (int)(x + (i * 0.7071)));
+                result.Dict[1][i] = (int)GetPixelBrightness(y + i, x);
+                result.Dict[2][i] = (int)GetPixelBrightness((int)(y + (i * 0.7071)), (int)(x - (i * 0.7071)));
+                result.Dict[3][i] = (int)GetPixelBrightness(y, x - i);
+                result.Dict[4][i] = (int)GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x - (i * 0.7071)));
+                result.Dict[5][i] = (int)GetPixelBrightness(y - i, x);
+                result.Dict[6][i] = (int)GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x + (i * 0.7071)));
+                result.Dict[7][i] = (int)GetPixelBrightness(y, x + i);
+                result.Dict[8][i] = (int)GetPixelBrightness((int)(y + (i * 0.7071)), (int)(x + (i * 0.7071)));
             }
             return result.AvgBrightest();
         }

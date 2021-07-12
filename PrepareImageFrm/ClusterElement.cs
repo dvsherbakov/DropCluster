@@ -10,24 +10,27 @@ namespace PrepareImageFrm
         public int ClusterNo { get; set; }
         public RotatedRect Element { get; }
         public int[] Profile;
+        public uint BackgroundAvg;
 
         public double AverageBrightness => Profile.Average();
 
         public float Diam => (Element.Size.Height + Element.Size.Width) / 2;
 
-        public ClusterElement(int id, RotatedRect rect, int[] profile)
+        public ClusterElement(int id, RotatedRect rect, int[] profile, uint backgroundAvg = 0)
         {
             Id = id;
             Element = rect;
             Profile = profile;
+            BackgroundAvg = backgroundAvg;
         }
 
-        public ClusterElement(int id, int cn, RotatedRect rect, int[] profile)
+        public ClusterElement(int id, int cn, RotatedRect rect, int[] profile, uint backgroundAvg = 0)
         {
             Id = id;
             Element = rect;
             ClusterNo = cn;
             Profile = profile;
+            BackgroundAvg = backgroundAvg;
         }
 
         public float Range(RotatedRect el)
