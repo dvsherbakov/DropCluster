@@ -154,7 +154,7 @@ namespace PrepareImageFrm
                     File.Delete(fileName);
                 }
 
-                const double zm = 0.8529;
+                var  zm = ZoomKoef;//0.8529;
 
                 var file = new FileInfo(fileName);
 
@@ -184,12 +184,12 @@ namespace PrepareImageFrm
                         var row = 12;
                         foreach (var item in lst)
                         {
-                            xlsDistribution.Cells[row, 2].Value = item.ClusterNo;
+                            xlsDistribution.Cells[row, 2].Value = row - 12+(row/2);
                             xlsDistribution.Cells[row, 3].Value = item.Id;
                             xlsDistribution.Cells[row, 4].Value = item.Element.Center.X;
                             xlsDistribution.Cells[row, 5].Value = item.Element.Center.Y;
                             xlsDistribution.Cells[row, 6].Value = item.AverageBrightness;
-                            xlsDistribution.Cells[row, 7].Value = item.Diam / zm;
+                            xlsDistribution.Cells[row, 7].Value = item.Diam /zm;
                             xlsDistribution.Cells[row, 8].Value = item.BackgroundAvg;
 
                             //for (var q = 0; q < item.Profile.Length; q++)
@@ -197,7 +197,7 @@ namespace PrepareImageFrm
                             //    xlsDistribution.Cells[row, 10 + q].Value = item.Profile[q];
                             //}
 
-                            xlsDistribution.Cells[row, 10].Value = item.Profile.Take(15).Average(x=>x);
+                            //xlsDistribution.Cells[row, 10].Value = item.Profile.Take(15).Average(x=>x);
 
                             row++;
                         }

@@ -283,13 +283,25 @@ namespace PrepareImageFrm
 
             var temp = inputImage.SmoothGaussian(_gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_binarizationThreshold), new Gray(255));
             var contours = new VectorOfVectorOfPoint();
+            var res = new VectorOfVectorOfPoint();
             var m = new Mat();
-            CvInvoke.FindContours(image: temp, contours, m, RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
+            CvInvoke.FindContours(image: temp, contours, m, RetrType.Tree, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
+
+            var vecVecPts2 = new VectorOfVectorOfPoint();
+
+            var hierarchy = CvInvoke.FindContourTree(temp, vecVecPts2,
+                ChainApproxMethod.ChainApproxNone);
+
             for (var i = 0; i < contours.Size; i++)
             {
                 var perimeter = CvInvoke.ArcLength(contours[i], true);
                 var approx = new VectorOfPoint();
                 CvInvoke.ApproxPolyDP(contours[i], approx, 0.1 * perimeter, true);
+                if (hierarchy[i, 2] == -1)
+                {
+                    res.Push(contours[i]);
+                }
+
             }
             temp.Dispose();
             m.Dispose();
@@ -397,7 +409,7 @@ namespace PrepareImageFrm
                 result.Dict[1][i] = (int)GetPixelBrightness(y + i, x);
                 result.Dict[2][i] = (int)GetPixelBrightness((int)(y + (i * 0.7071)), (int)(x - (i * 0.7071)));
                 result.Dict[3][i] = (int)GetPixelBrightness(y, x - i);
-                result.Dict[4][i] = (int)GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x - (i * 0.7071)));
+                result.Dict[4][i] = GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x - (i * 0.7071)));
                 result.Dict[5][i] = (int)GetPixelBrightness(y - i, x);
                 result.Dict[6][i] = (int)GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x + (i * 0.7071)));
                 result.Dict[7][i] = (int)GetPixelBrightness(y, x + i);
