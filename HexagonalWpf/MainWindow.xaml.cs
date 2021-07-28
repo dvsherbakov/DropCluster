@@ -22,7 +22,8 @@ namespace HexagonalWpf
         private double _fRatio;
         private RawCluster _rawCluster;
         private RelativePosition _fRPosition;
-        private HexagonPack _fHexPack;
+        private HexagonPack _hexPack;
+        private ClusterPack _clusterPack;
 
         public MainWindow()
         {
@@ -33,6 +34,7 @@ namespace HexagonalWpf
             tbMaxAspectRatio.Text = Properties.Settings.Default.MaxAspectRatio.ToString();
             tbMinPerimetherLen.Text = Properties.Settings.Default.MinPerimetherLen.ToString();
             tbCameraZoom.Text = Properties.Settings.Default.CameraZoom.ToString();
+            _clusterPack = new ClusterPack("");
         }
 
 
@@ -104,25 +106,29 @@ namespace HexagonalWpf
         private void CommandBinding_PrepareFolder(object sender, ExecutedRoutedEventArgs e)
         {
 
-            _fHexPack = new HexagonPack(_fCurrentFileName, _fRPosition);
-            _ = Task.Run(() => _fHexPack.PrepareFolderAsync());
+            _hexPack = new HexagonPack(_fCurrentFileName, _fRPosition);
+            _ = Task.Run(() => _hexPack.PrepareFolderAsync());
         }
 
+        private void Command_SearchLinks(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+        }
         private void CommandBinding_DrawPath(object sender, ExecutedRoutedEventArgs e)
         {
             Debug.WriteLine("DrawPath");
-            var newPolyLine= new Polyline
+            var newPolyLine = new Polyline
             {
                 Stroke = Brushes.LightGreen,
                 StrokeThickness = 2
             };
-            foreach (var h in _fHexPack.HexList)
+            foreach (var h in _hexPack.HexList)
             {
                 newPolyLine.Points.Add(new Point(h.Center.Element.Center.X * _fRatio, h.Center.Element.Center.Y * _fRatio));
             }
             _ = ObjectCanvas.Children.Add(newPolyLine);
 
-            _ = Task.Run(() => _fHexPack.SaveExcelFile());
+            _ = Task.Run(() => _hexPack.SaveExcelFile());
 
         }
 
@@ -136,6 +142,7 @@ namespace HexagonalWpf
                 Properties.Settings.Default.MaxAspectRatio,
                 Properties.Settings.Default.MinPerimetherLen);
             await _rawCluster.MakeCluster();
+            _clusterPack.Add(_rawCluster.GetCluser);
             Dispatcher.Invoke(() => DrawUiObject(_rawCluster.GetElements));
         }
 
@@ -232,6 +239,12 @@ namespace HexagonalWpf
                 _fRPosition = _rawCluster.GetRelativePosition(pt.Center);
             }
 
+        }
+
+        private void CommandBinding_SearchLinks(object sender, ExecutedRoutedEventArgs e)
+        {
+            //throw new NotImplementedException();
+            //Stopwatch this
         }
     }
 }

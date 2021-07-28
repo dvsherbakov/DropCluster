@@ -6,7 +6,19 @@ using System.Threading.Tasks;
 
 namespace HexagonalWpf
 {
-    class ClusterPack
+    internal class ClusterPack
     {
+        public string Id { get; set; }
+        private List<Cluster> _cluster;
+
+        public ClusterPack(string path)
+        {
+            _cluster = new List<Cluster>();
+        }
+
+        public void Add(Cluster c)
+        {
+            _cluster.Add(c);
+        }
     }
 }

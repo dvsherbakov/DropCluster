@@ -12,6 +12,7 @@
         <CommandBinding Command="local:WindowCommands.PrepareCurrent" Executed="CommandBinding_OnExecuted"/>
         <CommandBinding Command="local:WindowCommands.PrepareFolder" Executed="CommandBinding_PrepareFolder"/>
         <CommandBinding Command="local:WindowCommands.DrawPath" Executed="CommandBinding_DrawPath"/>
+        <CommandBinding Command="local:WindowCommands.SearchLinks" Executed="CommandBinding_SearchLinks"></CommandBinding>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
@@ -21,6 +22,7 @@
                     Command="local:WindowCommands.PrepareFolder" />
         <KeyBinding Key="P" Modifiers="Control"
                     Command="local:WindowCommands.DrawPath" />
+        <KeyBinding Key="L" Modifiers="Control" Command="local:WindowCommands.SearchLinks"></KeyBinding>
     </Window.InputBindings>
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>

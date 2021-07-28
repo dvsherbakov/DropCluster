@@ -17,11 +17,12 @@ namespace HexagonalWpf
         private readonly int _fMaxAspectRatio;
         private readonly int _fMinPerimeterLen;
 
-        private readonly Cluster _fCluster;
+        private readonly Cluster _cluster;
+        public Cluster GetCluser => _cluster;
 
         public Hexagon Hexagon { get; private set; }
 
-        public IEnumerable<ClusterElement> GetElements => _fCluster.GetList;
+        public IEnumerable<ClusterElement> GetElements => _cluster.GetList;
         private readonly string _fFileName;
         private Image<Bgr, byte> _fCurrentImage;
         public string FileName => _fFileName;
@@ -29,7 +30,7 @@ namespace HexagonalWpf
         public RawCluster(string fName, int gaussianParam, int binarizationThreshold, int maxAspectRatio, int minPerimeterLen)
         {
             _fFileName = fName;
-            _fCluster = new Cluster(fName);
+            _cluster = new Cluster(fName);
             _fGaussianParam = gaussianParam;
             _fBinarizationThreshold = binarizationThreshold;
             _fMaxAspectRatio = maxAspectRatio;
@@ -48,7 +49,7 @@ namespace HexagonalWpf
                     var perimeter = CvInvoke.ArcLength(contours[i], true);
                     var approx = new VectorOfPoint();
                     CvInvoke.ApproxPolyDP(contours[i], approx, 0.03 * perimeter, true);
-                    _fCluster.Add(new ClusterElement(i, CvInvoke.FitEllipse(contours[i])));
+                    _cluster.Add(new ClusterElement(i, CvInvoke.FitEllipse(contours[i])));
                 }
             }
             catch (Exception ex)
@@ -128,27 +129,27 @@ namespace HexagonalWpf
 
         public ClusterElement GetNearer(RotatedRect el)
         {
-            return _fCluster.GetNearer(el);
+            return _cluster.GetNearer(el);
         }
 
         public PointF GetCenter()
         {
-            return _fCluster.GetCenter();
+            return _cluster.GetCenter();
         }
 
         public RelativePosition GetRelativePosition(PointF pos)
         {
-            return _fCluster.GetRelativePos(pos);
+            return _cluster.GetRelativePos(pos);
         }
 
         public PointF RelativeToPos(RelativePosition position)
         {
-            return _fCluster.RelativeToPos(position);
+            return _cluster.RelativeToPos(position);
         }
 
         public void CreateHexagon(ClusterElement el)
         {
-            Hexagon = new Hexagon(el, _fCluster.Get7(el.Element), _fFileName);
+            Hexagon = new Hexagon(el, _cluster.Get7(el.Element), _fFileName);
         }
     }
 }
