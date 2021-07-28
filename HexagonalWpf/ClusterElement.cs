@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Emgu.CV.Structure;
 
 namespace HexagonalWpf
 {
-    class ClusterElement
+    internal class ClusterElement
     {
         public int Id { get; }
         public RotatedRect Element { get; }
@@ -22,6 +18,6 @@ namespace HexagonalWpf
             return (float)Math.Sqrt(Math.Pow(Element.Center.X - el.Center.X, 2) + Math.Pow(Element.Center.Y - el.Center.Y, 2));
         }
 
-        public double Diametr => (Element.Size.Width + Element.Size.Height) / 2;
+        public double Diameter => (Element.Size.Width + Element.Size.Height) / 2;
     }
 }

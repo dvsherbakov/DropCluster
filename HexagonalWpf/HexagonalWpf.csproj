@@ -99,6 +99,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Cluster.cs" />
+    <Compile Include="ClusterPack.cs" />
     <Compile Include="Hexagon.cs" />
     <Compile Include="HexagonPack.cs" />
     <Compile Include="RawCluster.cs" />

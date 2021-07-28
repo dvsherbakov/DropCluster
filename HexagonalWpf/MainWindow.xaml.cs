@@ -16,13 +16,13 @@ namespace HexagonalWpf
     public partial class MainWindow : Window
     {
 
-        private string f_CurrentFileName;
-        private double f_OrigWidth;
-        private double f_OrigHeight;
-        private double f_Ratio;
-        private RawCluster f_RawCluster;
-        private RelativePosition f_RPosition;
-        private HexagonPack f_HexPack;
+        private string _fCurrentFileName;
+        private double _fOrigWidth;
+        private double _fOrigHeight;
+        private double _fRatio;
+        private RawCluster _rawCluster;
+        private RelativePosition _fRPosition;
+        private HexagonPack _fHexPack;
 
         public MainWindow()
         {
@@ -50,10 +50,10 @@ namespace HexagonalWpf
             var result = dlg.ShowDialog();
             if (result != true) return;
             Debug.WriteLine(dlg.FileName);
-            f_CurrentFileName = dlg.FileName;
+            _fCurrentFileName = dlg.FileName;
             var oi = new BitmapImage(new Uri(dlg.FileName));
-            f_OrigWidth = oi.PixelWidth;
-            f_OrigHeight = oi.PixelHeight;
+            _fOrigWidth = oi.PixelWidth;
+            _fOrigHeight = oi.PixelHeight;
             OriginalImage.Source = oi;
             RangeCanvas();
         }
@@ -89,7 +89,7 @@ namespace HexagonalWpf
             };
             EventCanvas.Children.Add(rect);
             ObjectCanvas.Children.Add(objRect);
-            f_Ratio = ((EventCanvas.Width / f_OrigWidth) + (EventCanvas.Height / f_OrigHeight)) / 2;
+            _fRatio = ((EventCanvas.Width / _fOrigWidth) + (EventCanvas.Height / _fOrigHeight)) / 2;
         }
 
         private void ViewContainer_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -99,47 +99,47 @@ namespace HexagonalWpf
 
         private void CommandBinding_OnExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            Task.Run(() => PrepareFileAsync());
+            _ = Task.Run(PrepareFileAsync);
         }
         private void CommandBinding_PrepareFolder(object sender, ExecutedRoutedEventArgs e)
         {
 
-            f_HexPack = new HexagonPack(f_CurrentFileName, f_RPosition);
-            _ = Task.Run(() => f_HexPack.PrepareFolderAsync());
+            _fHexPack = new HexagonPack(_fCurrentFileName, _fRPosition);
+            _ = Task.Run(() => _fHexPack.PrepareFolderAsync());
         }
 
         private void CommandBinding_DrawPath(object sender, ExecutedRoutedEventArgs e)
         {
             Debug.WriteLine("DrawPath");
-            var NewPolyline = new Polyline
+            var newPolyLine= new Polyline
             {
                 Stroke = Brushes.LightGreen,
                 StrokeThickness = 2
             };
-            foreach (var h in f_HexPack.HexList)
+            foreach (var h in _fHexPack.HexList)
             {
-                NewPolyline.Points.Add(new Point(h.Center.Element.Center.X * f_Ratio, h.Center.Element.Center.Y * f_Ratio));
+                newPolyLine.Points.Add(new Point(h.Center.Element.Center.X * _fRatio, h.Center.Element.Center.Y * _fRatio));
             }
-            ObjectCanvas.Children.Add(NewPolyline);
+            _ = ObjectCanvas.Children.Add(newPolyLine);
 
-            Task.Run(() => f_HexPack.SaveExcelFile());
+            _ = Task.Run(() => _fHexPack.SaveExcelFile());
 
         }
 
 
         private async Task PrepareFileAsync()
         {
-            f_RawCluster = new RawCluster(
-                f_CurrentFileName,
+            _rawCluster = new RawCluster(
+                _fCurrentFileName,
                 Properties.Settings.Default.GaussianParam,
                 Properties.Settings.Default.BinarizationThreshold,
                 Properties.Settings.Default.MaxAspectRatio,
                 Properties.Settings.Default.MinPerimetherLen);
-            await f_RawCluster.MakeCluster();
-            Dispatcher.Invoke(() => DrawUIObject(f_RawCluster.GetElements));
+            await _rawCluster.MakeCluster();
+            Dispatcher.Invoke(() => DrawUiObject(_rawCluster.GetElements));
         }
 
-        private void DrawUIObject(IEnumerable<ClusterElement> elements)
+        private void DrawUiObject(IEnumerable<ClusterElement> elements)
         {
             ObjectCanvas.Children.Clear();
             try
@@ -157,7 +157,7 @@ namespace HexagonalWpf
 
         private void DrawMarker(ClusterElement element, Color color)
         {
-            var wh = ((element.Element.Size.Width + element.Element.Size.Height) / 2) * f_Ratio;
+            var wh = ((element.Element.Size.Width + element.Element.Size.Height) / 2) * _fRatio;
             var uiElem = new Ellipse
             {
                 Width = wh,
@@ -169,8 +169,8 @@ namespace HexagonalWpf
                 }
             };
 
-            Canvas.SetLeft(uiElem, (element.Element.Center.X - element.Element.Size.Width / 2) * f_Ratio);
-            Canvas.SetTop(uiElem, (element.Element.Center.Y - element.Element.Size.Height / 2) * f_Ratio);
+            Canvas.SetLeft(uiElem, (element.Element.Center.X - element.Element.Size.Width / 2) * _fRatio);
+            Canvas.SetTop(uiElem, (element.Element.Center.Y - element.Element.Size.Height / 2) * _fRatio);
 
             ObjectCanvas.Children.Add(uiElem);
         }
@@ -204,7 +204,7 @@ namespace HexagonalWpf
 
         private void MinPerimetherLen_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (int.TryParse(tbMinPerimetherLen.Text, out int res))
+            if (int.TryParse(tbMinPerimetherLen.Text, out var res))
                 Properties.Settings.Default.MinPerimetherLen = res;
         }
 
@@ -218,18 +218,18 @@ namespace HexagonalWpf
         {
             var position = Mouse.GetPosition(ViewContainer);
             var pt = new Emgu.CV.Structure.RotatedRect(
-                    new System.Drawing.PointF((float)(position.X / f_Ratio), (float)(position.Y / f_Ratio)),
+                    new System.Drawing.PointF((float)(position.X / _fRatio), (float)(position.Y / _fRatio)),
                     new System.Drawing.SizeF(),
                     0
                 );
-            if (f_RawCluster != null)
+            if (_rawCluster != null)
             {
-                var markedElement = f_RawCluster.GetNearer(pt);
+                var markedElement = _rawCluster.GetNearer(pt);
                 //DrawMarker(markedElement, Colors.Orange);
-                f_RawCluster.CreateHexagon(markedElement);
-                DrawHexagon(f_RawCluster.Hexagon);
-                f_RawCluster.Hexagon.AverageLink();
-                f_RPosition = f_RawCluster.GetRelativePosition(pt.Center);
+                _rawCluster.CreateHexagon(markedElement);
+                DrawHexagon(_rawCluster.Hexagon);
+                _rawCluster.Hexagon.AverageLink();
+                _fRPosition = _rawCluster.GetRelativePosition(pt.Center);
             }
 
         }

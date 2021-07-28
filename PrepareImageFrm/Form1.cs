@@ -112,6 +112,7 @@ namespace PrepareImageFrm
             {
                 _currentFile = filename;
                 _imgInput = await LoadFileAsync(filename);
+                _imgInput.Dilate(10);
                 var contours = FilterContours(ExtractContours(_imgInput));
                 var size = new FileInfo(filename).Length;
                 AddContoursToResCollection(filename, size, contours, false);
@@ -186,14 +187,14 @@ namespace PrepareImageFrm
                 // var el = new Ellipse(new PointF(100, 900), new SizeF(50, 50), 0);
                 // _imgInput.Draw(el, new Bgr(Color.Yellow), 4);
 
-                const double zm = 0.8529;
-                var tmpList = lst.OrderByDescending(x => x.Diam).Select(itm => $"{itm.Diam / zm}:{itm.AvgBrightest()}:{string.Join(":", itm.GetProfile())}").ToList();
+                //const double zm = 0.8529;
+                //var tmpList = lst.OrderByDescending(x => x.Diam).Select(itm => $"{itm.Diam / zm}:{itm.AvgBrightest()}:{string.Join(":", itm.GetProfile())}").ToList();
 
-                using (TextWriter tw = new StreamWriter($"{Path.GetFileNameWithoutExtension(fileName)}.csv"))
-                {
-                    foreach (var s in tmpList)
-                        tw.WriteLine(s);
-                }
+                //using (TextWriter tw = new StreamWriter($"{Path.GetFileNameWithoutExtension(fileName)}.csv"))
+                //{
+                //    foreach (var s in tmpList)
+                //        tw.WriteLine(s);
+                //}
             }
         }
 
@@ -209,7 +210,7 @@ namespace PrepareImageFrm
                 _clusterPack.Clear();
                 listBox1.Items.Add("Start directory encode");
                 var files = Directory.GetFiles(dialog.SelectedPath);
-                foreach (var file in files)
+                foreach (var file in files.OrderByDescending(x=>x))
                 {
                     //var tmpRes = 
                     await PrepareFile(file);
@@ -270,12 +271,30 @@ namespace PrepareImageFrm
             for (var i = 0; i < contours.Size; i++)
             {
                 if (contours[i].Size < 5) continue;
+
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var perimeter = CvInvoke.ArcLength(contours[i], true);
-                if ((GetAspectRatio(rct) < _maxAspectRatio / 100f) && (perimeter > _minPerimeterLen) && (perimeter < 300))
-                    filteredContours.Push(contours[i]);
+                if (GetAspectRatio(rct) < _maxAspectRatio / 100f && perimeter > _minPerimeterLen && perimeter < 500)
+                    if (!IncludeContour(contours, i)) filteredContours.Push(contours[i]);
             }
             return filteredContours;
+        }
+
+        private bool IncludeContour(VectorOfVectorOfPoint list, int src)
+        { //is internal contour?
+            var ellipseOfSrc = CvInvoke.FitEllipse(list[src]);
+
+            for (var i = 0; i < list.Size; i++)
+            {
+                if (list[i].Size < 10) continue;
+                var tmp = CvInvoke.FitEllipse(list[i]);
+                if (!(ellipseOfSrc.Size.Height + ellipseOfSrc.Size.Width <
+                      tmp.Size.Height + tmp.Size.Width)) continue;
+                if (Math.Sqrt(Math.Pow((ellipseOfSrc.Center.X - tmp.Center.X), 2) +
+                              Math.Pow((ellipseOfSrc.Center.Y - tmp.Center.Y), 2)) <
+                    (tmp.Size.Height + tmp.Size.Height) / 2) return true;
+            }
+            return false;
         }
 
         private VectorOfVectorOfPoint ExtractContours(Image<Bgr, ushort> inputImage)
@@ -283,26 +302,10 @@ namespace PrepareImageFrm
 
             var temp = inputImage.SmoothGaussian(_gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_binarizationThreshold), new Gray(255));
             var contours = new VectorOfVectorOfPoint();
-            var res = new VectorOfVectorOfPoint();
+
             var m = new Mat();
-            CvInvoke.FindContours(image: temp, contours, m, RetrType.Tree, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
+            CvInvoke.FindContours(image: temp, contours, m, RetrType.External, ChainApproxMethod.LinkRuns);
 
-            var vecVecPts2 = new VectorOfVectorOfPoint();
-
-            var hierarchy = CvInvoke.FindContourTree(temp, vecVecPts2,
-                ChainApproxMethod.ChainApproxNone);
-
-            for (var i = 0; i < contours.Size; i++)
-            {
-                var perimeter = CvInvoke.ArcLength(contours[i], true);
-                var approx = new VectorOfPoint();
-                CvInvoke.ApproxPolyDP(contours[i], approx, 0.1 * perimeter, true);
-                if (hierarchy[i, 2] == -1)
-                {
-                    res.Push(contours[i]);
-                }
-
-            }
             temp.Dispose();
             m.Dispose();
             return contours;
@@ -396,7 +399,7 @@ namespace PrepareImageFrm
 
         private uint AroundAverageBrightness(IInputArray contour)
         {
-
+            return 0;
             const int size = 30;
             var tmp = CvInvoke.FitEllipse(contour);
             var x = 100;//(int)tmp.Center.X + 70;

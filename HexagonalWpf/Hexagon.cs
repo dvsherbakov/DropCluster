@@ -1,38 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HexagonalWpf
 {
-    class Hexagon
+    internal class Hexagon
     {
-        private readonly ClusterElement f_Center;
-        public ClusterElement Center => f_Center;
-        private readonly List<ClusterElement> f_List;
-        private readonly double f_AverageSize;
-        public double AverageSize => f_AverageSize;
+        private readonly ClusterElement _center;
+        public ClusterElement Center => _center;
+        private readonly List<ClusterElement> _list;
+        private readonly double _averageSize;
+        public double AverageSize => _averageSize;
         public string FileName { get; set; }
-        public IEnumerable<ClusterElement> HList => f_List;
+        public IEnumerable<ClusterElement> HList => _list;
 
-        public Hexagon(ClusterElement center, List<ClusterElement> list, string fileName)
+        public Hexagon(ClusterElement center, ICollection<ClusterElement> list, string fileName)
         {
             FileName = fileName;
-            f_AverageSize = list.Average(x => x.Diametr); 
-            f_Center = center;
+            _averageSize = list.Average(x => x.Diameter); 
+            _center = center;
             _ = list.Remove(center);
-            f_List = new List<ClusterElement>();
-            f_List.AddRange(list);
+            _list = new List<ClusterElement>();
+            _list.AddRange(list);
         }
 
         public double AverageLink()
         {
             var tmpList = new List<ClusterElement>();
-            tmpList.AddRange(f_List);
+            tmpList.AddRange(_list);
             var resList = new List<double>();
-            resList.AddRange(tmpList.Select(x => (double)x.Range(f_Center.Element)));
+            resList.AddRange(tmpList.Select(x => (double)x.Range(_center.Element)));
             var fst = tmpList.FirstOrDefault();
             var last = fst;
             tmpList.Remove(fst);
@@ -41,10 +38,10 @@ namespace HexagonalWpf
                 var t = tmpList.OrderBy(x => x.Range(fst.Element)).FirstOrDefault();
                 resList.Add(t.Range(fst.Element));
                 fst = t;
-                tmpList.Remove(fst);
+                _ = tmpList.Remove(fst);
             }
             resList.Add(last.Range(fst.Element));
-            Debug.WriteLine($"Diametr: {f_AverageSize}, Distance: {resList.Average()}");
+            Debug.WriteLine($"Diameter: {_averageSize}, Distance: {resList.Average()}");
             return resList.Average();
         }
 

@@ -6,36 +6,34 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HexagonalWpf
 {
-    class RawCluster
+    internal class RawCluster
     {
-        private readonly int f_GaussianParam;
-        private readonly int f_BinarizationThreshold;
-        private readonly int f_MaxAspectRatio;
-        private readonly int f_MinPerimeterLen;
+        private readonly int _fGaussianParam;
+        private readonly int _fBinarizationThreshold;
+        private readonly int _fMaxAspectRatio;
+        private readonly int _fMinPerimeterLen;
 
-        private readonly Cluster f_Cluster;
+        private readonly Cluster _fCluster;
 
         public Hexagon Hexagon { get; private set; }
 
-        public IEnumerable<ClusterElement> GetElements => f_Cluster.GetList;
-        private readonly string f_FileName;
-        private Image<Bgr, byte> f_CurrentImage;
-        public string FileName => f_FileName;
+        public IEnumerable<ClusterElement> GetElements => _fCluster.GetList;
+        private readonly string _fFileName;
+        private Image<Bgr, byte> _fCurrentImage;
+        public string FileName => _fFileName;
 
         public RawCluster(string fName, int gaussianParam, int binarizationThreshold, int maxAspectRatio, int minPerimeterLen)
         {
-            f_FileName = fName;
-            f_Cluster = new Cluster(fName);
-            f_GaussianParam = gaussianParam;
-            f_BinarizationThreshold = binarizationThreshold;
-            f_MaxAspectRatio = maxAspectRatio;
-            f_MinPerimeterLen = minPerimeterLen;
+            _fFileName = fName;
+            _fCluster = new Cluster(fName);
+            _fGaussianParam = gaussianParam;
+            _fBinarizationThreshold = binarizationThreshold;
+            _fMaxAspectRatio = maxAspectRatio;
+            _fMinPerimeterLen = minPerimeterLen;
         }
 
 
@@ -43,14 +41,14 @@ namespace HexagonalWpf
         {
             try
             {
-                f_CurrentImage = await LoadFileAsync();
+                _fCurrentImage = await LoadFileAsync();
                 var contours = FilterContours(ExtractContours());
                 for (var i = 0; i < contours.Size; i++)
                 {
                     var perimeter = CvInvoke.ArcLength(contours[i], true);
                     var approx = new VectorOfPoint();
                     CvInvoke.ApproxPolyDP(contours[i], approx, 0.03 * perimeter, true);
-                    f_Cluster.Add(new ClusterElement(i, CvInvoke.FitEllipse(contours[i])));
+                    _fCluster.Add(new ClusterElement(i, CvInvoke.FitEllipse(contours[i])));
                 }
             }
             catch (Exception ex)
@@ -59,20 +57,33 @@ namespace HexagonalWpf
             }
         }
 
+        private bool IncludeContour(VectorOfVectorOfPoint list, int src)
+        { //is internal contour?
+            var ellipseOfSrc = CvInvoke.FitEllipse(list[src]);
+
+            for (var i = 0; i < list.Size; i++)
+            {
+                if (list[i].Size < 10) continue;
+                var tmp = CvInvoke.FitEllipse(list[i]);
+                if (!(ellipseOfSrc.Size.Height + ellipseOfSrc.Size.Width <
+                      tmp.Size.Height + tmp.Size.Width)) continue;
+                if (Math.Sqrt(Math.Pow((ellipseOfSrc.Center.X - tmp.Center.X), 2) +
+                              Math.Pow((ellipseOfSrc.Center.Y - tmp.Center.Y), 2)) <
+                    (tmp.Size.Height + tmp.Size.Height) / 2) return true;
+            }
+            return false;
+        }
+
         private async Task<Image<Bgr, byte>> LoadFileAsync()
         {
-            var res = await Task.Run(() =>
-            {
-
-                return new Image<Bgr, byte>(FileName);
-            });
+            var res = await Task.Run(() => new Image<Bgr, byte>(FileName));
             return res;
         }
 
         private VectorOfVectorOfPoint ExtractContours()
         {
 
-            var temp = f_CurrentImage.SmoothGaussian(f_GaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(f_BinarizationThreshold), new Gray(255));
+            var temp = _fCurrentImage.SmoothGaussian(_fGaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_fBinarizationThreshold), new Gray(255));
             var contours = new VectorOfVectorOfPoint();
             var m = new Mat();
             CvInvoke.FindContours(image: temp, contours, m, RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
@@ -93,10 +104,11 @@ namespace HexagonalWpf
             for (var i = 0; i < contours.Size; i++)
             {
                 if (contours[i].Size < 5) continue;
+
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var perimeter = CvInvoke.ArcLength(contours[i], true);
-                if ((GetAspectRatio(rct) < f_MaxAspectRatio / 100f) && (perimeter > f_MinPerimeterLen))
-                    filteredContours.Push(contours[i]);
+                if (GetAspectRatio(rct) < _fMaxAspectRatio / 100f && perimeter > _fMinPerimeterLen && perimeter < 500)
+                    if (!IncludeContour(contours, i)) filteredContours.Push(contours[i]);
             }
             return filteredContours;
         }
@@ -116,27 +128,27 @@ namespace HexagonalWpf
 
         public ClusterElement GetNearer(RotatedRect el)
         {
-            return f_Cluster.GetNearer(el);
+            return _fCluster.GetNearer(el);
         }
 
         public PointF GetCenter()
         {
-            return f_Cluster.GetCenter();
+            return _fCluster.GetCenter();
         }
 
         public RelativePosition GetRelativePosition(PointF pos)
         {
-            return f_Cluster.GetRelativePos(pos);
+            return _fCluster.GetRelativePos(pos);
         }
 
         public PointF RelativeToPos(RelativePosition position)
         {
-            return f_Cluster.RelativeToPos(position);
+            return _fCluster.RelativeToPos(position);
         }
 
         public void CreateHexagon(ClusterElement el)
         {
-            Hexagon = new Hexagon(el, f_Cluster.Get7(el.Element), f_FileName);
+            Hexagon = new Hexagon(el, _fCluster.Get7(el.Element), _fFileName);
         }
     }
 }

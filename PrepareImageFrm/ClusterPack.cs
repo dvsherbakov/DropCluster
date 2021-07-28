@@ -74,7 +74,7 @@ namespace PrepareImageFrm
         public Mat Trajectories()
         {
 
-            var res = new Mat(new Size(1000, 1000), DepthType.Cv8U, 3);
+            var res = new Mat(new Size(2560, 2160), DepthType.Cv8U, 3);
             res.SetTo(new MCvScalar(0));
             var colors = GenerateColorTable();
 
@@ -95,7 +95,7 @@ namespace PrepareImageFrm
             var idx = 0;
             foreach (var lst in pList)
             {
-                CvInvoke.Polylines(res, Array.ConvertAll(lst.ToArray(), Point.Round), false, new Bgr(colors[idx]).MCvScalar, 2);
+                CvInvoke.Polylines(res, Array.ConvertAll(lst.ToArray(), Point.Round), false, new Bgr(colors[idx]).MCvScalar, 5);
                 idx++;
             }
             return res;
@@ -184,13 +184,13 @@ namespace PrepareImageFrm
                         var row = 12;
                         foreach (var item in lst)
                         {
-                            xlsDistribution.Cells[row, 2].Value = row - 12+(row/2);
-                            xlsDistribution.Cells[row, 3].Value = item.Id;
+                            xlsDistribution.Cells[row, 2].Value = (row - 12)/2.0;
+                            
                             xlsDistribution.Cells[row, 4].Value = item.Element.Center.X;
                             xlsDistribution.Cells[row, 5].Value = item.Element.Center.Y;
-                            xlsDistribution.Cells[row, 6].Value = item.AverageBrightness;
+                           
                             xlsDistribution.Cells[row, 7].Value = item.Diam /zm;
-                            xlsDistribution.Cells[row, 8].Value = item.BackgroundAvg;
+                            
 
                             //for (var q = 0; q < item.Profile.Length; q++)
                             //{

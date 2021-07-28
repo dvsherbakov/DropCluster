@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Emgu.CV.Structure;
@@ -51,10 +52,11 @@ namespace PrepareImageFrm
 
 
         public int GetNearerId(RotatedRect el)
-        { 
+        { //Поиск ближайшего? 
             if (ClusterList == null || ClusterList.Count <= 0) return -1;
-            var tmp = ClusterList.OrderBy(x => x.Range(el));
-            return ClusterList.OrderBy(x => x.Range(el)).FirstOrDefault().Id;
+            var tmp = ClusterList.OrderBy(x => x.Range(el)).Take(2);
+            var p = tmp.OrderBy(x => Math.Abs(x.Diam- (el.Size.Height + el.Size.Width) / 2)).FirstOrDefault().Id;
+            return p; //ClusterList.OrderBy(x => x.Range(el)).FirstOrDefault().Id;
         }
 
         public int GetRelativeNearerId(ClusterElement relateElement)
