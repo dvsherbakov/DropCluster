@@ -12,7 +12,9 @@
         <CommandBinding Command="local:WindowCommands.PrepareCurrent" Executed="CommandBinding_OnExecuted"/>
         <CommandBinding Command="local:WindowCommands.PrepareFolder" Executed="CommandBinding_PrepareFolder"/>
         <CommandBinding Command="local:WindowCommands.DrawPath" Executed="CommandBinding_DrawPath"/>
-        <CommandBinding Command="local:WindowCommands.SearchLinks" Executed="CommandBinding_SearchLinks"></CommandBinding>
+        <CommandBinding Command="local:WindowCommands.SearchLinks" Executed="CommandBinding_SearchLinks"/>
+        <CommandBinding Command="local:WindowCommands.NextSrc" Executed="CommandBinding_OnExecutedNextSrc"/>
+        <CommandBinding Command="local:WindowCommands.PrevSrc" Executed="CommandBinding_OnExecutedPrevSrc"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
@@ -43,6 +45,8 @@
                           Command="local:WindowCommands.PrepareFolder"/>
                 <MenuItem Header="Draw Path" InputGestureText="Ctrl+P" 
                           Command="local:WindowCommands.DrawPath"/>
+                <MenuItem Header="Renumbering drops" InputGestureText="Ctrl+L"
+                          Command="local:WindowCommands.SearchLinks"/>
             </MenuItem>
             <MenuItem Header="Settings" >
                 <MenuItem  Header="Binarization Threshold" >
@@ -61,16 +65,24 @@
                     <TextBox x:Name="tbCameraZoom" Width="50" LostFocus="CameraZoom_LostFocus"></TextBox>
                 </MenuItem>
             </MenuItem>
-            
-                
-            
         </Menu>
-        <Viewbox x:Name="ViewContainer" Grid.Row="1" 
-                 
-                 SizeChanged="ViewContainer_OnSizeChanged">
-            <Image x:Name="OriginalImage"></Image>
-        </Viewbox>
-        <Canvas Grid.Row="1" x:Name="ObjectCanvas"/>
-        <Canvas Grid.Row="1" x:Name="EventCanvas"  MouseDown="ViewContainer_MouseDown"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="7*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Vertical" x:Name="ButtonPanel">
+                <Button Content=">" Command="local:WindowCommands.NextSrc"/>
+                <Button Content="&#x003C;" Command="local:WindowCommands.PrevSrc"/>
+
+            </StackPanel>
+            <Viewbox x:Name="ViewContainer"  Grid.Column="1" 
+                     SizeChanged="ViewContainer_OnSizeChanged">
+                <Image x:Name="OriginalImage"></Image>
+            </Viewbox>
+            <Canvas Grid.Column="1" x:Name="ObjectCanvas"/>
+            <Canvas Grid.Column="1" x:Name="EventCanvas"  MouseDown="ViewContainer_MouseDown"/>
+        </Grid>
     </Grid>
 </Window>

@@ -12,10 +12,10 @@ namespace HexagonalWpf
 {
     internal class RawCluster
     {
-        private readonly int _fGaussianParam;
-        private readonly int _fBinarizationThreshold;
-        private readonly int _fMaxAspectRatio;
-        private readonly int _fMinPerimeterLen;
+        private readonly int _gaussianParam;
+        private readonly int _binarizationThreshold;
+        private readonly int _maxAspectRatio;
+        private readonly int _minPerimeterLen;
 
         private readonly Cluster _cluster;
         public Cluster GetCluser => _cluster;
@@ -31,10 +31,10 @@ namespace HexagonalWpf
         {
             _fFileName = fName;
             _cluster = new Cluster(fName);
-            _fGaussianParam = gaussianParam;
-            _fBinarizationThreshold = binarizationThreshold;
-            _fMaxAspectRatio = maxAspectRatio;
-            _fMinPerimeterLen = minPerimeterLen;
+            _gaussianParam = gaussianParam;
+            _binarizationThreshold = binarizationThreshold;
+            _maxAspectRatio = maxAspectRatio;
+            _minPerimeterLen = minPerimeterLen;
         }
 
 
@@ -84,7 +84,7 @@ namespace HexagonalWpf
         private VectorOfVectorOfPoint ExtractContours()
         {
 
-            var temp = _fCurrentImage.SmoothGaussian(_fGaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_fBinarizationThreshold), new Gray(255));
+            var temp = _fCurrentImage.SmoothGaussian(_gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_binarizationThreshold), new Gray(255));
             var contours = new VectorOfVectorOfPoint();
             var m = new Mat();
             CvInvoke.FindContours(image: temp, contours, m, RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
@@ -108,7 +108,7 @@ namespace HexagonalWpf
 
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var perimeter = CvInvoke.ArcLength(contours[i], true);
-                if (GetAspectRatio(rct) < _fMaxAspectRatio / 100f && perimeter > _fMinPerimeterLen && perimeter < 500)
+                if (GetAspectRatio(rct) < _maxAspectRatio / 100f && perimeter > _minPerimeterLen && perimeter < 500)
                     if (!IncludeContour(contours, i)) filteredContours.Push(contours[i]);
             }
             return filteredContours;
@@ -132,20 +132,10 @@ namespace HexagonalWpf
             return _cluster.GetNearer(el);
         }
 
-        public PointF GetCenter()
-        {
-            return _cluster.GetCenter();
-        }
-
-        public RelativePosition GetRelativePosition(PointF pos)
-        {
-            return _cluster.GetRelativePos(pos);
-        }
-
-        public PointF RelativeToPos(RelativePosition position)
-        {
-            return _cluster.RelativeToPos(position);
-        }
+        //public PointF GetCenter()
+        //{
+        //    return _cluster.GetCenter();
+        //}
 
         public void CreateHexagon(ClusterElement el)
         {

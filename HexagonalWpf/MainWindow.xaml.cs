@@ -23,7 +23,7 @@ namespace HexagonalWpf
         private RawCluster _rawCluster;
         private RelativePosition _fRPosition;
         private HexagonPack _hexPack;
-        private ClusterPack _clusterPack;
+        private readonly ClusterPack _clusterPack;
 
         public MainWindow()
         {
@@ -36,8 +36,6 @@ namespace HexagonalWpf
             tbCameraZoom.Text = Properties.Settings.Default.CameraZoom.ToString();
             _clusterPack = new ClusterPack("");
         }
-
-
 
         private void WindowBinding_OpenCommand(object sender, ExecutedRoutedEventArgs e)
         {
@@ -96,7 +94,12 @@ namespace HexagonalWpf
 
         private void ViewContainer_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
+            ObjectCanvas.Children.Clear();
             RangeCanvas();
+            if (_rawCluster != null && _rawCluster.GetCluser.Count > 0)
+            {
+                Dispatcher.Invoke(() => DrawUiObject(_rawCluster.GetElements));
+            }
         }
 
         private void CommandBinding_OnExecuted(object sender, ExecutedRoutedEventArgs e)
@@ -110,10 +113,6 @@ namespace HexagonalWpf
             _ = Task.Run(() => _hexPack.PrepareFolderAsync());
         }
 
-        private void Command_SearchLinks(object sender, ExecutedRoutedEventArgs e)
-        {
-            
-        }
         private void CommandBinding_DrawPath(object sender, ExecutedRoutedEventArgs e)
         {
             Debug.WriteLine("DrawPath");
@@ -180,17 +179,14 @@ namespace HexagonalWpf
             Canvas.SetTop(uiElem, (element.Element.Center.Y - element.Element.Size.Height / 2) * _fRatio);
 
             ObjectCanvas.Children.Add(uiElem);
+
+            var textBlock = new TextBlock { Text = element.Id.ToString(), Foreground = new SolidColorBrush(Colors.Blue), FontSize = 30};
+            Canvas.SetLeft(textBlock, element.Element.Center.X*_fRatio);
+            Canvas.SetTop(textBlock, element.Element.Center.Y*_fRatio);
+            ObjectCanvas.Children.Add(textBlock);
         }
 
-        private void DrawHexagon(Hexagon h)
-        {
-            DrawMarker(h.Center, Colors.LimeGreen);
-            foreach (var el in h.HList)
-            {
-                DrawMarker(el, Colors.Red);
-            }
-        }
-
+        
         private void BinarizationThreshold_LostFocus(object sender, RoutedEventArgs e)
         {
             int.TryParse(tbBinarizationThreshold.Text, out int res);
@@ -229,22 +225,30 @@ namespace HexagonalWpf
                     new System.Drawing.SizeF(),
                     0
                 );
-            if (_rawCluster != null)
-            {
-                var markedElement = _rawCluster.GetNearer(pt);
-                //DrawMarker(markedElement, Colors.Orange);
-                _rawCluster.CreateHexagon(markedElement);
-                DrawHexagon(_rawCluster.Hexagon);
-                _rawCluster.Hexagon.AverageLink();
-                _fRPosition = _rawCluster.GetRelativePosition(pt.Center);
-            }
+           // if (_rawCluster == null) return;
+           // var markedElement = _rawCluster.GetNearer(pt);
+            //DrawMarker(markedElement, Colors.Orange);
+           // _rawCluster.CreateHexagon(markedElement);
+            //DrawHexagon(_rawCluster.Hexagon);
+           // _rawCluster.Hexagon.AverageLink();
 
         }
 
         private void CommandBinding_SearchLinks(object sender, ExecutedRoutedEventArgs e)
         {
+            _clusterPack.Renumbering();
             //throw new NotImplementedException();
             //Stopwatch this
+        }
+
+        private void CommandBinding_OnExecutedNextSrc(object sender, ExecutedRoutedEventArgs e)
+        {
+            Dispatcher.Invoke(() => DrawUiObject(_clusterPack.NextById(_clusterPack.CurrentId).GetList));
+        }
+
+        private void CommandBinding_OnExecutedPrevSrc(object sender, ExecutedRoutedEventArgs e)
+        {
+            Dispatcher.Invoke(() => DrawUiObject(_clusterPack.PrevById(_clusterPack.CurrentId).GetList));
         }
     }
 }

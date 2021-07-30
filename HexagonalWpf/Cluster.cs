@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Xml.Schema;
 using Emgu.CV.Structure;
 
 namespace HexagonalWpf
@@ -9,7 +11,8 @@ namespace HexagonalWpf
     {
         private readonly List<ClusterElement> _cluster;
         public string ClusterId { get; }
-
+        public PointF StartPosition { get; private set; }
+        public PointF CenterPosition { get; private set; }
         public int Count => _cluster.Count;
         public Cluster(string fName)
         {
@@ -20,6 +23,8 @@ namespace HexagonalWpf
         public void Add(ClusterElement el)
         {
             _cluster.Add(el);
+            GetStartPosition();
+            GetCenterPosition();
         }
 
         public IEnumerable<ClusterElement> GetList => _cluster;
@@ -33,7 +38,7 @@ namespace HexagonalWpf
         public ClusterElement GetNearer(RotatedRect el)
         {
             if (_cluster == null || _cluster.Count <= 0) return new ClusterElement(-1, new RotatedRect());
-           // var tmp = _cluster.OrderBy(x => x.Range(el));
+            // var tmp = _cluster.OrderBy(x => x.Range(el));
             return _cluster.OrderBy(x => x.Range(el)).FirstOrDefault();
         }
 
@@ -43,42 +48,31 @@ namespace HexagonalWpf
             return _cluster.OrderBy(x => x.Range(el)).Take(7).ToList();
         }
 
-        public PointF GetCenter()
+        internal void RemoveById(int id)
         {
-            if (_cluster == null || _cluster.Count <= 0) return new PointF(0f, 0f);
+            _ = _cluster.Remove(_cluster.FirstOrDefault(x => x.Id == id));
+        }
+
+        public int GenerateNextId() => new HashSet<int>(_cluster.Select(x => x.Id)).Max() + 1;
+
+        public void GetStartPosition()
+        {
+            var x = _cluster.Select(t => t.Element.Center.X).Min();
+            var y = _cluster.Select(t => t.Element.Center.Y).Min();
+            StartPosition = new PointF(x, y);
+        }
+
+        public void GetCenterPosition()
+        {
+            if (_cluster == null || _cluster.Count <= 0) return;
             var cx = (_cluster.Min(x => x.Element.Center.X) + _cluster.Max(x => x.Element.Center.X)) / 2f;
             var cy = (_cluster.Min(x => x.Element.Center.Y) + _cluster.Max(x => x.Element.Center.Y)) / 2f;
-            return new PointF(cx, cy);
+            CenterPosition = new PointF(cx, cy);
         }
 
-        public RelativePosition GetRelativePos(PointF position)
+        public PointF RelativeCenterPos(PointF pos)
         {
-            var minX = _cluster.Min(x => x.Element.Center.X);
-            var maxX = _cluster.Max(x => x.Element.Center.X);
-            var sizeX = maxX - minX;
-            var minY = _cluster.Min(x => x.Element.Center.Y);
-            var maxY = _cluster.Max(x => x.Element.Center.Y);
-            var sizeY = maxY - minY;
-            var center = GetCenter();
-            var dx = position.X - center.X;
-            var dy = position.Y - center.Y;
-            return new RelativePosition { Rx = dx / sizeX, Ry = dy / sizeY };
-        }
-
-        public PointF RelativeToPos(RelativePosition position)
-        {
-            var minX = _cluster.Min(x => x.Element.Center.X);
-            var maxX = _cluster.Max(x => x.Element.Center.X);
-            var sizeX = maxX - minX;
-            var minY = _cluster.Min(x => x.Element.Center.Y);
-            var maxY = _cluster.Max(x => x.Element.Center.Y);
-            var sizeY = maxY - minY;
-            var center = GetCenter();
-            return new PointF(
-                (float)(center.X + position.Rx * sizeX),
-                (float)(center.Y + position.Ry * sizeY)
-                );
-
+            return new PointF(pos.X - CenterPosition.X, pos.Y - CenterPosition.Y);
         }
     }
 }

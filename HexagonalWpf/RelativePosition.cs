@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HexagonalWpf
 {
-    class RelativePosition
+    internal class RelativePosition
     {
         public double Rx;
         public double Ry;

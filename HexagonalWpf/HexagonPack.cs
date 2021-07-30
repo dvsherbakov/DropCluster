@@ -31,7 +31,7 @@ namespace HexagonalWpf
         {
             var folderName = Path.GetDirectoryName(_startName);
             var fileExt = Path.GetExtension(_startName);
-            var files = Directory.GetFiles(folderName, $"*{fileExt}");
+            var files = Directory.GetFiles(folderName ?? string.Empty, $"*{fileExt}");
             foreach (var file in files)
             {
                 var rawCluster = new RawCluster(
@@ -41,17 +41,6 @@ namespace HexagonalWpf
                 Properties.Settings.Default.MaxAspectRatio,
                 Properties.Settings.Default.MinPerimetherLen);
                 await rawCluster.MakeCluster();
-                var position = rawCluster.RelativeToPos(_currentPosition);
-                var pt = new Emgu.CV.Structure.RotatedRect(
-                    new System.Drawing.PointF((float)(position.X), (float)(position.Y)),
-                    new System.Drawing.SizeF(),
-                    0
-                );
-                var markedElement = rawCluster.GetNearer(pt);
-
-                rawCluster.CreateHexagon(markedElement);
-                _hexagon.Add(rawCluster.Hexagon);
-                _currentPosition = rawCluster.GetRelativePosition(rawCluster.Hexagon.Center.Element.Center);
             }
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -59,9 +48,9 @@ namespace HexagonalWpf
             });
         }
 
-        public Hexagon GetFirst => _hexagon.OrderBy(x => x.FileName).FirstOrDefault();
+       // public Hexagon GetFirst => _hexagon.OrderBy(x => x.FileName).FirstOrDefault();
 
-        public int Count => _hexagon.Count;
+       // public int Count => _hexagon.Count;
 
         public async Task SaveExcelFile()
         {
