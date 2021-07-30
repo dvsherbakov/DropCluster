@@ -21,7 +21,7 @@ namespace HexagonalWpf
         private double _fOrigHeight;
         private double _fRatio;
         private RawCluster _rawCluster;
-        private RelativePosition _fRPosition;
+        private RelativePosition _relativePosition;
         private HexagonPack _hexPack;
         private readonly ClusterPack _clusterPack;
 
@@ -109,7 +109,7 @@ namespace HexagonalWpf
         private void CommandBinding_PrepareFolder(object sender, ExecutedRoutedEventArgs e)
         {
 
-            _hexPack = new HexagonPack(_fCurrentFileName, _fRPosition);
+            _hexPack = new HexagonPack(_fCurrentFileName, _relativePosition);
             _ = Task.Run(() => _hexPack.PrepareFolderAsync());
         }
 

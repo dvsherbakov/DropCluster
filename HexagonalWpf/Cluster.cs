@@ -42,6 +42,18 @@ namespace HexagonalWpf
             return _cluster.OrderBy(x => x.Range(el)).FirstOrDefault();
         }
 
+        public int GetRelativeNearerId(PointF el)
+        {
+            if (_cluster == null || _cluster.Count <= 0) return -1;
+            return _cluster.OrderBy(x => x.RangeCenter(el, CenterPosition)).FirstOrDefault().Id;
+        }
+
+        public ClusterElement GetRelativeNearer(PointF el)
+        {
+            if (_cluster == null || _cluster.Count <= 0) return new ClusterElement(-1, new RotatedRect());
+            return _cluster.OrderBy(x => x.RangeCenter(el, CenterPosition)).FirstOrDefault();
+        }
+
         public List<ClusterElement> Get7(RotatedRect el)
         {
             if (_cluster == null || _cluster.Count <= 0) return null;
