@@ -15,6 +15,8 @@
         <CommandBinding Command="local:WindowCommands.SearchLinks" Executed="CommandBinding_SearchLinks"/>
         <CommandBinding Command="local:WindowCommands.NextSrc" Executed="CommandBinding_OnExecutedNextSrc"/>
         <CommandBinding Command="local:WindowCommands.PrevSrc" Executed="CommandBinding_OnExecutedPrevSrc"/>
+        <CommandBinding Command="local:WindowCommands.SaveResult" Executed="CommandBinding_OnExecutedSaveResult"/>
+        <CommandBinding Command="local:WindowCommands.FirstSrc" Executed="FirstSrc"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
@@ -24,7 +26,8 @@
                     Command="local:WindowCommands.PrepareFolder" />
         <KeyBinding Key="P" Modifiers="Control"
                     Command="local:WindowCommands.DrawPath" />
-        <KeyBinding Key="L" Modifiers="Control" Command="local:WindowCommands.SearchLinks"></KeyBinding>
+        <KeyBinding Key="L" Modifiers="Control" Command="local:WindowCommands.SearchLinks"/>
+        <KeyBinding Key="S" Modifiers="Control" Command="local:WindowCommands.SaveResult"/>
     </Window.InputBindings>
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
@@ -34,6 +37,10 @@
         <Menu Height="25" VerticalAlignment="Top" Grid.Row="0">
             <MenuItem Header="File">
                 <MenuItem Header="Open"  InputGestureText="Ctrl+O" Command="Open">
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Save Result" InputGestureText="Ctrl+S" Command="local:WindowCommands.SaveResult">
+
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="Exit" ></MenuItem>
@@ -75,7 +82,10 @@
             <StackPanel Orientation="Vertical" x:Name="ButtonPanel">
                 <Button Content=">" Command="local:WindowCommands.NextSrc"/>
                 <Button Content="&#x003C;" Command="local:WindowCommands.PrevSrc"/>
-
+                <Button Content="&#x00AB;" Command="local:WindowCommands.FirstSrc"/>
+                <TextBlock x:Name="Counter" Text="0" Height="30" 
+                           FontSize="20"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </StackPanel>
             <Viewbox x:Name="ViewContainer"  Grid.Column="1" 
                      SizeChanged="ViewContainer_OnSizeChanged">

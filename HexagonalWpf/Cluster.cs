@@ -86,5 +86,7 @@ namespace HexagonalWpf
         {
             return new PointF(pos.X - CenterPosition.X, pos.Y - CenterPosition.Y);
         }
+
+        public int MaxId => _cluster.Select(x => x.Id).OrderByDescending(x => x).FirstOrDefault();
     }
 }

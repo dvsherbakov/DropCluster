@@ -12,6 +12,8 @@ namespace HexagonalWpf
             SearchLinks = new RoutedCommand("SearchLinks", typeof(MainWindow));
             NextSrc = new RoutedCommand("NextSrc", typeof(MainWindow));
             PrevSrc = new RoutedCommand("PrevSrc", typeof(MainWindow));
+            FirstSrc = new RoutedCommand("FirstSrc", typeof(MainWindow));
+            SaveResult = new RoutedCommand("SaveResult", typeof(MainWindow));
         }
         public static RoutedCommand PrepareCurrent { get; set; }
         public static RoutedCommand PrepareFolder { get; set; }
@@ -19,5 +21,7 @@ namespace HexagonalWpf
         public static  RoutedCommand SearchLinks { get; set; }
         public static  RoutedCommand NextSrc { get; set; }
         public static  RoutedCommand PrevSrc { get; set; }
+        public static RoutedCommand FirstSrc { get; set; }
+        public static  RoutedCommand SaveResult { get; set; }
     }
 }

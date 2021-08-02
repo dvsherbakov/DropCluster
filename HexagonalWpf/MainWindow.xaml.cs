@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace HexagonalWpf
 {
@@ -16,7 +18,7 @@ namespace HexagonalWpf
     public partial class MainWindow : Window
     {
 
-        private string _fCurrentFileName;
+        private string _currentFileName;
         private double _fOrigWidth;
         private double _fOrigHeight;
         private double _fRatio;
@@ -50,7 +52,7 @@ namespace HexagonalWpf
             var result = dlg.ShowDialog();
             if (result != true) return;
             Debug.WriteLine(dlg.FileName);
-            _fCurrentFileName = dlg.FileName;
+            _currentFileName = dlg.FileName;
             var oi = new BitmapImage(new Uri(dlg.FileName));
             _fOrigWidth = oi.PixelWidth;
             _fOrigHeight = oi.PixelHeight;
@@ -87,8 +89,8 @@ namespace HexagonalWpf
                 Stroke = new SolidColorBrush(Colors.Transparent),
                 Fill = new SolidColorBrush(Colors.Transparent)
             };
-            EventCanvas.Children.Add(rect);
-            ObjectCanvas.Children.Add(objRect);
+            _ = EventCanvas.Children.Add(rect);
+            _ = ObjectCanvas.Children.Add(objRect);
             _fRatio = ((EventCanvas.Width / _fOrigWidth) + (EventCanvas.Height / _fOrigHeight)) / 2;
         }
 
@@ -109,8 +111,10 @@ namespace HexagonalWpf
         private void CommandBinding_PrepareFolder(object sender, ExecutedRoutedEventArgs e)
         {
 
-            _hexPack = new HexagonPack(_fCurrentFileName, _relativePosition);
-            _ = Task.Run(() => _hexPack.PrepareFolderAsync());
+            // _hexPack = new HexagonPack(_currentFileName, _relativePosition);
+            //  _ = Task.Run(() => _hexPack.PrepareFolderAsync());
+
+            _ = PrepareFolderAsync(Path.GetDirectoryName(_currentFileName));
         }
 
         private void CommandBinding_DrawPath(object sender, ExecutedRoutedEventArgs e)
@@ -135,14 +139,40 @@ namespace HexagonalWpf
         private async Task PrepareFileAsync()
         {
             _rawCluster = new RawCluster(
-                _fCurrentFileName,
+                _currentFileName,
                 Properties.Settings.Default.GaussianParam,
                 Properties.Settings.Default.BinarizationThreshold,
                 Properties.Settings.Default.MaxAspectRatio,
                 Properties.Settings.Default.MinPerimetherLen);
             await _rawCluster.MakeCluster();
+            if (_clusterPack.Id == "") _clusterPack.Id = Path.GetDirectoryName(_currentFileName);
             _clusterPack.Add(_rawCluster.GetCluser);
             Dispatcher.Invoke(() => DrawUiObject(_rawCluster.GetElements));
+        }
+
+        private async Task PrepareFolderAsync(string folderName)
+        {
+
+            // var folderName = Path.GetDirectoryName(folderName);
+            var fileExt = Path.GetExtension(_currentFileName);
+            _clusterPack.Clear();
+            var files = Directory.GetFiles(folderName ?? string.Empty, $"*{fileExt}");
+            foreach (var file in files)
+            {
+                await Task.Run(() =>
+                {
+                    _rawCluster = new RawCluster(
+                       file,
+                        Properties.Settings.Default.GaussianParam,
+                        Properties.Settings.Default.BinarizationThreshold,
+                        Properties.Settings.Default.MaxAspectRatio,
+                        Properties.Settings.Default.MinPerimetherLen);
+                    _ = _rawCluster.MakeCluster();
+                    if (_clusterPack.Id == "") _clusterPack.Id = Path.GetDirectoryName(file);
+                    _clusterPack.Add(_rawCluster.GetCluser);
+                    Dispatcher.Invoke(() => Counter.Text = _clusterPack.Count.ToString());
+                });
+            }
         }
 
         private void DrawUiObject(IEnumerable<ClusterElement> elements)
@@ -180,13 +210,13 @@ namespace HexagonalWpf
 
             ObjectCanvas.Children.Add(uiElem);
 
-            var textBlock = new TextBlock { Text = element.Id.ToString(), Foreground = new SolidColorBrush(Colors.Blue), FontSize = 30};
-            Canvas.SetLeft(textBlock, element.Element.Center.X*_fRatio);
-            Canvas.SetTop(textBlock, element.Element.Center.Y*_fRatio);
+            var textBlock = new TextBlock { Text = element.Id.ToString(), Foreground = new SolidColorBrush(Colors.Blue), FontSize = 30 };
+            Canvas.SetLeft(textBlock, element.Element.Center.X * _fRatio);
+            Canvas.SetTop(textBlock, element.Element.Center.Y * _fRatio);
             ObjectCanvas.Children.Add(textBlock);
         }
 
-        
+
         private void BinarizationThreshold_LostFocus(object sender, RoutedEventArgs e)
         {
             int.TryParse(tbBinarizationThreshold.Text, out int res);
@@ -225,12 +255,12 @@ namespace HexagonalWpf
                     new System.Drawing.SizeF(),
                     0
                 );
-           // if (_rawCluster == null) return;
-           // var markedElement = _rawCluster.GetNearer(pt);
+            // if (_rawCluster == null) return;
+            // var markedElement = _rawCluster.GetNearer(pt);
             //DrawMarker(markedElement, Colors.Orange);
-           // _rawCluster.CreateHexagon(markedElement);
+            // _rawCluster.CreateHexagon(markedElement);
             //DrawHexagon(_rawCluster.Hexagon);
-           // _rawCluster.Hexagon.AverageLink();
+            // _rawCluster.Hexagon.AverageLink();
 
         }
 
@@ -249,6 +279,16 @@ namespace HexagonalWpf
         private void CommandBinding_OnExecutedPrevSrc(object sender, ExecutedRoutedEventArgs e)
         {
             Dispatcher.Invoke(() => DrawUiObject(_clusterPack.PrevById(_clusterPack.CurrentId).GetList));
+        }
+
+        private void CommandBinding_OnExecutedSaveResult(object sender, ExecutedRoutedEventArgs e)
+        {
+            _clusterPack.SaveResult();
+        }
+
+        private void FirstSrc(object sender, ExecutedRoutedEventArgs e)
+        {
+            Dispatcher.Invoke(() => DrawUiObject(_clusterPack.First().GetList));
         }
     }
 }

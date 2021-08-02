@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using OfficeOpenXml;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace HexagonalWpf
 {
@@ -8,6 +11,8 @@ namespace HexagonalWpf
         public string Id { get; set; }
         public string CurrentId { get; set; }
         private readonly List<Cluster> _clusters;
+
+        private static double ZoomKoef => (4.65 * 112 + 5.9) / 305;
 
         public ClusterPack(string path)
         {
@@ -70,5 +75,65 @@ namespace HexagonalWpf
             CurrentId = _clusters[index].ClusterId;
             return _clusters[index];
         }
+
+        public Cluster First()
+        {
+            CurrentId = _clusters[0].ClusterId;
+            return _clusters[0];
+        }
+
+        private int MaxId => _clusters.Select(x => x.MaxId).OrderByDescending(x => x).FirstOrDefault();
+
+        public async void SaveResult()
+        {
+            var startName = Id;
+            await Task.Run(() =>
+            {
+                var fileName = Path.GetDirectoryName(startName) + "\\out.xlsx";
+
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+
+                var zm = ZoomKoef;
+                var file = new FileInfo(fileName);
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var package = new ExcelPackage(file))
+                {
+                    var clusterNo = 1;
+
+                    var xlsDistribution = package.Workbook.Worksheets.Add(Id);
+
+                    foreach (var it in _clusters.OrderBy(x => x.ClusterId))
+                    {
+                        xlsDistribution.Cells[clusterNo + 1, 1].Value = (float)clusterNo / 2;
+
+                        for (var i = 0; i <= MaxId; i++)
+                        {
+                            if (it.GetList.Count(x => x.Id == i) <= 0) continue;
+
+                            var drop = it.GetList.FirstOrDefault(x => x.Id == i);
+
+                            if (drop != null) xlsDistribution.Cells[clusterNo + 1, i + 3].Value = drop.Diameter / ZoomKoef;
+
+                        }
+
+                        clusterNo++;
+                    }
+
+                    package.Save();
+                }
+            });
+
+        }
+
+        public void Clear()
+        {
+            _clusters.Clear();
+        }
+
+        public int Count => _clusters.Count;
     }
 }

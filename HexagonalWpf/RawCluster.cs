@@ -42,7 +42,7 @@ namespace HexagonalWpf
         {
             try
             {
-                _fCurrentImage = await LoadFileAsync();
+                _fCurrentImage = LoadFileAsync();
                 var contours = FilterContours(ExtractContours());
                 for (var i = 0; i < contours.Size; i++)
                 {
@@ -75,16 +75,16 @@ namespace HexagonalWpf
             return false;
         }
 
-        private async Task<Image<Bgr, byte>> LoadFileAsync()
+        private Image<Bgr, byte> LoadFileAsync()
         {
-            var res = await Task.Run(() => new Image<Bgr, byte>(FileName));
+            var res =  new Image<Bgr, byte>(FileName);
             return res;
         }
 
         private VectorOfVectorOfPoint ExtractContours()
         {
 
-            var temp = _fCurrentImage.SmoothGaussian(_gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_binarizationThreshold), new Gray(255));
+            var temp = _fCurrentImage.SmoothGaussian(_gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_binarizationThreshold), new Gray(255)).Dilate(3);
             var contours = new VectorOfVectorOfPoint();
             var m = new Mat();
             CvInvoke.FindContours(image: temp, contours, m, RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);

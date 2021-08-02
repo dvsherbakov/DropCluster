@@ -301,6 +301,7 @@ namespace PrepareImageFrm
         {
 
             var temp = inputImage.SmoothGaussian(_gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_binarizationThreshold), new Gray(255));
+            temp.Erode(3);
             var contours = new VectorOfVectorOfPoint();
 
             var m = new Mat();
