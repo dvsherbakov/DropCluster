@@ -84,7 +84,7 @@ namespace HexagonalWpf
         private VectorOfVectorOfPoint ExtractContours()
         {
 
-            var temp = _fCurrentImage.SmoothGaussian(_gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_binarizationThreshold), new Gray(255)).Dilate(3);
+            var temp = _fCurrentImage.SmoothGaussian(_gaussianParam).Convert<Gray, byte>().ThresholdBinaryInv(new Gray(_binarizationThreshold), new Gray(255)).Dilate(2);
             var contours = new VectorOfVectorOfPoint();
             var m = new Mat();
             CvInvoke.FindContours(image: temp, contours, m, RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.LinkRuns);
