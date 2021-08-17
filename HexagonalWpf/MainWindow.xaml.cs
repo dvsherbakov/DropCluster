@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -156,8 +157,10 @@ namespace HexagonalWpf
             // var folderName = Path.GetDirectoryName(folderName);
             var fileExt = Path.GetExtension(_currentFileName);
             _clusterPack.Clear();
-            var files = Directory.GetFiles(folderName ?? string.Empty, $"*{fileExt}");
-            foreach (var file in files)
+            var fl = new FileList(folderName, fileExt);
+
+            //var files = Directory.GetFiles(folderName ?? string.Empty, $"*{fileExt}");
+            foreach (var file in fl)
             {
                 await Task.Run(() =>
                 {

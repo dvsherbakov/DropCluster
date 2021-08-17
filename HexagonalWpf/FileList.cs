@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+namespace HexagonalWpf
+{
+    class FileList
+    {
+        public List<string> GetList { get; }
+
+        public FileList(string fName, string ext)
+        {
+            GetList = new List<string>(Directory.GetFiles(fName ?? string.Empty, $"*{ext}").Select(itm => new CustomFileName(itm)).ToList().OrderBy(x => x.number).Select(y => y.Name));
+        }
+
+    }
+
+    class CustomFileName
+    {
+        public string Name { get; set; }
+        public int number { get; set; }
+
+        public CustomFileName(string fName)
+        {
+            Name = fName;
+            var t = new Regex(@"\d+").Matches(fName);
+            number = t.Count > 0 ? int.Parse(t[t.Count - 1].Value) : 9999;
+        }
+
+    }
+}
