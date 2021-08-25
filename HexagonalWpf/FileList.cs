@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HexagonalWpf
 {
-    class FileList
+    internal class FileList
     {
         public List<string> GetList { get; }
 
@@ -19,7 +19,7 @@ namespace HexagonalWpf
 
     }
 
-    class CustomFileName
+    internal class CustomFileName
     {
         public string Name { get; set; }
         public int number { get; set; }

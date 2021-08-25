@@ -24,7 +24,7 @@ namespace HexagonalWpf
         private double _fOrigHeight;
         private double _fRatio;
         private RawCluster _rawCluster;
-        private RelativePosition _relativePosition;
+        //private RelativePosition _relativePosition;
         private HexagonPack _hexPack;
         private readonly ClusterPack _clusterPack;
 
@@ -160,7 +160,7 @@ namespace HexagonalWpf
             var fl = new FileList(folderName, fileExt);
 
             //var files = Directory.GetFiles(folderName ?? string.Empty, $"*{fileExt}");
-            foreach (var file in fl)
+            foreach (var file in fl.GetList)
             {
                 await Task.Run(() =>
                 {

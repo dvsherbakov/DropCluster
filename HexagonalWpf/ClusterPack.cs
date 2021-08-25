@@ -48,7 +48,7 @@ namespace HexagonalWpf
                 foreach (var elem in _clusters[i].GetList)
                 {
                     //elem.Id = prev.Count > 0 ? prev.GetNearerId(elem.Element) : _clusters[i].GenerateNextId();
-                    elem.Id = prev.Count > 0 ? prev.GetRelativeNearerId(elem.GetRelativeCenter(_clusters[i].CenterPosition)) : _clusters[i].GenerateNextId();
+                    elem.Id = prev.Count > 0 ? prev.GetNearerId(elem.Element) : _clusters[i].GenerateNextId();
                     prev.RemoveById(elem.Id);
                 }
             }
