@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -175,6 +176,11 @@ namespace PrepareImageFrm
                 {
                     //tmpList.Add(string.Join(":", GetComplexShear(contours[i]).GetProfile()));
                     lst.Add(GetComplexShear(contours[i]));
+                    //var tmp = GetComplexShear(contours[i]);
+                    //foreach (var itm in tmp.Dict)
+                    //{
+                    //    Debug.WriteLine(String.Join(" ", itm.Value));
+                    //}
                     var rct = CvInvoke.FitEllipse(contours[i]);
                     var ellipse = new Ellipse(rct);
                     if (_imgInput == null) continue;
@@ -377,7 +383,7 @@ namespace PrepareImageFrm
 
         private OctoShear GetComplexShear(IInputArray contour)
         {
-            const int size = 50;
+            const int size = 80;
             var rct = CvInvoke.FitEllipse(contour);
             var cb = GetPixelBrightness((int)rct.Center.Y, (int)rct.Center.X);
             var result = new OctoShear(size, (int)cb, rct);

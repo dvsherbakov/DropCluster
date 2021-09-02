@@ -88,5 +88,7 @@ namespace HexagonalWpf
         }
 
         public int MaxId => _cluster.Select(x => x.Id).OrderByDescending(x => x).FirstOrDefault();
+
+        public double AvgDiam => _cluster.Average(x => x.Diameter);
     }
 }

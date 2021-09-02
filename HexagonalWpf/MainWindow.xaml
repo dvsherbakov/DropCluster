@@ -16,6 +16,7 @@
         <CommandBinding Command="local:WindowCommands.NextSrc" Executed="CommandBinding_OnExecutedNextSrc"/>
         <CommandBinding Command="local:WindowCommands.PrevSrc" Executed="CommandBinding_OnExecutedPrevSrc"/>
         <CommandBinding Command="local:WindowCommands.SaveResult" Executed="CommandBinding_OnExecutedSaveResult"/>
+        <CommandBinding Command="local:WindowCommands.SaveAvg" Executed="CommandBinding_OnExecutedSaveAvg"></CommandBinding>
         <CommandBinding Command="local:WindowCommands.FirstSrc" Executed="FirstSrc"/>
     </Window.CommandBindings>
     <Window.InputBindings>
@@ -28,6 +29,7 @@
                     Command="local:WindowCommands.DrawPath" />
         <KeyBinding Key="L" Modifiers="Control" Command="local:WindowCommands.SearchLinks"/>
         <KeyBinding Key="S" Modifiers="Control" Command="local:WindowCommands.SaveResult"/>
+        <KeyBinding Key="S" Modifiers="Alt" Command="local:WindowCommands.SaveAvg"/>
     </Window.InputBindings>
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
@@ -39,9 +41,8 @@
                 <MenuItem Header="Open"  InputGestureText="Ctrl+O" Command="Open">
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="Save Result" InputGestureText="Ctrl+S" Command="local:WindowCommands.SaveResult">
-
-                </MenuItem>
+                <MenuItem Header="Save Result" InputGestureText="Ctrl+S" Command="local:WindowCommands.SaveResult"/>
+                <MenuItem Header="Save Average Diameters" InputGestureText="Alt+S" Command="local:WindowCommands.SaveAvg"/>
                 <Separator />
                 <MenuItem Header="Exit" ></MenuItem>
             </MenuItem>

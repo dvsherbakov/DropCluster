@@ -39,16 +39,19 @@ namespace HexagonalWpf
 
         public void Renumbering()
         {
-            if (_clusters.Count < 2) return;
+            if (_clusters.Count < 2)
+            {
+                return;
+            }
 
             for (var i = 1; i < _clusters.Count; i++)
             {
                 var prev = CloneCluster(i - 1);
 
-                foreach (var elem in _clusters[i].GetList)
+                foreach (var elem in _clusters[i].GetList.OrderBy(x => x.Element.Center.X).ThenBy(y => y.Element.Center.Y))
                 {
                     //elem.Id = prev.Count > 0 ? prev.GetNearerId(elem.Element) : _clusters[i].GenerateNextId();
-                    elem.Id = prev.Count > 0 ? prev.GetNearerId(elem.Element) : _clusters[i].GenerateNextId();
+                    elem.Id = prev.Count > 0 ? prev.GetRelativeNearerId(elem.GetRelativeCenter(_clusters[i].CenterPosition)) : _clusters[i].GenerateNextId();
                     prev.RemoveById(elem.Id);
                 }
             }
@@ -96,7 +99,7 @@ namespace HexagonalWpf
                     File.Delete(fileName);
                 }
 
-                var zm = ZoomKoef;
+                var zm = 0.8529;//ZoomKoef;
                 var file = new FileInfo(fileName);
 
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -116,7 +119,8 @@ namespace HexagonalWpf
 
                             var drop = it.GetList.FirstOrDefault(x => x.Id == i);
 
-                            if (drop != null) xlsDistribution.Cells[clusterNo + 1, i + 3].Value = drop.Diameter / ZoomKoef;
+                            if (drop != null)
+                                xlsDistribution.Cells[clusterNo + 1, i + 3].Value = drop.Diameter / zm; //ZoomKoef;
 
                         }
 
@@ -126,7 +130,37 @@ namespace HexagonalWpf
                     package.Save();
                 }
             });
+        }
 
+        public void SaveAvgDiameters()
+        {
+
+            var fileName = Path.GetDirectoryName(Id) + "\\out.xlsx";
+
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+
+            var zm = ZoomKoef;
+            var file = new FileInfo(fileName);
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage(file))
+            {
+                var clusterNo = 1;
+
+                var xlsDistribution = package.Workbook.Worksheets.Add(Id);
+
+                foreach (var it in _clusters.OrderBy(x => x.ClusterId))
+                {
+                    xlsDistribution.Cells[clusterNo + 1, 1].Value = (float)clusterNo / 2;
+                    xlsDistribution.Cells[clusterNo + 1, 3].Value = it.AvgDiam / ZoomKoef;
+                    clusterNo++;
+                }
+
+                package.Save();
+            }
         }
 
         public void Clear()

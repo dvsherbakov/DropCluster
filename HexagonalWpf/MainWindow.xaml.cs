@@ -26,6 +26,7 @@ namespace HexagonalWpf
         private RawCluster _rawCluster;
         //private RelativePosition _relativePosition;
         private HexagonPack _hexPack;
+       
         private readonly ClusterPack _clusterPack;
 
         public MainWindow()
@@ -292,6 +293,11 @@ namespace HexagonalWpf
         private void FirstSrc(object sender, ExecutedRoutedEventArgs e)
         {
             Dispatcher.Invoke(() => DrawUiObject(_clusterPack.First().GetList));
+        }
+
+        private void CommandBinding_OnExecutedSaveAvg(object sender, ExecutedRoutedEventArgs e)
+        {
+            _clusterPack.SaveAvgDiameters();
         }
     }
 }
