@@ -278,11 +278,13 @@ namespace HexagonalWpf
         private void CommandBinding_OnExecutedNextSrc(object sender, ExecutedRoutedEventArgs e)
         {
             Dispatcher.Invoke(() => DrawUiObject(_clusterPack.NextById(_clusterPack.CurrentId).GetList));
+            Dispatcher.Invoke(() => Counter.Text = _clusterPack.GetCurrentNumberId());
         }
 
         private void CommandBinding_OnExecutedPrevSrc(object sender, ExecutedRoutedEventArgs e)
         {
             Dispatcher.Invoke(() => DrawUiObject(_clusterPack.PrevById(_clusterPack.CurrentId).GetList));
+            Dispatcher.Invoke(() => Counter.Text = _clusterPack.GetCurrentNumberId());
         }
 
         private void CommandBinding_OnExecutedSaveResult(object sender, ExecutedRoutedEventArgs e)
@@ -293,6 +295,7 @@ namespace HexagonalWpf
         private void FirstSrc(object sender, ExecutedRoutedEventArgs e)
         {
             Dispatcher.Invoke(() => DrawUiObject(_clusterPack.First().GetList));
+            Dispatcher.Invoke(() => Counter.Text = _clusterPack.GetCurrentNumberId());
         }
 
         private void CommandBinding_OnExecutedSaveAvg(object sender, ExecutedRoutedEventArgs e)

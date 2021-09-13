@@ -1,5 +1,6 @@
 ﻿using OfficeOpenXml;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace HexagonalWpf
     {
         public string Id { get; set; }
         public string CurrentId { get; set; }
+        
         private readonly List<Cluster> _clusters;
 
         private static double ZoomKoef => (4.65 * 112 + 5.9) / 305;
@@ -28,8 +30,8 @@ namespace HexagonalWpf
 
         private Cluster CloneCluster(int id)
         {
-            var prev = new Cluster(_clusters.OrderBy(x => x.ClusterId).ToList()[id].ClusterId);
-            foreach (var e in _clusters.OrderBy(x => x.ClusterId).ToList()[id].GetList)
+            var prev = new Cluster(_clusters.ToList()[id].ClusterId);
+            foreach (var e in _clusters.ToList()[id].GetList)
             {
                 prev.Add(e);
             }
@@ -48,10 +50,15 @@ namespace HexagonalWpf
             {
                 var prev = CloneCluster(i - 1);
 
-                foreach (var elem in _clusters[i].GetList.OrderBy(x => x.Element.Center.X).ThenBy(y => y.Element.Center.Y))
+                prev.SetCorrection(_clusters[i].CenterPosition);
+
+                foreach (var elem in _clusters[i].GetList.OrderBy(x => x.Element.Center.Y).ThenBy(y => y.Element.Center.X))
                 {
                     //elem.Id = prev.Count > 0 ? prev.GetNearerId(elem.Element) : _clusters[i].GenerateNextId();
-                    elem.Id = prev.Count > 0 ? prev.GetRelativeNearerId(elem.GetRelativeCenter(_clusters[i].CenterPosition)) : _clusters[i].GenerateNextId();
+                    //var a = prev.GetRelativeNearerId(elem.Element.Center);
+                    //var c = prev.GetList.FirstOrDefault(x => x.Id == a);
+                    //Debug.WriteLine($"{elem.Element.Center.X}-{elem.Element.Center.Y}  |  {c.Element.Center.X}-{c.Element.Center.Y} ");
+                    elem.Id = prev.Count > 0 ? prev.GetRelativeNearerId(elem.Element.Center) : _clusters[i].GenerateNextId();
                     prev.RemoveById(elem.Id);
                 }
             }
@@ -109,7 +116,7 @@ namespace HexagonalWpf
 
                     var xlsDistribution = package.Workbook.Worksheets.Add(Id);
 
-                    foreach (var it in _clusters.OrderBy(x => x.ClusterId))
+                    foreach (var it in _clusters.OrderBy(x => x.CustomName.number))
                     {
                         xlsDistribution.Cells[clusterNo + 1, 1].Value = (float)clusterNo / 2;
 
@@ -142,7 +149,7 @@ namespace HexagonalWpf
                 File.Delete(fileName);
             }
 
-            var zm = ZoomKoef;
+            var zm = 0.8529;
             var file = new FileInfo(fileName);
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -152,10 +159,10 @@ namespace HexagonalWpf
 
                 var xlsDistribution = package.Workbook.Worksheets.Add(Id);
 
-                foreach (var it in _clusters.OrderBy(x => x.ClusterId))
+                foreach (var it in _clusters.OrderBy(x => x.CustomName.number))
                 {
                     xlsDistribution.Cells[clusterNo + 1, 1].Value = (float)clusterNo / 2;
-                    xlsDistribution.Cells[clusterNo + 1, 3].Value = it.AvgDiam / ZoomKoef;
+                    xlsDistribution.Cells[clusterNo + 1, 3].Value = it.AvgDiam / zm;
                     clusterNo++;
                 }
 
@@ -169,5 +176,11 @@ namespace HexagonalWpf
         }
 
         public int Count => _clusters.Count;
+
+        public string GetCurrentNumberId()
+        {
+            var custom = new CustomFileName(CurrentId);
+            return custom.number.ToString();
+        }
     }
 }

@@ -11,13 +11,18 @@ namespace HexagonalWpf
     {
         private readonly List<ClusterElement> _cluster;
         public string ClusterId { get; }
+        public CustomFileName CustomName { get; }
         public PointF StartPosition { get; private set; }
         public PointF CenterPosition { get; private set; }
+
+        public PointF Correction { get; set; }
+        
         public int Count => _cluster.Count;
         public Cluster(string fName)
         {
             _cluster = new List<ClusterElement>();
             ClusterId = fName;
+            CustomName = new CustomFileName(fName);
         }
 
         public void Add(ClusterElement el)
@@ -45,7 +50,7 @@ namespace HexagonalWpf
         public int GetRelativeNearerId(PointF el)
         {
             if (_cluster == null || _cluster.Count <= 0) return -1;
-            return _cluster.OrderBy(x => x.RangeCenter(el, CenterPosition)).FirstOrDefault().Id;
+            return _cluster.OrderBy(x => x.RangeCenter(el, Correction)).FirstOrDefault().Id;
         }
 
         public ClusterElement GetRelativeNearer(PointF el)
@@ -84,7 +89,12 @@ namespace HexagonalWpf
 
         public PointF RelativeCenterPos(PointF pos)
         {
-            return new PointF(pos.X - CenterPosition.X, pos.Y - CenterPosition.Y);
+            return new PointF(pos.X - Correction.X, pos.Y - Correction.Y);
+        }
+
+        public void SetCorrection(PointF c)
+        {
+            Correction = new PointF(CenterPosition.X - c.X, CenterPosition.Y-c.Y);
         }
 
         public int MaxId => _cluster.Select(x => x.Id).OrderByDescending(x => x).FirstOrDefault();
