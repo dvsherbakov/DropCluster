@@ -16,7 +16,7 @@ namespace HexagonalWpf
         public PointF CenterPosition { get; private set; }
 
         public PointF Correction { get; set; }
-        
+
         public int Count => _cluster.Count;
         public Cluster(string fName)
         {
@@ -94,11 +94,11 @@ namespace HexagonalWpf
 
         public void SetCorrection(PointF c)
         {
-            Correction = new PointF(CenterPosition.X - c.X, CenterPosition.Y-c.Y);
+            Correction = new PointF(CenterPosition.X - c.X, CenterPosition.Y - c.Y);
         }
 
         public int MaxId => _cluster.Select(x => x.Id).OrderByDescending(x => x).FirstOrDefault();
 
-        public double AvgDiam => _cluster.Average(x => x.Diameter);
+        public double AvgDiam => _cluster.Count > 0 ? _cluster.Average(x => x.Diameter) : 0;
     }
 }
