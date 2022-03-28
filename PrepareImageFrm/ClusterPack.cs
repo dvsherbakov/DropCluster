@@ -154,53 +154,40 @@ namespace PrepareImageFrm
                     File.Delete(fileName);
                 }
 
-                var  zm = ZoomKoef;//0.8529;
+                var zm = 0.8529;// ZoomKoef;//
 
                 var file = new FileInfo(fileName);
 
                 var pList = new List<List<ClusterElement>>();
-                for (var i = 0; i < GetMaxDropCount(); i++)
-                {
-                    var tmp = new List<ClusterElement>();
-                    foreach (var it in _clusters)
-                    {
-                        if (it.GetList.Count(x => x.Id == i) > 0)
-                        {
-                            tmp.Add(it.GetList.FirstOrDefault(x => x.Id == i));
-                        }
-                    }
-                    pList.Add(tmp);
-                }
+                //for (var i = 0; i < GetMaxDropCount(); i++)
+                //{
+                //    var tmp = new List<ClusterElement>();
+                //    foreach (var it in _clusters)
+                //    {
+                //        if (it.GetList.Count(x => x.Id == i) > 0)
+                //        {
+                //            tmp.Add(it.GetList.FirstOrDefault(x => x.Id == i));
+                //        }
+                //    }
+                //    pList.Add(tmp);
+                //}
 
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
                 using (var package = new ExcelPackage(file))
                 {
                     var dropId = 1;
-                    foreach (var lst in pList)
+                    var xlsDistribution = package.Workbook.Worksheets.Add(dropId.ToString());
+                    var row = 12;
+                    foreach (var lst in _clusters.OrderBy(x => x.ClusterNo))
                     {
-                        var xlsDistribution = package.Workbook.Worksheets.Add(dropId.ToString());
-                        dropId++;
-                        var row = 12;
-                        foreach (var item in lst)
-                        {
-                            xlsDistribution.Cells[row, 2].Value = (row - 12)/2.0;
-                            
-                            xlsDistribution.Cells[row, 4].Value = item.Element.Center.X;
-                            xlsDistribution.Cells[row, 5].Value = item.Element.Center.Y;
-                           
-                            xlsDistribution.Cells[row, 7].Value = item.Diam /zm;
-                            
+                        
+                        xlsDistribution.Cells[row, 2].Value = (row - 12) / 2.0;
 
-                            //for (var q = 0; q < item.Profile.Length; q++)
-                            //{
-                            //    xlsDistribution.Cells[row, 10 + q].Value = item.Profile[q];
-                            //}
+                        xlsDistribution.Cells[row, 4].Value = lst.ClusterList.Average(y => y.Diam / zm);
+                        
+                        row++;
 
-                            //xlsDistribution.Cells[row, 10].Value = item.Profile.Take(15).Average(x=>x);
-
-                            row++;
-                        }
                     }
 
 

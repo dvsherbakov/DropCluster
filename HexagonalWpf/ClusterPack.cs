@@ -106,7 +106,7 @@ namespace HexagonalWpf
                     File.Delete(fileName);
                 }
 
-                var zm = 0.8529;//ZoomKoef;
+                const double zm = 0.8529; //ZoomKoef;
                 var file = new FileInfo(fileName);
 
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -149,7 +149,7 @@ namespace HexagonalWpf
                 File.Delete(fileName);
             }
 
-            var zm = 0.8529;
+            const double zm = 0.8529;
             var file = new FileInfo(fileName);
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -163,6 +163,7 @@ namespace HexagonalWpf
                 {
                     xlsDistribution.Cells[clusterNo + 1, 1].Value = (float)clusterNo / 2;
                     xlsDistribution.Cells[clusterNo + 1, 3].Value = it.AvgDiam / zm;
+                    xlsDistribution.Cells[clusterNo + 1, 5].Value = it.AvgDist() / zm;
                     clusterNo++;
                 }
 

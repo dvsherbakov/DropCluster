@@ -36,8 +36,7 @@ namespace HexagonalWpf
 
         public int GetNearerId(RotatedRect el)
         {
-            if (_cluster == null || _cluster.Count <= 0) return -1;
-            return _cluster.OrderBy(x => x.Range(el)).FirstOrDefault().Id;
+            return _cluster == null || _cluster.Count <= 0 ? -1 : _cluster.OrderBy(x => x.Range(el)).FirstOrDefault().Id;
         }
 
         public ClusterElement GetNearer(RotatedRect el)
@@ -100,5 +99,12 @@ namespace HexagonalWpf
         public int MaxId => _cluster.Select(x => x.Id).OrderByDescending(x => x).FirstOrDefault();
 
         public double AvgDiam => _cluster.Count > 0 ? _cluster.Average(x => x.Diameter) : 0;
+
+        public double AvgDist()
+        {
+            var ranges = (from circle in _cluster from dCircle in _cluster where circle.Range(dCircle.Element) > 0.00001 select circle.Range(dCircle.Element)).ToList();
+
+            return ranges.Average();
+        }
     }
 }

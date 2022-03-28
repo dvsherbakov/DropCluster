@@ -242,7 +242,7 @@ namespace PrepareImageFrm
             }
             saveFile.Flush();
             saveFile.Close();
-            listBox1.Items.Add($"Log {fileName} saved");
+            _ = listBox1.Items.Add($"Log {fileName} saved");
         }
 
         private async Task<Image<Bgr, ushort>> LoadFileAsync(string fileName)
@@ -281,7 +281,8 @@ namespace PrepareImageFrm
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var perimeter = CvInvoke.ArcLength(contours[i], true);
                 if (GetAspectRatio(rct) < _maxAspectRatio / 100f && perimeter > _minPerimeterLen && perimeter < 500)
-                    if (!IncludeContour(contours, i)) filteredContours.Push(contours[i]);
+                    //if (!IncludeContour(contours, i))
+                    filteredContours.Push(contours[i]);
             }
             return filteredContours;
         }
@@ -358,8 +359,8 @@ namespace PrepareImageFrm
             {
                 await PrepareFile(file);
             }
-            listBox1.Items.Add("Finished directory ReEncode");
-            listBox1.Items.Add($"Undetected: {_storage.GetUndetectedCount}");
+            _ = listBox1.Items.Add("Finished directory ReEncode");
+            _ = listBox1.Items.Add($"Undetected: {_storage.GetUndetectedCount}");
         }
 
         private async void OpenSelectedToolStripMenuItem_Click(object sender, EventArgs e)
@@ -386,18 +387,18 @@ namespace PrepareImageFrm
             const int size = 80;
             var rct = CvInvoke.FitEllipse(contour);
             var cb = GetPixelBrightness((int)rct.Center.Y, (int)rct.Center.X);
-            var result = new OctoShear(size, (int)cb, rct);
+            var result = new OctoShear(size, cb, rct);
 
             for (var i = 1; i < size; i++)
             {
-                result.Dict[1][i] = (int)GetPixelBrightness((int)(rct.Center.Y + i), (int)rct.Center.X);
-                result.Dict[2][i] = (int)GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
-                result.Dict[3][i] = (int)GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X - i));
-                result.Dict[4][i] = (int)GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
-                result.Dict[5][i] = (int)GetPixelBrightness((int)(rct.Center.Y - i), (int)rct.Center.X);
-                result.Dict[6][i] = (int)GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
-                result.Dict[7][i] = (int)GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X + i));
-                result.Dict[8][i] = (int)GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
+                result.Dict[1][i] = GetPixelBrightness((int)(rct.Center.Y + i), (int)rct.Center.X);
+                result.Dict[2][i] = GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
+                result.Dict[3][i] = GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X - i));
+                result.Dict[4][i] = GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
+                result.Dict[5][i] = GetPixelBrightness((int)(rct.Center.Y - i), (int)rct.Center.X);
+                result.Dict[6][i] = GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
+                result.Dict[7][i] = GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X + i));
+                result.Dict[8][i] = GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
             }
             return result;
         }
@@ -406,7 +407,6 @@ namespace PrepareImageFrm
 
         private uint AroundAverageBrightness(IInputArray contour)
         {
-            return 0;
             const int size = 30;
             var tmp = CvInvoke.FitEllipse(contour);
             var x = 100;//(int)tmp.Center.X + 70;
