@@ -3,6 +3,7 @@ using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PrepareImageFrm
@@ -92,7 +93,7 @@ namespace PrepareImageFrm
 
                         foreach (var res in _results)
                         {//по всем снимкам
-                            var xlsSheet = package.Workbook.Worksheets.Add(Path.GetFileNameWithoutExtension(res.FileName));
+                            var xlsSheet = package.Workbook.Worksheets.Add(Regex.Replace(Path.GetFileNameWithoutExtension(res.FileName), "[ _-]", string.Empty)) ;
                             var row = 2;
 
                             foreach (var drop in res.Brightness)

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Xml.Schema;
 using Emgu.CV.Structure;
 
 namespace HexagonalWpf

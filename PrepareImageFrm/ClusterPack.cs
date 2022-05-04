@@ -138,14 +138,7 @@ namespace PrepareImageFrm
             {
                 ReOrderPack();
                 //var tmp = _clusters[0].GetList;
-                var linearList = new List<ClusterElement>();
-                foreach (var c in _clusters)
-                {
-                    foreach (var it in c.ClusterList)
-                    {
-                        linearList.Add(it);
-                    }
-                }
+                var linearList = _clusters.SelectMany(c => c.ClusterList).ToList();
 
                 var fileName = _packId.Split('\\').LastOrDefault() + ".xlsx";
 
@@ -176,7 +169,7 @@ namespace PrepareImageFrm
 
                 using (var package = new ExcelPackage(file))
                 {
-                    var dropId = 1;
+                    const int dropId = 1;
                     var xlsDistribution = package.Workbook.Worksheets.Add(dropId.ToString());
                     var row = 12;
                     foreach (var lst in _clusters.OrderBy(x => x.ClusterNo))

@@ -5,7 +5,6 @@ using Emgu.CV.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Threading.Tasks;
 
 namespace HexagonalWpf
@@ -64,7 +63,7 @@ namespace HexagonalWpf
 
             for (var i = 0; i < list.Size; i++)
             {
-                if (list[i].Size < 10) continue;
+                if (list[i].Size < 10 || list[i].Size > 500) continue;
                 var tmp = CvInvoke.FitEllipse(list[i]);
                 if (!(ellipseOfSrc.Size.Height + ellipseOfSrc.Size.Width <
                       tmp.Size.Height + tmp.Size.Width)) continue;
@@ -104,12 +103,13 @@ namespace HexagonalWpf
             var filteredContours = new VectorOfVectorOfPoint();
             for (var i = 0; i < contours.Size; i++)
             {
-                if (contours[i].Size < 5) continue;
+                if (contours[i].Size < 5|| contours[i].Size >500) continue;
 
                 var rct = CvInvoke.FitEllipse(contours[i]);
                 var perimeter = CvInvoke.ArcLength(contours[i], true);
-                if (GetAspectRatio(rct) < _maxAspectRatio / 100f && perimeter > _minPerimeterLen && perimeter < 500)
-                    if (!IncludeContour(contours, i)) filteredContours.Push(contours[i]);
+                if (!(GetAspectRatio(rct) < _maxAspectRatio / 100f) || !(perimeter > _minPerimeterLen) ||
+                    !(perimeter < 500)) continue;
+                if (!IncludeContour(contours, i)) filteredContours.Push(contours[i]);
             }
             return filteredContours;
         }
