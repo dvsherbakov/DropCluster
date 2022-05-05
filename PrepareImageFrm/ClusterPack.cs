@@ -131,7 +131,7 @@ namespace PrepareImageFrm
                 }
             }
         }
-
+        
         public async Task SaveDetailInfo()
         {
             await Task.Run(() =>
@@ -147,7 +147,7 @@ namespace PrepareImageFrm
                     File.Delete(fileName);
                 }
 
-                var zm = 0.8529;// ZoomKoef;//
+                const double zm = 0.8529; // ZoomKoef;//
 
                 var file = new FileInfo(fileName);
 
@@ -174,11 +174,11 @@ namespace PrepareImageFrm
                     var row = 12;
                     foreach (var lst in _clusters.OrderBy(x => x.ClusterNo))
                     {
-                        
+
                         xlsDistribution.Cells[row, 2].Value = (row - 12) / 2.0;
 
                         xlsDistribution.Cells[row, 4].Value = lst.ClusterList.Average(y => y.Diam / zm);
-                        
+
                         row++;
 
                     }

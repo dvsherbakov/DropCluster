@@ -8,10 +8,18 @@ namespace HexagonalWpf
     {
         public int Id { get; set; }
         public RotatedRect Element { get; }
+        public OctoShear Shear { get; }
         public ClusterElement(int id, RotatedRect rect)
         {
             Id = id;
             Element = rect;
+        }
+
+        public ClusterElement(int id, RotatedRect rect, OctoShear shear)
+        {
+            Id = id;
+            Element = rect;
+            Shear = shear;
         }
 
         public PointF GetRelativeCenter(PointF center) =>

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Media.TextFormatting;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -409,21 +407,21 @@ namespace PrepareImageFrm
         {
             const int size = 30;
             var tmp = CvInvoke.FitEllipse(contour);
-            var x = 100;//(int)tmp.Center.X + 70;
-            var y = 900;//(int)tmp.Center.X + 70;
+            const int x = 100; //(int)tmp.Center.X + 70;
+            const int y = 900; //(int)tmp.Center.X + 70;
             var cb = GetPixelBrightness(y, x);
-            var result = new OctoShear(size, (int)cb, tmp);
+            var result = new OctoShear(size, cb, tmp);
 
             for (var i = 1; i < size; i++)
             {
-                result.Dict[1][i] = (int)GetPixelBrightness(y + i, x);
-                result.Dict[2][i] = (int)GetPixelBrightness((int)(y + (i * 0.7071)), (int)(x - (i * 0.7071)));
-                result.Dict[3][i] = (int)GetPixelBrightness(y, x - i);
+                result.Dict[1][i] = GetPixelBrightness(y + i, x);
+                result.Dict[2][i] = GetPixelBrightness((int)(y + (i * 0.7071)), (int)(x - (i * 0.7071)));
+                result.Dict[3][i] = GetPixelBrightness(y, x - i);
                 result.Dict[4][i] = GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x - (i * 0.7071)));
-                result.Dict[5][i] = (int)GetPixelBrightness(y - i, x);
-                result.Dict[6][i] = (int)GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x + (i * 0.7071)));
-                result.Dict[7][i] = (int)GetPixelBrightness(y, x + i);
-                result.Dict[8][i] = (int)GetPixelBrightness((int)(y + (i * 0.7071)), (int)(x + (i * 0.7071)));
+                result.Dict[5][i] = GetPixelBrightness(y - i, x);
+                result.Dict[6][i] = GetPixelBrightness((int)(y - (i * 0.7071)), (int)(x + (i * 0.7071)));
+                result.Dict[7][i] = GetPixelBrightness(y, x + i);
+                result.Dict[8][i] = GetPixelBrightness((int)(y + (i * 0.7071)), (int)(x + (i * 0.7071)));
             }
             return result.AvgBrightest();
         }

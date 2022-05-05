@@ -5,6 +5,7 @@ using Emgu.CV.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HexagonalWpf
@@ -23,7 +24,7 @@ namespace HexagonalWpf
 
         public IEnumerable<ClusterElement> GetElements => _cluster.GetList;
         private readonly string _fFileName;
-        private Image<Bgr, byte> _fCurrentImage;
+        private Image<Bgr, ushort> _fCurrentImage;
         public string FileName => _fFileName;
 
         public RawCluster(string fName, int gaussianParam, int binarizationThreshold, int maxAspectRatio, int minPerimeterLen)
@@ -37,7 +38,7 @@ namespace HexagonalWpf
         }
 
 
-        public async Task MakeCluster()
+        public Task MakeCluster()
         {
             try
             {
@@ -48,16 +49,18 @@ namespace HexagonalWpf
                     var perimeter = CvInvoke.ArcLength(contours[i], true);
                     var approx = new VectorOfPoint();
                     CvInvoke.ApproxPolyDP(contours[i], approx, 0.03 * perimeter, true);
-                    _cluster.Add(new ClusterElement(i, CvInvoke.FitEllipse(contours[i])));
+                    _cluster.Add(new ClusterElement(i, CvInvoke.FitEllipse(contours[i]), GetComplexShear(contours[i])));
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
+
+            return Task.CompletedTask;
         }
 
-        private bool IncludeContour(VectorOfVectorOfPoint list, int src)
+        private static bool IncludeContour(VectorOfVectorOfPoint list, int src)
         { //is internal contour?
             var ellipseOfSrc = CvInvoke.FitEllipse(list[src]);
 
@@ -74,9 +77,9 @@ namespace HexagonalWpf
             return false;
         }
 
-        private Image<Bgr, byte> LoadFileAsync()
+        private Image<Bgr, ushort> LoadFileAsync()
         {
-            var res =  new Image<Bgr, byte>(FileName);
+            var res =  new Image<Bgr, ushort>(FileName);
             return res;
         }
 
@@ -114,7 +117,7 @@ namespace HexagonalWpf
             return filteredContours;
         }
 
-        private float GetAspectRatio(RotatedRect rct)
+        private static float GetAspectRatio(RotatedRect rct)
         {
             try
             {
@@ -131,15 +134,39 @@ namespace HexagonalWpf
         {
             return _cluster.GetNearer(el);
         }
-
-        //public PointF GetCenter()
-        //{
-        //    return _cluster.GetCenter();
-        //}
-
+        
         public void CreateHexagon(ClusterElement el)
         {
             Hexagon = new Hexagon(el, _cluster.Get7(el.Element), _fFileName);
+        }
+
+        private int GetPixelBrightness(int x, int y)
+        {
+            if (_fCurrentImage == null) return 0;
+            if (x <= 0 || y <= 0 || x >= _fCurrentImage.Size.Width || y >= _fCurrentImage.Size.Height) return 0;
+            var pixel = _fCurrentImage[x, y];
+            return (int)(new List<double>() { pixel.Green, pixel.Blue, pixel.Red }).Average();
+        }
+
+        private OctoShear GetComplexShear(IInputArray contour)
+        {
+            const int size = 80;
+            var rct = CvInvoke.FitEllipse(contour);
+            var cb = GetPixelBrightness((int)rct.Center.Y, (int)rct.Center.X);
+            var result = new OctoShear(size, cb, rct);
+
+            for (var i = 1; i < size; i++)
+            {
+                result.Dict[1][i] = GetPixelBrightness((int)(rct.Center.Y + i), (int)rct.Center.X);
+                result.Dict[2][i] = GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
+                result.Dict[3][i] = GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X - i));
+                result.Dict[4][i] = GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));
+                result.Dict[5][i] = GetPixelBrightness((int)(rct.Center.Y - i), (int)rct.Center.X);
+                result.Dict[6][i] = GetPixelBrightness((int)(rct.Center.Y - (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
+                result.Dict[7][i] = GetPixelBrightness((int)rct.Center.Y, (int)(rct.Center.X + i));
+                result.Dict[8][i] = GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X + (i * 0.7071)));
+            }
+            return result;
         }
     }
 }

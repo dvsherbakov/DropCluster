@@ -15,6 +15,7 @@ namespace HexagonalWpf
             FirstSrc = new RoutedCommand("FirstSrc", typeof(MainWindow));
             SaveResult = new RoutedCommand("SaveResult", typeof(MainWindow));
             SaveAvg= new RoutedCommand("SaveAvg", typeof(MainWindow));
+            SaveShearInfo = new RoutedCommand("SaveShearInfo", typeof(MainWindow));
         }
         public static RoutedCommand PrepareCurrent { get; set; }
         public static RoutedCommand PrepareFolder { get; set; }
@@ -25,5 +26,6 @@ namespace HexagonalWpf
         public static RoutedCommand FirstSrc { get; set; }
         public static  RoutedCommand SaveResult { get; set; }
         public static  RoutedCommand SaveAvg { get; set; }
+        public static RoutedCommand SaveShearInfo { get; set; }
     }
 }

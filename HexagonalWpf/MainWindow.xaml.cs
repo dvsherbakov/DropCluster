@@ -60,7 +60,7 @@ namespace HexagonalWpf
             RangeCanvas();
         }
 
-        private void App_Exit(object sender, CancelEventArgs cancelEventArg)
+        private static void App_Exit(object sender, CancelEventArgs cancelEventArg)
         {
             Properties.Settings.Default.Save();
         }
@@ -299,6 +299,16 @@ namespace HexagonalWpf
         private void CommandBinding_OnExecutedSaveAvg(object sender, ExecutedRoutedEventArgs e)
         {
             _clusterPack.SaveAvgDiameters();
+        }
+
+        private void CommandBinding_OnExecutedSaveShearInfo(object sender, ExecutedRoutedEventArgs e)
+        {
+            _ = _clusterPack.SaveShearInfo();
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

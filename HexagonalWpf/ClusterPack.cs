@@ -1,7 +1,9 @@
 ﻿using OfficeOpenXml;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HexagonalWpf
@@ -92,6 +94,45 @@ namespace HexagonalWpf
         }
 
         private int MaxId => _clusters.Select(x => x.MaxId).OrderByDescending(x => x).FirstOrDefault();
+
+        public async Task SaveShearInfo()
+        {
+            await Task.Run(() =>
+            {
+
+                var fileName = Path.GetDirectoryName(Id) + "\\outShear.xlsx";
+
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+
+                var file = new FileInfo(fileName);
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                using (var package = new ExcelPackage(file))
+                {
+                    foreach (var cluster in _clusters)
+                    {
+                        var xlsSheet = package.Workbook.Worksheets.Add(Regex.Replace(Path.GetFileNameWithoutExtension(cluster.ClusterId), "[ _-]", string.Empty));
+                        var column = 5;
+                        foreach (var item in cluster.GetList.OrderBy(x => x.Id))
+                        {
+                            xlsSheet.Cells[4, column].Value = item.Id;
+                            var profile = item.Shear.GetProfile();
+                            for (var i = 0; i < profile.Length; i++)
+                            {
+                                xlsSheet.Cells[6 + i, column].Value = profile[i];
+                            }
+                            column++;
+                        }
+
+                    }
+                    package.Save();
+                }
+            });
+        }
 
         public async void SaveResult()
         {

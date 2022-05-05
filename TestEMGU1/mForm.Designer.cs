@@ -153,9 +153,9 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.tlpMaster);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Location = new System.Drawing.Point(4, 33);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(1091, 605);
+            this.tabPage2.Size = new System.Drawing.Size(1091, 588);
             this.tabPage2.TabIndex = 2;
             this.tabPage2.Text = "Обработка изображений";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -172,7 +172,7 @@
             this.tlpMaster.Name = "tlpMaster";
             this.tlpMaster.RowCount = 1;
             this.tlpMaster.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpMaster.Size = new System.Drawing.Size(1091, 605);
+            this.tlpMaster.Size = new System.Drawing.Size(1091, 588);
             this.tlpMaster.TabIndex = 0;
             // 
             // pbOnePict
@@ -180,7 +180,7 @@
             this.pbOnePict.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbOnePict.Location = new System.Drawing.Point(3, 3);
             this.pbOnePict.Name = "pbOnePict";
-            this.pbOnePict.Size = new System.Drawing.Size(757, 599);
+            this.pbOnePict.Size = new System.Drawing.Size(757, 582);
             this.pbOnePict.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pbOnePict.TabIndex = 0;
             this.pbOnePict.TabStop = false;
@@ -235,7 +235,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(322, 599);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(322, 582);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // tbMinimalDist
@@ -311,7 +311,7 @@
             this.tbSingleFile.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbSingleFile.Location = new System.Drawing.Point(3, 483);
             this.tbSingleFile.Name = "tbSingleFile";
-            this.tbSingleFile.Size = new System.Drawing.Size(219, 24);
+            this.tbSingleFile.Size = new System.Drawing.Size(219, 32);
             this.tbSingleFile.TabIndex = 6;
             // 
             // label1
@@ -511,11 +511,11 @@
             this.tcMain.Controls.Add(this.tpBranched);
             this.tcMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcMain.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tcMain.Location = new System.Drawing.Point(0, 24);
+            this.tcMain.Location = new System.Drawing.Point(0, 33);
             this.tcMain.Margin = new System.Windows.Forms.Padding(4);
             this.tcMain.Name = "tcMain";
             this.tcMain.SelectedIndex = 0;
-            this.tcMain.Size = new System.Drawing.Size(1099, 634);
+            this.tcMain.Size = new System.Drawing.Size(1099, 625);
             this.tcMain.TabIndex = 6;
             // 
             // tabPage1
@@ -529,9 +529,9 @@
             this.tabPage1.Controls.Add(this.tbPoint3);
             this.tabPage1.Controls.Add(this.tbPoint2);
             this.tabPage1.Controls.Add(this.tbPoint1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(1091, 605);
+            this.tabPage1.Size = new System.Drawing.Size(1091, 597);
             this.tabPage1.TabIndex = 3;
             this.tabPage1.Text = "Углы";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -541,7 +541,7 @@
             this.cbAngles.AutoSize = true;
             this.cbAngles.Location = new System.Drawing.Point(9, 13);
             this.cbAngles.Name = "cbAngles";
-            this.cbAngles.Size = new System.Drawing.Size(218, 21);
+            this.cbAngles.Size = new System.Drawing.Size(296, 28);
             this.cbAngles.TabIndex = 8;
             this.cbAngles.Text = "Использовать этот алгоритм";
             this.cbAngles.UseVisualStyleBackColor = true;
@@ -609,21 +609,21 @@
             // 
             this.tbPoint3.Location = new System.Drawing.Point(8, 96);
             this.tbPoint3.Name = "tbPoint3";
-            this.tbPoint3.Size = new System.Drawing.Size(100, 24);
+            this.tbPoint3.Size = new System.Drawing.Size(100, 32);
             this.tbPoint3.TabIndex = 2;
             // 
             // tbPoint2
             // 
             this.tbPoint2.Location = new System.Drawing.Point(8, 66);
             this.tbPoint2.Name = "tbPoint2";
-            this.tbPoint2.Size = new System.Drawing.Size(100, 24);
+            this.tbPoint2.Size = new System.Drawing.Size(100, 32);
             this.tbPoint2.TabIndex = 1;
             // 
             // tbPoint1
             // 
             this.tbPoint1.Location = new System.Drawing.Point(8, 36);
             this.tbPoint1.Name = "tbPoint1";
-            this.tbPoint1.Size = new System.Drawing.Size(100, 24);
+            this.tbPoint1.Size = new System.Drawing.Size(100, 32);
             this.tbPoint1.TabIndex = 0;
             // 
             // tpArea
@@ -637,9 +637,9 @@
             this.tpArea.Controls.Add(this.btSaveArea);
             this.tpArea.Controls.Add(this.lvArea);
             this.tpArea.Controls.Add(this.cbArea);
-            this.tpArea.Location = new System.Drawing.Point(4, 25);
+            this.tpArea.Location = new System.Drawing.Point(4, 33);
             this.tpArea.Name = "tpArea";
-            this.tpArea.Size = new System.Drawing.Size(1091, 605);
+            this.tpArea.Size = new System.Drawing.Size(1091, 597);
             this.tpArea.TabIndex = 5;
             this.tpArea.Text = "Область";
             this.tpArea.UseVisualStyleBackColor = true;
@@ -664,7 +664,7 @@
             this.lbAvgRad.AutoSize = true;
             this.lbAvgRad.Location = new System.Drawing.Point(519, 224);
             this.lbAvgRad.Name = "lbAvgRad";
-            this.lbAvgRad.Size = new System.Drawing.Size(114, 17);
+            this.lbAvgRad.Size = new System.Drawing.Size(157, 24);
             this.lbAvgRad.TabIndex = 7;
             this.lbAvgRad.Text = "Средний радиус";
             // 
@@ -682,7 +682,7 @@
             // 
             this.tbRadCount.Location = new System.Drawing.Point(168, 34);
             this.tbRadCount.Name = "tbRadCount";
-            this.tbRadCount.Size = new System.Drawing.Size(48, 24);
+            this.tbRadCount.Size = new System.Drawing.Size(48, 32);
             this.tbRadCount.TabIndex = 5;
             this.tbRadCount.Text = "5";
             this.tbRadCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -692,7 +692,7 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(6, 37);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(156, 17);
+            this.label12.Size = new System.Drawing.Size(213, 24);
             this.label12.TabIndex = 4;
             this.label12.Text = "Кратность рассотяния";
             // 
@@ -700,10 +700,10 @@
             // 
             this.lbLinks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbLinks.FormattingEnabled = true;
-            this.lbLinks.ItemHeight = 16;
+            this.lbLinks.ItemHeight = 24;
             this.lbLinks.Location = new System.Drawing.Point(731, 10);
             this.lbLinks.Name = "lbLinks";
-            this.lbLinks.Size = new System.Drawing.Size(345, 228);
+            this.lbLinks.Size = new System.Drawing.Size(345, 220);
             this.lbLinks.TabIndex = 3;
             // 
             // btSaveArea
@@ -764,7 +764,7 @@
             this.cbArea.AutoSize = true;
             this.cbArea.Location = new System.Drawing.Point(9, 13);
             this.cbArea.Name = "cbArea";
-            this.cbArea.Size = new System.Drawing.Size(184, 21);
+            this.cbArea.Size = new System.Drawing.Size(249, 28);
             this.cbArea.TabIndex = 0;
             this.cbArea.Text = "Выбрать этот алгоритм";
             this.cbArea.UseVisualStyleBackColor = true;
@@ -776,9 +776,9 @@
             this.tpChains.Controls.Add(this.btnChainDelete);
             this.tpChains.Controls.Add(this.lvChains);
             this.tpChains.Controls.Add(this.cbChains);
-            this.tpChains.Location = new System.Drawing.Point(4, 25);
+            this.tpChains.Location = new System.Drawing.Point(4, 33);
             this.tpChains.Name = "tpChains";
-            this.tpChains.Size = new System.Drawing.Size(1091, 605);
+            this.tpChains.Size = new System.Drawing.Size(1091, 597);
             this.tpChains.TabIndex = 6;
             this.tpChains.Text = "Цепочки";
             this.tpChains.UseVisualStyleBackColor = true;
@@ -865,7 +865,7 @@
             this.cbChains.AutoSize = true;
             this.cbChains.Location = new System.Drawing.Point(9, 4);
             this.cbChains.Name = "cbChains";
-            this.cbChains.Size = new System.Drawing.Size(218, 21);
+            this.cbChains.Size = new System.Drawing.Size(296, 28);
             this.cbChains.TabIndex = 0;
             this.cbChains.Text = "Использовать этот алгоритм";
             this.cbChains.UseVisualStyleBackColor = true;
@@ -873,9 +873,9 @@
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.flpStat);
-            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1091, 605);
+            this.tabPage3.Size = new System.Drawing.Size(1091, 597);
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "Статистика";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -889,7 +889,7 @@
             this.flpStat.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpStat.Location = new System.Drawing.Point(0, 0);
             this.flpStat.Name = "flpStat";
-            this.flpStat.Size = new System.Drawing.Size(1091, 605);
+            this.flpStat.Size = new System.Drawing.Size(1091, 597);
             this.flpStat.TabIndex = 0;
             // 
             // panel1
@@ -906,7 +906,7 @@
             this.lbGrade.AutoSize = true;
             this.lbGrade.Location = new System.Drawing.Point(6, 4);
             this.lbGrade.Name = "lbGrade";
-            this.lbGrade.Size = new System.Drawing.Size(68, 17);
+            this.lbGrade.Size = new System.Drawing.Size(97, 24);
             this.lbGrade.TabIndex = 1;
             this.lbGrade.Text = "Градация";
             // 
@@ -915,7 +915,7 @@
             this.trackBarGrade.Location = new System.Drawing.Point(3, 24);
             this.trackBarGrade.Minimum = 1;
             this.trackBarGrade.Name = "trackBarGrade";
-            this.trackBarGrade.Size = new System.Drawing.Size(191, 45);
+            this.trackBarGrade.Size = new System.Drawing.Size(191, 69);
             this.trackBarGrade.TabIndex = 0;
             this.trackBarGrade.Value = 1;
             this.trackBarGrade.Scroll += new System.EventHandler(this.TrackBarGrade_Scroll);
@@ -982,10 +982,10 @@
             // tpCadr
             // 
             this.tpCadr.Controls.Add(this.tbCadr);
-            this.tpCadr.Location = new System.Drawing.Point(4, 25);
+            this.tpCadr.Location = new System.Drawing.Point(4, 33);
             this.tpCadr.Name = "tpCadr";
             this.tpCadr.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCadr.Size = new System.Drawing.Size(1091, 605);
+            this.tpCadr.Size = new System.Drawing.Size(1091, 597);
             this.tpCadr.TabIndex = 7;
             this.tpCadr.Text = "Кадр";
             this.tpCadr.UseVisualStyleBackColor = true;
@@ -996,17 +996,17 @@
             this.tbCadr.Location = new System.Drawing.Point(3, 3);
             this.tbCadr.Multiline = true;
             this.tbCadr.Name = "tbCadr";
-            this.tbCadr.Size = new System.Drawing.Size(1085, 599);
+            this.tbCadr.Size = new System.Drawing.Size(1085, 591);
             this.tbCadr.TabIndex = 0;
             this.tbCadr.TextChanged += new System.EventHandler(this.tbCadr_TextChanged);
             // 
             // tpBranched
             // 
             this.tpBranched.Controls.Add(this.cbBranched);
-            this.tpBranched.Location = new System.Drawing.Point(4, 25);
+            this.tpBranched.Location = new System.Drawing.Point(4, 33);
             this.tpBranched.Name = "tpBranched";
             this.tpBranched.Padding = new System.Windows.Forms.Padding(3);
-            this.tpBranched.Size = new System.Drawing.Size(1091, 605);
+            this.tpBranched.Size = new System.Drawing.Size(1091, 597);
             this.tpBranched.TabIndex = 8;
             this.tpBranched.Text = "Ветвление";
             this.tpBranched.UseVisualStyleBackColor = true;
@@ -1016,18 +1016,20 @@
             this.cbBranched.AutoSize = true;
             this.cbBranched.Location = new System.Drawing.Point(9, 7);
             this.cbBranched.Name = "cbBranched";
-            this.cbBranched.Size = new System.Drawing.Size(218, 21);
+            this.cbBranched.Size = new System.Drawing.Size(296, 28);
             this.cbBranched.TabIndex = 0;
             this.cbBranched.Text = "Использовать этот алгоритм";
             this.cbBranched.UseVisualStyleBackColor = true;
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.файлToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1099, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1099, 33);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1038,31 +1040,31 @@
             this.toolStripMenuItem1,
             this.tmExit});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(69, 29);
             this.файлToolStripMenuItem.Text = "Файл";
             // 
             // tmRename
             // 
             this.tmRename.Name = "tmRename";
-            this.tmRename.Size = new System.Drawing.Size(161, 22);
+            this.tmRename.Size = new System.Drawing.Size(244, 34);
             this.tmRename.Text = "Переименовать";
             this.tmRename.Click += new System.EventHandler(this.TmRename_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(158, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(241, 6);
             // 
             // tmExit
             // 
             this.tmExit.Name = "tmExit";
-            this.tmExit.Size = new System.Drawing.Size(161, 22);
+            this.tmExit.Size = new System.Drawing.Size(244, 34);
             this.tmExit.Text = "Выход";
             this.tmExit.Click += new System.EventHandler(this.TmExit_Click);
             // 
             // FmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1099, 658);
             this.Controls.Add(this.tcMain);

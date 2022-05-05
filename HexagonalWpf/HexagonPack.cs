@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace HexagonalWpf
 {
-    class HexagonPack
+    internal class HexagonPack
     {
         private readonly List<Hexagon> _hexagon;
         public IEnumerable<Hexagon> HexList => _hexagon.OrderBy(x => x.FileName);

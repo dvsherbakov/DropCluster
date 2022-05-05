@@ -103,6 +103,7 @@
     <Compile Include="FileList.cs" />
     <Compile Include="Hexagon.cs" />
     <Compile Include="HexagonPack.cs" />
+    <Compile Include="OctoShear.cs" />
     <Compile Include="RawCluster.cs" />
     <Compile Include="RelativePosition.cs" />
     <Compile Include="WindowCommands.cs" />

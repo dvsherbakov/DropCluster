@@ -16,8 +16,9 @@
         <CommandBinding Command="local:WindowCommands.NextSrc" Executed="CommandBinding_OnExecutedNextSrc"/>
         <CommandBinding Command="local:WindowCommands.PrevSrc" Executed="CommandBinding_OnExecutedPrevSrc"/>
         <CommandBinding Command="local:WindowCommands.SaveResult" Executed="CommandBinding_OnExecutedSaveResult"/>
-        <CommandBinding Command="local:WindowCommands.SaveAvg" Executed="CommandBinding_OnExecutedSaveAvg"></CommandBinding>
+        <CommandBinding Command="local:WindowCommands.SaveAvg" Executed="CommandBinding_OnExecutedSaveAvg"/>
         <CommandBinding Command="local:WindowCommands.FirstSrc" Executed="FirstSrc"/>
+        <CommandBinding Command="local:WindowCommands.SaveShearInfo" Executed="CommandBinding_OnExecutedSaveShearInfo"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
@@ -43,10 +44,11 @@
                 <Separator />
                 <MenuItem Header="Save Result" InputGestureText="Ctrl+S" Command="local:WindowCommands.SaveResult"/>
                 <MenuItem Header="Save Average Diameters" InputGestureText="Alt+S" Command="local:WindowCommands.SaveAvg"/>
+                <MenuItem Header="Save Shear Info" InputGestureText="Alt+H" Command="local:WindowCommands.SaveShearInfo"/>
                 <Separator />
                 <MenuItem Header="Exit" ></MenuItem>
             </MenuItem>
-            <MenuItem Header="Tools" >
+            <MenuItem Header="Tools" Click="MenuItem_Click" >
                 <MenuItem Header="Prepare Current" InputGestureText="Ctrl+D" 
                           Command="local:WindowCommands.PrepareCurrent"/>
                 <MenuItem Header="Prepare Folder" InputGestureText="Ctrl+F" 
