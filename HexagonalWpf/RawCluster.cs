@@ -51,6 +51,13 @@ namespace HexagonalWpf
                     CvInvoke.ApproxPolyDP(contours[i], approx, 0.03 * perimeter, true);
                     _cluster.Add(new ClusterElement(i, CvInvoke.FitEllipse(contours[i]), GetComplexShear(contours[i])));
                 }
+
+                foreach (var item in _cluster.GetList)
+                {
+                    Debug.WriteLine(item.Id);
+                    Debug.WriteLine(string.Join(";", item.Shear.GetProfileX()));
+                    Debug.WriteLine(string.Join(";", item.Shear.GetProfileY()));
+                }
             }
             catch (Exception ex)
             {
@@ -155,7 +162,7 @@ namespace HexagonalWpf
             var cb = GetPixelBrightness((int)rct.Center.Y, (int)rct.Center.X);
             var result = new OctoShear(size, cb, rct);
 
-            for (var i = 1; i < size; i++)
+            for (var i = 0; i < size; i++)
             {
                 result.Dict[1][i] = GetPixelBrightness((int)(rct.Center.Y + i), (int)rct.Center.X);
                 result.Dict[2][i] = GetPixelBrightness((int)(rct.Center.Y + (i * 0.7071)), (int)(rct.Center.X - (i * 0.7071)));

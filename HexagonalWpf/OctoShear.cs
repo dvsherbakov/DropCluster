@@ -35,6 +35,22 @@ namespace HexagonalWpf
             return res.ToArray();
         }
 
+        public int[] GetProfileX()
+        {
+            var res= new List<int>();
+            res.AddRange(Dict[1].ToArray().Reverse().ToList());
+            res.AddRange(Dict[5].ToArray().ToList());
+            return res.ToArray();
+        }
+
+        public int[] GetProfileY()
+        {
+            var res = new List<int>();
+            res.AddRange(Dict[3].ToArray().Reverse().ToList());
+            res.AddRange(Dict[7].ToArray().ToList());
+            return res.ToArray();
+        }
+
         public float Diam => (Shape.Size.Height + Shape.Size.Width) / 2;
 
         public uint AvgBrightest()
