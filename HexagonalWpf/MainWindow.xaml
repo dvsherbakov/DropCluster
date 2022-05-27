@@ -11,6 +11,7 @@
         <CommandBinding Command="Open" Executed="WindowBinding_OpenCommand" />
         <CommandBinding Command="local:WindowCommands.PrepareCurrent" Executed="CommandBinding_OnExecuted"/>
         <CommandBinding Command="local:WindowCommands.PrepareFolder" Executed="CommandBinding_PrepareFolder"/>
+        <CommandBinding Command="local:WindowCommands.PrepareFolderArea" Executed="CommandBinding_PrepareFolderArea"/>
         <CommandBinding Command="local:WindowCommands.DrawPath" Executed="CommandBinding_DrawPath"/>
         <CommandBinding Command="local:WindowCommands.SearchLinks" Executed="CommandBinding_SearchLinks"/>
         <CommandBinding Command="local:WindowCommands.NextSrc" Executed="CommandBinding_OnExecutedNextSrc"/>
@@ -19,6 +20,7 @@
         <CommandBinding Command="local:WindowCommands.SaveAvg" Executed="CommandBinding_OnExecutedSaveAvg"/>
         <CommandBinding Command="local:WindowCommands.FirstSrc" Executed="FirstSrc"/>
         <CommandBinding Command="local:WindowCommands.SaveShearInfo" Executed="CommandBinding_OnExecutedSaveShearInfo"/>
+        <CommandBinding Command="local:WindowCommands.SaveBrightestSpot" Executed="CommandBindingOnExecutedSaveBrightestSpot"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
@@ -45,6 +47,7 @@
                 <MenuItem Header="Save Result" InputGestureText="Ctrl+S" Command="local:WindowCommands.SaveResult"/>
                 <MenuItem Header="Save Average Diameters" InputGestureText="Alt+S" Command="local:WindowCommands.SaveAvg"/>
                 <MenuItem Header="Save Shear Info" InputGestureText="Alt+H" Command="local:WindowCommands.SaveShearInfo"/>
+                <MenuItem Header="Save Brightest Spot Info" Command="local:WindowCommands.SaveBrightestSpot"/>
                 <Separator />
                 <MenuItem Header="Exit" ></MenuItem>
             </MenuItem>
@@ -53,6 +56,8 @@
                           Command="local:WindowCommands.PrepareCurrent"/>
                 <MenuItem Header="Prepare Folder" InputGestureText="Ctrl+F" 
                           Command="local:WindowCommands.PrepareFolder"/>
+                <MenuItem Header="Prepare Folder Area" InputGestureText="Alt+F" 
+                          Command="local:WindowCommands.PrepareFolderArea"/>
                 <MenuItem Header="Draw Path" InputGestureText="Ctrl+P" 
                           Command="local:WindowCommands.DrawPath"/>
                 <MenuItem Header="Renumbering drops" InputGestureText="Ctrl+L"

@@ -134,6 +134,44 @@ namespace HexagonalWpf
             });
         }
 
+        public async void SaveBrightestSpot()
+        {
+            await Task.Run(() =>
+            {
+
+                var fileName = Path.GetDirectoryName(Id) + "\\outBrightestSpot.xlsx";
+
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+
+                var file = new FileInfo(fileName);
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                using (var package = new ExcelPackage(file))
+                {
+                    var xlsSheet = package.Workbook.Worksheets.Add("bg");
+                    var row = 4;
+                    foreach (var cluster in _clusters.OrderBy(x => x.CustomName.number))
+                    {
+                        
+                        xlsSheet.Cells[row, 4].Value = cluster.CustomName.number;
+                        
+                        foreach (var item in cluster.GetList.OrderBy(x => x.Id))
+                        {
+                            xlsSheet.Cells[row,item.Id+6].Value = item.Shear.GetAvgCenterSpot();
+                        }
+
+                        row++;
+                    }
+                    package.Save();
+                }
+            });
+
+        }
+
         public async void SaveResult()
         {
             var startName = Id;

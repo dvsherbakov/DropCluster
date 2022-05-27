@@ -52,12 +52,12 @@ namespace HexagonalWpf
                     _cluster.Add(new ClusterElement(i, CvInvoke.FitEllipse(contours[i]), GetComplexShear(contours[i])));
                 }
 
-                foreach (var item in _cluster.GetList)
-                {
-                    Debug.WriteLine(item.Id);
-                    Debug.WriteLine(string.Join(";", item.Shear.GetProfileX()));
-                    Debug.WriteLine(string.Join(";", item.Shear.GetProfileY()));
-                }
+                //foreach (var item in _cluster.GetList)
+                //{
+                //    Debug.WriteLine(item.Id);
+                //    Debug.WriteLine(string.Join(";", item.Shear.GetProfileX()));
+                //    Debug.WriteLine(string.Join(";", item.Shear.GetProfileY()));
+                //}
             }
             catch (Exception ex)
             {

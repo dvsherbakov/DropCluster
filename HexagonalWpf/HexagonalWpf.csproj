@@ -98,6 +98,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CentralArea.cs" />
     <Compile Include="Cluster.cs" />
     <Compile Include="ClusterPack.cs" />
     <Compile Include="FileList.cs" />

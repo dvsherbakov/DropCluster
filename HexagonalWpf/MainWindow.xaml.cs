@@ -51,7 +51,7 @@ namespace HexagonalWpf
 
             var result = dlg.ShowDialog();
             if (result != true) return;
-            Debug.WriteLine(dlg.FileName);
+            
             _currentFileName = dlg.FileName;
             var oi = new BitmapImage(new Uri(dlg.FileName));
             _fOrigWidth = oi.PixelWidth;
@@ -117,9 +117,14 @@ namespace HexagonalWpf
             _ = PrepareFolderAsync(Path.GetDirectoryName(_currentFileName));
         }
 
+        private void CommandBinding_PrepareFolderArea(object sender, ExecutedRoutedEventArgs e)
+        {
+            PrepareFolderAreaAsync(Path.GetDirectoryName(_currentFileName));
+        }
+
         private void CommandBinding_DrawPath(object sender, ExecutedRoutedEventArgs e)
         {
-            Debug.WriteLine("DrawPath");
+            
             var newPolyLine = new Polyline
             {
                 Stroke = Brushes.LightGreen,
@@ -175,6 +180,12 @@ namespace HexagonalWpf
                     Dispatcher.Invoke(() => Counter.Text = _clusterPack.Count.ToString());
                 });
             }
+        }
+
+        private void PrepareFolderAreaAsync(string folderName)
+        {
+            var fileExt = Path.GetExtension(_currentFileName);
+            var fl = new FileList(folderName, fileExt);
         }
 
         private void DrawUiObject(IEnumerable<ClusterElement> elements)
@@ -304,6 +315,11 @@ namespace HexagonalWpf
         private void CommandBinding_OnExecutedSaveShearInfo(object sender, ExecutedRoutedEventArgs e)
         {
             _ = _clusterPack.SaveShearInfo();
+        }
+
+        private void CommandBindingOnExecutedSaveBrightestSpot(object sender, ExecutedRoutedEventArgs e)
+        {
+            _clusterPack.SaveBrightestSpot();
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

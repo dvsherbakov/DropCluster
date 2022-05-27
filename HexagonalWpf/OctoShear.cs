@@ -37,7 +37,7 @@ namespace HexagonalWpf
 
         public int[] GetProfileX()
         {
-            var res= new List<int>();
+            var res = new List<int>();
             res.AddRange(Dict[1].ToArray().Reverse().ToList());
             res.AddRange(Dict[5].ToArray().ToList());
             return res.ToArray();
@@ -60,6 +60,19 @@ namespace HexagonalWpf
             for (var i = 0; i < Diam / 2; i++)
                 tmp.Add(pr[i]);
             return (uint)tmp.Average(x => x);
+        }
+
+        public int GetAvgCenterSpot()
+        {
+            var tmp = new List<int>();
+            foreach (var axis in Dict)
+            {
+                tmp.Add(axis.Value[0]);
+                tmp.Add(axis.Value[1]);
+                tmp.Add(axis.Value[2]);
+                tmp.Add(axis.Value[3]);
+            }
+            return (int)tmp.Average(x=>x);
         }
     }
 }
