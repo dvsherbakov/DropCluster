@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HexagonalWpf
+﻿namespace HexagonalWpf
 {
     internal class CentralArea
     {
-        private int[] _centralSpot;
+        public double AvgSpot { get; }
+        public CustomFileName Name { get; }
 
-        public CentralArea(int[] cs)
+        public CentralArea(double ca, string name)
         {
-            _centralSpot = cs;
+            AvgSpot = ca;
+            Name = new CustomFileName(name);
         }
     }
 }

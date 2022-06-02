@@ -72,7 +72,29 @@ namespace HexagonalWpf
                 tmp.Add(axis.Value[2]);
                 tmp.Add(axis.Value[3]);
             }
-            return (int)tmp.Average(x=>x);
+
+            return (int)tmp.Average(x => x);
         }
+
+        private int GetAvgEnvirons()
+        {
+            var tmp = new List<int>();
+            foreach (var axis in Dict)
+            {
+                var lIdx = axis.Value.Length;
+                tmp.Add(axis.Value[lIdx - 1]);
+                tmp.Add(axis.Value[lIdx - 2]);
+                tmp.Add(axis.Value[lIdx - 3]);
+                tmp.Add(axis.Value[lIdx - 4]);
+            }
+
+            return (int)tmp.Average(x => x);
+        }
+
+        private int GetTopLimit => (int)(GetAvgCenterSpot() * 0.75);
+
+        public int GetBottomLimit => (int)(GetAvgEnvirons() * 1.25);
+
+        public IEnumerable<int> GetSide => Dict[1].Where(x => x>GetBottomLimit && x<GetTopLimit);
     }
 }

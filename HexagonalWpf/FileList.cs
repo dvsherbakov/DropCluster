@@ -8,6 +8,8 @@ namespace HexagonalWpf
     internal class FileList
     {
         public List<string> GetList { get; }
+        
+        public string GetFirst => GetList[0];
 
         public FileList(string fName, string ext)
         {

@@ -157,10 +157,12 @@ namespace HexagonalWpf
                     foreach (var cluster in _clusters.OrderBy(x => x.CustomName.number))
                     {
                         
-                        xlsSheet.Cells[row, 4].Value = cluster.CustomName.number;
                         
+                        xlsSheet.Cells[row, 4].Value = cluster.CustomName.number;
+
                         foreach (var item in cluster.GetList.OrderBy(x => x.Id))
                         {
+                            var lv = item.Shear.GetSide;
                             xlsSheet.Cells[row,item.Id+6].Value = item.Shear.GetAvgCenterSpot();
                         }
 

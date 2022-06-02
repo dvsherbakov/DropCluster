@@ -99,6 +99,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CentralArea.cs" />
+    <Compile Include="CentralAreaList.cs" />
     <Compile Include="Cluster.cs" />
     <Compile Include="ClusterPack.cs" />
     <Compile Include="FileList.cs" />

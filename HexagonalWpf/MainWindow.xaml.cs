@@ -24,6 +24,7 @@ namespace HexagonalWpf
         private RawCluster _rawCluster;
         //private RelativePosition _relativePosition;
         private HexagonPack _hexPack;
+        private CentralAreaList _areas;
        
         private readonly ClusterPack _clusterPack;
 
@@ -186,6 +187,8 @@ namespace HexagonalWpf
         {
             var fileExt = Path.GetExtension(_currentFileName);
             var fl = new FileList(folderName, fileExt);
+            _areas = new CentralAreaList();
+            _areas.AddDir(fl);
         }
 
         private void DrawUiObject(IEnumerable<ClusterElement> elements)
@@ -310,6 +313,11 @@ namespace HexagonalWpf
         private void CommandBinding_OnExecutedSaveAvg(object sender, ExecutedRoutedEventArgs e)
         {
             _clusterPack.SaveAvgDiameters();
+        }
+
+        private void CommandBinding_OnExecutedSaveAreasAvg(object sender, ExecutedRoutedEventArgs e)
+        {
+            _ = _areas.SaveExcelFile();
         }
 
         private void CommandBinding_OnExecutedSaveShearInfo(object sender, ExecutedRoutedEventArgs e)

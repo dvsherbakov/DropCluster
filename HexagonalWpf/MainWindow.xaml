@@ -21,6 +21,7 @@
         <CommandBinding Command="local:WindowCommands.FirstSrc" Executed="FirstSrc"/>
         <CommandBinding Command="local:WindowCommands.SaveShearInfo" Executed="CommandBinding_OnExecutedSaveShearInfo"/>
         <CommandBinding Command="local:WindowCommands.SaveBrightestSpot" Executed="CommandBindingOnExecutedSaveBrightestSpot"/>
+        <CommandBinding Command="local:WindowCommands.SaveBrightestArea" Executed="CommandBinding_OnExecutedSaveAreasAvg"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
@@ -48,6 +49,7 @@
                 <MenuItem Header="Save Average Diameters" InputGestureText="Alt+S" Command="local:WindowCommands.SaveAvg"/>
                 <MenuItem Header="Save Shear Info" InputGestureText="Alt+H" Command="local:WindowCommands.SaveShearInfo"/>
                 <MenuItem Header="Save Brightest Spot Info" Command="local:WindowCommands.SaveBrightestSpot"/>
+                <MenuItem Header="Save Brightest Areas Info" Command="local:WindowCommands.SaveBrightestArea"/>
                 <Separator />
                 <MenuItem Header="Exit" ></MenuItem>
             </MenuItem>
