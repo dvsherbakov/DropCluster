@@ -53,6 +53,11 @@ namespace HexagonalWpf
 
                 prev.SetCorrection(_clusters[i].CenterPosition);
 
+                foreach (var el in prev.GetList.OrderBy(x=>x.RangeCenter(prev.CenterPosition)))
+                {
+
+                }
+
                 foreach (var elem in _clusters[i].GetList.OrderBy(x => x.Element.Center.Y).ThenBy(y => y.Element.Center.X))
                 {
                     //elem.Id = prev.Count > 0 ? prev.GetNearerId(elem.Element) : _clusters[i].GenerateNextId();

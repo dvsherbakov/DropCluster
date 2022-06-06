@@ -40,6 +40,26 @@ namespace HexagonalWpf
                     }
 
                     _centralAreas.Add(new CentralArea(cl.Average(), file));
+
+                    //
+                    //double max = 0;
+
+                    //for (var y = 0; y < res.Height; y++)
+                    //{
+                    //    for (var x = 0; x < res.Width; x++)
+                    //    {
+
+                    //        var pixel = res[x, y];
+                    //        if (pixel.Green > max) max = pixel.Green;
+                    //        pixel.Blue = 0;
+                    //        pixel.Red *= 0.25;
+                            
+
+                    //        res[x, y] = pixel;
+                    //    }
+                    //}
+
+                    //CvInvoke.Imwrite(@"E:\tmp\2\" + Path.GetFileName(file), res);
                 }
             });
         }

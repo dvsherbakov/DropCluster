@@ -164,7 +164,6 @@ namespace HexagonalWpf
             _clusterPack.Clear();
             var fl = new FileList(folderName, fileExt);
 
-            //var files = Directory.GetFiles(folderName ?? string.Empty, $"*{fileExt}");
             foreach (var file in fl.GetList)
             {
                 await Task.Run(() =>
