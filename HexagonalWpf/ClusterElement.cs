@@ -30,6 +30,11 @@ namespace HexagonalWpf
             return (float)Math.Sqrt(Math.Pow(Element.Center.X - el.Center.X, 2) + Math.Pow(Element.Center.Y - el.Center.Y, 2));
         }
 
+        public float RangeF(PointF el)
+        {
+            return (float)Math.Sqrt(Math.Pow(Element.Center.X - el.X, 2) + Math.Pow(Element.Center.Y - el.Y, 2));
+        }
+
         public float RangeCenter(PointF el, PointF center)
         {
             var relX = el.X + center.X;

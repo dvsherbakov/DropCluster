@@ -11,8 +11,9 @@ namespace HexagonalWpf
     internal class ClusterPack
     {
         public string Id { get; set; }
+
         public string CurrentId { get; set; }
-        
+
         private readonly List<Cluster> _clusters;
 
         private static double ZoomKoef => (4.65 * 112 + 5.9) / 305;
@@ -20,6 +21,7 @@ namespace HexagonalWpf
         public ClusterPack(string path)
         {
             Id = path;
+
             _clusters = new List<Cluster>();
         }
 
@@ -52,19 +54,18 @@ namespace HexagonalWpf
                 var prev = CloneCluster(i - 1);
 
                 prev.SetCorrection(_clusters[i].CenterPosition);
+                
 
-                foreach (var el in prev.GetList.OrderBy(x=>x.RangeCenter(prev.CenterPosition)))
-                {
-
-                }
-
-                foreach (var elem in _clusters[i].GetList.OrderBy(x => x.Element.Center.Y).ThenBy(y => y.Element.Center.X))
+                foreach (var elem in _clusters[i].GetList.OrderBy(x => x.Element.Center.Y)
+                             .ThenBy(y => y.Element.Center.X))
                 {
                     //elem.Id = prev.Count > 0 ? prev.GetNearerId(elem.Element) : _clusters[i].GenerateNextId();
                     //var a = prev.GetRelativeNearerId(elem.Element.Center);
                     //var c = prev.GetList.FirstOrDefault(x => x.Id == a);
                     //Debug.WriteLine($"{elem.Element.Center.X}-{elem.Element.Center.Y}  |  {c.Element.Center.X}-{c.Element.Center.Y} ");
-                    elem.Id = prev.Count > 0 ? prev.GetRelativeNearerId(elem.Element.Center) : _clusters[i].GenerateNextId();
+                    elem.Id = prev.Count > 0
+                        ? prev.GetRelativeNearerId(elem.Element.Center)
+                        : _clusters[i].GenerateNextId();
                     prev.RemoveById(elem.Id);
                 }
             }
@@ -74,7 +75,6 @@ namespace HexagonalWpf
         {
             return _clusters.FirstOrDefault(x => x.ClusterId == id);
         }
-
 
         public Cluster PrevById(string id)
         {
@@ -98,13 +98,35 @@ namespace HexagonalWpf
             return _clusters[0];
         }
 
+        public void SetCurrentSelected(ClusterElement ce)
+        {
+            if (_clusters.Count <= 0 || CurrentId == "") return;
+            _clusters.FirstOrDefault(x => x.ClusterId == CurrentId).SelectedElement = ce;
+        }
+
+        public ClusterElement GetCurrentSelected()
+        {
+            if (_clusters.Count <= 0 || CurrentId == "") return null;
+            return _clusters.FirstOrDefault(x => x.ClusterId == CurrentId).SelectedElement;
+        }
+
+        public void FindPastSelected()
+        {
+            var first = _clusters.IndexOf(_clusters.FirstOrDefault(x => x.SelectedElement != null));
+
+            for (var i = first;  i < _clusters.Count-1; i++)
+            {
+
+            }
+
+        }
+
         private int MaxId => _clusters.Select(x => x.MaxId).OrderByDescending(x => x).FirstOrDefault();
 
         public async Task SaveShearInfo()
         {
             await Task.Run(() =>
             {
-
                 var fileName = Path.GetDirectoryName(Id) + "\\outShear.xlsx";
 
                 if (File.Exists(fileName))
@@ -120,7 +142,8 @@ namespace HexagonalWpf
                 {
                     foreach (var cluster in _clusters)
                     {
-                        var xlsSheet = package.Workbook.Worksheets.Add(Regex.Replace(Path.GetFileNameWithoutExtension(cluster.ClusterId), "[ _-]", string.Empty));
+                        var xlsSheet = package.Workbook.Worksheets.Add(
+                            Regex.Replace(Path.GetFileNameWithoutExtension(cluster.ClusterId), "[ _-]", string.Empty));
                         var column = 5;
                         foreach (var item in cluster.GetList.OrderBy(x => x.Id))
                         {
@@ -130,10 +153,11 @@ namespace HexagonalWpf
                             {
                                 xlsSheet.Cells[6 + i, column].Value = profile[i];
                             }
+
                             column++;
                         }
-
                     }
+
                     package.Save();
                 }
             });
@@ -143,7 +167,6 @@ namespace HexagonalWpf
         {
             await Task.Run(() =>
             {
-
                 var fileName = Path.GetDirectoryName(Id) + "\\outBrightestSpot.xlsx";
 
                 if (File.Exists(fileName))
@@ -161,22 +184,20 @@ namespace HexagonalWpf
                     var row = 4;
                     foreach (var cluster in _clusters.OrderBy(x => x.CustomName.number))
                     {
-                        
-                        
                         xlsSheet.Cells[row, 4].Value = cluster.CustomName.number;
 
                         foreach (var item in cluster.GetList.OrderBy(x => x.Id))
                         {
                             var lv = item.Shear.GetSide;
-                            xlsSheet.Cells[row,item.Id+6].Value = item.Shear.GetAvgCenterSpot();
+                            xlsSheet.Cells[row, item.Id + 6].Value = item.Shear.GetAvgCenterSpot();
                         }
 
                         row++;
                     }
+
                     package.Save();
                 }
             });
-
         }
 
         public async void SaveResult()
@@ -213,7 +234,6 @@ namespace HexagonalWpf
 
                             if (drop != null)
                                 xlsDistribution.Cells[clusterNo + 1, i + 3].Value = drop.Diameter / zm; //ZoomKoef;
-
                         }
 
                         clusterNo++;
@@ -226,7 +246,6 @@ namespace HexagonalWpf
 
         public void SaveAvgDiameters()
         {
-
             var fileName = Path.GetDirectoryName(Id) + "\\out.xlsx";
 
             if (File.Exists(fileName))

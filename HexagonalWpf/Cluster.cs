@@ -13,12 +13,15 @@ namespace HexagonalWpf
         public PointF StartPosition { get; private set; }
         public PointF CenterPosition { get; private set; }
 
+        public ClusterElement SelectedElement { get; set; }
+
         public PointF Correction { get; set; }
 
         public int Count => _cluster.Count;
         public Cluster(string fName)
         {
             _cluster = new List<ClusterElement>();
+            SelectedElement = null;
             ClusterId = fName;
             CustomName = new CustomFileName(fName);
         }
@@ -82,6 +85,11 @@ namespace HexagonalWpf
             var cx = (_cluster.Min(x => x.Element.Center.X) + _cluster.Max(x => x.Element.Center.X)) / 2f;
             var cy = (_cluster.Min(x => x.Element.Center.Y) + _cluster.Max(x => x.Element.Center.Y)) / 2f;
             CenterPosition = new PointF(cx, cy);
+        }
+
+        public List<ClusterElement> GetCenterArrangedList()
+        {
+            return _cluster.OrderBy(x => x.RangeF(CenterPosition)).ToList();
         }
 
         public PointF RelativeCenterPos(PointF pos)

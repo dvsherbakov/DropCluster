@@ -14,6 +14,7 @@
         <CommandBinding Command="local:WindowCommands.PrepareFolderArea" Executed="CommandBinding_PrepareFolderArea"/>
         <CommandBinding Command="local:WindowCommands.DrawPath" Executed="CommandBinding_DrawPath"/>
         <CommandBinding Command="local:WindowCommands.SearchLinks" Executed="CommandBinding_SearchLinks"/>
+        <CommandBinding Command="local:WindowCommands.SearchDrop" Executed="CommandBindingOnExecutedSearchDrop"/>
         <CommandBinding Command="local:WindowCommands.NextSrc" Executed="CommandBinding_OnExecutedNextSrc"/>
         <CommandBinding Command="local:WindowCommands.PrevSrc" Executed="CommandBinding_OnExecutedPrevSrc"/>
         <CommandBinding Command="local:WindowCommands.SaveResult" Executed="CommandBinding_OnExecutedSaveResult"/>
@@ -76,7 +77,7 @@
                     <TextBox x:Name="tbMaxAspectRatio" Width="50" LostFocus="MaxAspectRatio_LostFocus"></TextBox>
                 </MenuItem>
                 <MenuItem Header="Min Perimether Len" >
-                    <TextBox x:Name="tbMinPerimetherLen" Width="50" LostFocus="MinPerimetherLen_LostFocus"></TextBox>
+                    <TextBox x:Name="tbMinPerimetherLen" Width="50" LostFocus="MinPerimeterLen_LostFocus"></TextBox>
                 </MenuItem>
                 <MenuItem Header="Camera Zoom" >
                     <TextBox x:Name="tbCameraZoom" Width="50" LostFocus="CameraZoom_LostFocus"></TextBox>

@@ -25,7 +25,7 @@ namespace HexagonalWpf
         //private RelativePosition _relativePosition;
         private HexagonPack _hexPack;
         private CentralAreaList _areas;
-       
+
         private readonly ClusterPack _clusterPack;
 
         public MainWindow()
@@ -52,7 +52,7 @@ namespace HexagonalWpf
 
             var result = dlg.ShowDialog();
             if (result != true) return;
-            
+
             _currentFileName = dlg.FileName;
             var oi = new BitmapImage(new Uri(dlg.FileName));
             _fOrigWidth = oi.PixelWidth;
@@ -125,7 +125,7 @@ namespace HexagonalWpf
 
         private void CommandBinding_DrawPath(object sender, ExecutedRoutedEventArgs e)
         {
-            
+
             var newPolyLine = new Polyline
             {
                 Stroke = Brushes.LightGreen,
@@ -199,6 +199,9 @@ namespace HexagonalWpf
                 {
                     DrawMarker(element, Colors.Red);
                 }
+
+                var selected = _clusterPack.GetCurrentSelected();
+                if (selected!=null) DrawMarker(selected, Colors.Orange);
             }
             catch (Exception ex)
             {
@@ -246,11 +249,11 @@ namespace HexagonalWpf
 
         private void MaxAspectRatio_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (int.TryParse(tbMaxAspectRatio.Text, out int res))
+            if (int.TryParse(tbMaxAspectRatio.Text, out var res))
                 Properties.Settings.Default.MaxAspectRatio = res;
         }
 
-        private void MinPerimetherLen_LostFocus(object sender, RoutedEventArgs e)
+        private void MinPerimeterLen_LostFocus(object sender, RoutedEventArgs e)
         {
             if (int.TryParse(tbMinPerimetherLen.Text, out var res))
                 Properties.Settings.Default.MinPerimetherLen = res;
@@ -258,7 +261,7 @@ namespace HexagonalWpf
 
         private void CameraZoom_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (int.TryParse(tbCameraZoom.Text, out int res))
+            if (int.TryParse(tbCameraZoom.Text, out var res))
                 Properties.Settings.Default.CameraZoom = res;
         }
 
@@ -271,8 +274,10 @@ namespace HexagonalWpf
                     0
                 );
             // if (_rawCluster == null) return;
-            // var markedElement = _rawCluster.GetNearer(pt);
-            //DrawMarker(markedElement, Colors.Orange);
+            var markedElement = _rawCluster.GetNearer(pt);
+            _clusterPack.SetCurrentSelected(markedElement);
+            DrawMarker(markedElement, Colors.Orange);
+            var id = _clusterPack.CurrentId;
             // _rawCluster.CreateHexagon(markedElement);
             //DrawHexagon(_rawCluster.Hexagon);
             // _rawCluster.Hexagon.AverageLink();
@@ -332,6 +337,11 @@ namespace HexagonalWpf
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void CommandBindingOnExecutedSearchDrop(object sender, ExecutedRoutedEventArgs e)
+        {
+            _clusterPack.FindPastSelected();
         }
     }
 }

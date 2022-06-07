@@ -11,6 +11,7 @@ namespace HexagonalWpf
             PrepareFolderArea = new RoutedCommand("PrepareFolderArea", typeof(MainWindow));
             DrawPath = new RoutedCommand("DrawPath", typeof(MainWindow));
             SearchLinks = new RoutedCommand("SearchLinks", typeof(MainWindow));
+            SearchDrop = new RoutedCommand("SearchDrop", typeof(MainWindow));
             NextSrc = new RoutedCommand("NextSrc", typeof(MainWindow));
             PrevSrc = new RoutedCommand("PrevSrc", typeof(MainWindow));
             FirstSrc = new RoutedCommand("FirstSrc", typeof(MainWindow));
@@ -26,6 +27,7 @@ namespace HexagonalWpf
         public static  RoutedCommand PrepareFolderArea { get; set; }
         public static RoutedCommand DrawPath { get; set; }
         public static  RoutedCommand SearchLinks { get; set; }
+        public static RoutedCommand SearchDrop { get; set; }
         public static  RoutedCommand NextSrc { get; set; }
         public static  RoutedCommand PrevSrc { get; set; }
         public static RoutedCommand FirstSrc { get; set; }
