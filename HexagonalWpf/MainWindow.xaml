@@ -23,6 +23,7 @@
         <CommandBinding Command="local:WindowCommands.SaveShearInfo" Executed="CommandBinding_OnExecutedSaveShearInfo"/>
         <CommandBinding Command="local:WindowCommands.SaveBrightestSpot" Executed="CommandBindingOnExecutedSaveBrightestSpot"/>
         <CommandBinding Command="local:WindowCommands.SaveBrightestArea" Executed="CommandBinding_OnExecutedSaveAreasAvg"/>
+        <CommandBinding Command="local:WindowCommands.SaveSelectedDropHaul" Executed="CommandBinding_OnExecutedSaveSelectedDropHaul"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
@@ -51,6 +52,7 @@
                 <MenuItem Header="Save Shear Info" InputGestureText="Alt+H" Command="local:WindowCommands.SaveShearInfo"/>
                 <MenuItem Header="Save Brightest Spot Info" Command="local:WindowCommands.SaveBrightestSpot"/>
                 <MenuItem Header="Save Brightest Areas Info" Command="local:WindowCommands.SaveBrightestArea"/>
+                <MenuItem Header="Save Selected Haul" Command="local:WindowCommands.SaveSelectedDropHaul"/>
                 <Separator />
                 <MenuItem Header="Exit" ></MenuItem>
             </MenuItem>
@@ -61,6 +63,7 @@
                           Command="local:WindowCommands.PrepareFolder"/>
                 <MenuItem Header="Prepare Folder Area" InputGestureText="Alt+F" 
                           Command="local:WindowCommands.PrepareFolderArea"/>
+                <MenuItem Header="Find Selected" Command="local:WindowCommands.SearchDrop"/>
                 <MenuItem Header="Draw Path" InputGestureText="Ctrl+P" 
                           Command="local:WindowCommands.DrawPath"/>
                 <MenuItem Header="Renumbering drops" InputGestureText="Ctrl+L"

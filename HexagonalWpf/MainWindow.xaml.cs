@@ -274,8 +274,8 @@ namespace HexagonalWpf
                     0
                 );
             // if (_rawCluster == null) return;
-            var markedElement = _rawCluster.GetNearer(pt);
-            _clusterPack.SetCurrentSelected(markedElement);
+             //_rawCluster.GetNearer(pt);
+             var markedElement = _clusterPack.SetCurrentSelected(pt);
             DrawMarker(markedElement, Colors.Orange);
             var id = _clusterPack.CurrentId;
             // _rawCluster.CreateHexagon(markedElement);
@@ -342,6 +342,11 @@ namespace HexagonalWpf
         private void CommandBindingOnExecutedSearchDrop(object sender, ExecutedRoutedEventArgs e)
         {
             _clusterPack.FindPastSelected();
+        }
+
+        private void CommandBinding_OnExecutedSaveSelectedDropHaul(object sender, ExecutedRoutedEventArgs e)
+        {
+            _clusterPack.saveOneDropHaul();
         }
     }
 }

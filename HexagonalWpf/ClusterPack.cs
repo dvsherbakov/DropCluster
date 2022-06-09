@@ -1,10 +1,13 @@
-﻿using OfficeOpenXml;
+﻿using System;
+using OfficeOpenXml;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Emgu.CV.Structure;
 
 namespace HexagonalWpf
 {
@@ -54,7 +57,7 @@ namespace HexagonalWpf
                 var prev = CloneCluster(i - 1);
 
                 prev.SetCorrection(_clusters[i].CenterPosition);
-                
+
 
                 foreach (var elem in _clusters[i].GetList.OrderBy(x => x.Element.Center.Y)
                              .ThenBy(y => y.Element.Center.X))
@@ -98,10 +101,13 @@ namespace HexagonalWpf
             return _clusters[0];
         }
 
-        public void SetCurrentSelected(ClusterElement ce)
+        public ClusterElement SetCurrentSelected(RotatedRect el)
         {
-            if (_clusters.Count <= 0 || CurrentId == "") return;
-            _clusters.FirstOrDefault(x => x.ClusterId == CurrentId).SelectedElement = ce;
+            if (_clusters.Count <= 0 || CurrentId == "") return null;
+            var index = _clusters.IndexOf(_clusters.FirstOrDefault(x => x.ClusterId == CurrentId));
+            var elem = _clusters[index].GetNearer(el);
+            _clusters[index].SelectedElement = elem;
+            return elem;
         }
 
         public ClusterElement GetCurrentSelected()
@@ -109,14 +115,19 @@ namespace HexagonalWpf
             if (_clusters.Count <= 0 || CurrentId == "") return null;
             return _clusters.FirstOrDefault(x => x.ClusterId == CurrentId).SelectedElement;
         }
-
+        
         public void FindPastSelected()
         {
             var first = _clusters.IndexOf(_clusters.FirstOrDefault(x => x.SelectedElement != null));
 
-            for (var i = first;  i < _clusters.Count-1; i++)
+            for (var i = first; i < _clusters.Count - 1; i++)
             {
-
+                //var nearer = 
+                _clusters[i + 1].SelectedElement = _clusters[i + 1].GetList.OrderBy(x => x.Range(_clusters[i].SelectedElement.Element))
+                    .FirstOrDefault();
+                //_clusters[i + 1].SelectedElement = nearer.OrderBy(x =>
+                //        Math.Abs((int)x.Shear.AvgBrightest() - _clusters[i].SelectedElement.Shear.AvgBrightest()))
+                //    .FirstOrDefault();
             }
 
         }
@@ -161,6 +172,39 @@ namespace HexagonalWpf
                     package.Save();
                 }
             });
+        }
+
+        public void saveOneDropHaul()
+        {
+            var first = _clusters.IndexOf(_clusters.FirstOrDefault(x => x.SelectedElement != null));
+            var dropIndex = _clusters[first].SelectedElement.Id;
+            var fileName = Path.GetDirectoryName(Id)+"\\oneDrop.xlsx";
+
+            var file = new FileInfo(fileName);
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage(file))
+            {
+                var xlsSheet = package.Workbook.Worksheets.Add($"drop{dropIndex}");
+
+                xlsSheet.Cells[2, 5].Value = "#";
+                xlsSheet.Cells[2, 7].Value = "Центральная область";
+                xlsSheet.Cells[2, 8].Value = "Среднее";
+                xlsSheet.Cells[2, 9].Value = "Диаметр";
+
+                var row = 4;
+                for (var i = first; i < _clusters.Count; i++)
+                {
+                    xlsSheet.Cells[row, 5].Value = new CustomFileName(_clusters[i].ClusterId).number;
+                    xlsSheet.Cells[row, 7].Value = _clusters[i].SelectedElement.Shear.GetAvgCenterSpot();
+                    xlsSheet.Cells[row, 8].Value = _clusters[i].SelectedElement.Shear.AvgBrightest();
+                    xlsSheet.Cells[row, 9].Value = _clusters[i].SelectedElement.Diameter;
+
+                    row++;
+                }
+                package.Save();
+            }
         }
 
         public async void SaveBrightestSpot()

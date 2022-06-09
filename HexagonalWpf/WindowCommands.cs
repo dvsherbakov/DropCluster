@@ -20,6 +20,7 @@ namespace HexagonalWpf
             SaveShearInfo = new RoutedCommand("SaveShearInfo", typeof(MainWindow));
             SaveBrightestSpot = new RoutedCommand("SaveBrightestSpot", typeof(MainWindow));
             SaveBrightestArea = new RoutedCommand("SaveBrightestSpot", typeof(MainWindow));
+            SaveSelectedDropHaul = new RoutedCommand("SaveSelectedDropHaul", typeof(MainWindow));
         }
 
         public static RoutedCommand PrepareCurrent { get; set; }
@@ -36,5 +37,6 @@ namespace HexagonalWpf
         public static RoutedCommand SaveShearInfo { get; set; }
         public static RoutedCommand SaveBrightestSpot { get; set; }
         public static RoutedCommand SaveBrightestArea { get; set; }
+        public static RoutedCommand SaveSelectedDropHaul { get; set; }
     }
 }
