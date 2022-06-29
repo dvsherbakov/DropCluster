@@ -28,6 +28,7 @@ namespace HexagonalWpf
             Name = fName;
             var t = new Regex(@"\d+").Matches(fName);
             number = t.Count > 0 ? int.Parse(t[t.Count - 1].Value) : 9999;
+            number = t.Count > 0 ? int.Parse(t[t.Count - 1].Value) : 9999;
         }
 
     }

@@ -115,7 +115,7 @@ namespace HexagonalWpf
             if (_clusters.Count <= 0 || CurrentId == "") return null;
             return _clusters.FirstOrDefault(x => x.ClusterId == CurrentId).SelectedElement;
         }
-        
+
         public void FindPastSelected()
         {
             var first = _clusters.IndexOf(_clusters.FirstOrDefault(x => x.SelectedElement != null));
@@ -123,8 +123,9 @@ namespace HexagonalWpf
             for (var i = first; i < _clusters.Count - 1; i++)
             {
                 //var nearer = 
-                _clusters[i + 1].SelectedElement = _clusters[i + 1].GetList.OrderBy(x => x.Range(_clusters[i].SelectedElement.Element))
-                    .FirstOrDefault();
+                if (_clusters[i].SelectedElement != null)
+                    _clusters[i + 1].SelectedElement = _clusters[i + 1].GetList.OrderBy(x => x.Range(_clusters[i].SelectedElement.Element))
+                        .FirstOrDefault();
                 //_clusters[i + 1].SelectedElement = nearer.OrderBy(x =>
                 //        Math.Abs((int)x.Shear.AvgBrightest() - _clusters[i].SelectedElement.Shear.AvgBrightest()))
                 //    .FirstOrDefault();
@@ -178,7 +179,7 @@ namespace HexagonalWpf
         {
             var first = _clusters.IndexOf(_clusters.FirstOrDefault(x => x.SelectedElement != null));
             var dropIndex = _clusters[first].SelectedElement.Id;
-            var fileName = Path.GetDirectoryName(Id)+"\\oneDrop.xlsx";
+            var fileName = Path.GetDirectoryName(Id) + "\\oneDrop.xlsx";
 
             var file = new FileInfo(fileName);
 
@@ -196,6 +197,7 @@ namespace HexagonalWpf
                 var row = 4;
                 for (var i = first; i < _clusters.Count; i++)
                 {
+                    if (_clusters[i].SelectedElement == null) continue;
                     xlsSheet.Cells[row, 5].Value = new CustomFileName(_clusters[i].ClusterId).number;
                     xlsSheet.Cells[row, 7].Value = _clusters[i].SelectedElement.Shear.GetAvgCenterSpot();
                     xlsSheet.Cells[row, 8].Value = _clusters[i].SelectedElement.Shear.AvgBrightest();
@@ -311,7 +313,8 @@ namespace HexagonalWpf
                 {
                     xlsDistribution.Cells[clusterNo + 1, 1].Value = (float)clusterNo / 2;
                     xlsDistribution.Cells[clusterNo + 1, 3].Value = it.AvgDiam / zm;
-                    xlsDistribution.Cells[clusterNo + 1, 5].Value = it.AvgDist() / zm;
+                    //xlsDistribution.Cells[clusterNo + 1, 5].Value = it.AvgDist() / zm;
+                    xlsDistribution.Cells[clusterNo + 1, 5].Value = it.Count;
                     clusterNo++;
                 }
 

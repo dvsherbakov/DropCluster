@@ -110,7 +110,7 @@ namespace HexagonalWpf
         {
             var ranges = (from circle in _cluster from dCircle in _cluster where circle.Range(dCircle.Element) > 0.00001 select circle.Range(dCircle.Element)).ToList();
 
-            return ranges.Average();
+            return ranges.Count > 0 ? ranges.Average() : 0;
         }
     }
 }

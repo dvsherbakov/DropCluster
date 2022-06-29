@@ -321,7 +321,7 @@ namespace HexagonalWpf
 
         private void CommandBinding_OnExecutedSaveAreasAvg(object sender, ExecutedRoutedEventArgs e)
         {
-            _ = _areas.SaveExcelFile();
+            _ = _areas?.SaveExcelFile();
         }
 
         private void CommandBinding_OnExecutedSaveShearInfo(object sender, ExecutedRoutedEventArgs e)
