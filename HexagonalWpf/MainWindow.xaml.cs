@@ -201,7 +201,7 @@ namespace HexagonalWpf
                 }
 
                 var selected = _clusterPack.GetCurrentSelected();
-                if (selected!=null) DrawMarker(selected, Colors.Orange);
+                if (selected != null) DrawMarker(selected, Colors.Orange);
             }
             catch (Exception ex)
             {
@@ -211,12 +211,13 @@ namespace HexagonalWpf
 
         private void DrawMarker(ClusterElement element, Color color)
         {
+            if (element == null) return;
             var wh = ((element.Element.Size.Width + element.Element.Size.Height) / 2) * _fRatio;
             var uiElem = new Ellipse
             {
                 Width = wh,
                 Height = wh,
-                StrokeThickness = 4,
+                StrokeThickness = 1,
                 Stroke = new SolidColorBrush
                 {
                     Color = color
@@ -232,6 +233,21 @@ namespace HexagonalWpf
             Canvas.SetLeft(textBlock, element.Element.Center.X * _fRatio);
             Canvas.SetTop(textBlock, element.Element.Center.Y * _fRatio);
             ObjectCanvas.Children.Add(textBlock);
+
+            var brightnessElem = new Ellipse
+            {
+                Width = 2*element.Shear.AvgDiam * _fRatio,
+                Height = 2*element.Shear.AvgDiam * _fRatio,
+                StrokeThickness = 1,
+                Stroke = new SolidColorBrush
+                {
+                    Color = Colors.Coral
+                }
+            };
+
+            Canvas.SetLeft(brightnessElem, (element.Element.Center.X - element.Shear.AvgDiam) * _fRatio);
+            Canvas.SetTop(brightnessElem, (element.Element.Center.Y - element.Shear.AvgDiam) * _fRatio);
+            ObjectCanvas.Children.Add(brightnessElem);
         }
 
 
@@ -274,8 +290,8 @@ namespace HexagonalWpf
                     0
                 );
             // if (_rawCluster == null) return;
-             //_rawCluster.GetNearer(pt);
-             var markedElement = _clusterPack.SetCurrentSelected(pt);
+            //_rawCluster.GetNearer(pt);
+            var markedElement = _clusterPack.SetCurrentSelected(pt);
             DrawMarker(markedElement, Colors.Orange);
             var id = _clusterPack.CurrentId;
             // _rawCluster.CreateHexagon(markedElement);

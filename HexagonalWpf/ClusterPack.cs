@@ -124,13 +124,13 @@ namespace HexagonalWpf
             {
                 //var nearer = 
                 if (_clusters[i].SelectedElement != null)
-                    _clusters[i + 1].SelectedElement = _clusters[i + 1].GetList.OrderBy(x => x.Range(_clusters[i].SelectedElement.Element))
+                    _clusters[i + 1].SelectedElement = _clusters[i + 1].GetList
+                        .OrderBy(x => x.Range(_clusters[i].SelectedElement.Element))
                         .FirstOrDefault();
                 //_clusters[i + 1].SelectedElement = nearer.OrderBy(x =>
                 //        Math.Abs((int)x.Shear.AvgBrightest() - _clusters[i].SelectedElement.Shear.AvgBrightest()))
                 //    .FirstOrDefault();
             }
-
         }
 
         private int MaxId => _clusters.Select(x => x.MaxId).OrderByDescending(x => x).FirstOrDefault();
@@ -193,6 +193,7 @@ namespace HexagonalWpf
                 xlsSheet.Cells[2, 7].Value = "Центральная область";
                 xlsSheet.Cells[2, 8].Value = "Среднее";
                 xlsSheet.Cells[2, 9].Value = "Диаметр";
+                xlsSheet.Cells[2, 10].Value = "Диаметр свечения";
 
                 var row = 4;
                 for (var i = first; i < _clusters.Count; i++)
@@ -202,9 +203,10 @@ namespace HexagonalWpf
                     xlsSheet.Cells[row, 7].Value = _clusters[i].SelectedElement.Shear.GetAvgCenterSpot();
                     xlsSheet.Cells[row, 8].Value = _clusters[i].SelectedElement.Shear.AvgBrightest();
                     xlsSheet.Cells[row, 9].Value = _clusters[i].SelectedElement.Diameter;
-
+                    xlsSheet.Cells[row, 10].Value = _clusters[i].SelectedElement.Shear.AvgDiam*2;
                     row++;
                 }
+
                 package.Save();
             }
         }
@@ -234,7 +236,7 @@ namespace HexagonalWpf
 
                         foreach (var item in cluster.GetList.OrderBy(x => x.Id))
                         {
-                            var lv = item.Shear.GetSide;
+                            var lv = item.Shear.AvgDiam;
                             xlsSheet.Cells[row, item.Id + 6].Value = item.Shear.GetAvgCenterSpot();
                         }
 

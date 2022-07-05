@@ -33,6 +33,7 @@ namespace HexagonalWpf.utils
         }
 
         public double Zero => (-B) / A;
+
     }
 
 

@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using Emgu.CV.Stitching;
 using Emgu.CV.Structure;
+using HexagonalWpf.utils;
 
 namespace HexagonalWpf
 {
@@ -95,6 +99,52 @@ namespace HexagonalWpf
 
         public int GetBottomLimit => (int)(GetAvgEnvirons() * 1.25);
 
-        public IEnumerable<int> GetSide => Dict[1].Where(x => x>GetBottomLimit && x<GetTopLimit);
+        /*public IEnumerable<ShearPoint> GetSide(int axis)
+        {
+            var res = new List<ShearPoint>();
+
+            var tmp = GetSubList(axis);
+
+            var i = 0;
+            foreach (var itm in Dict[axis])
+            {
+                if (itm > GetBottomLimit && itm < GetTopLimit)
+                {
+                    res.Add(new ShearPoint
+                    {
+                        Brightness = itm,
+                        X = i
+                    });
+                }
+
+                i++;
+            }
+
+            ;
+            return res;
+        }*/
+
+        public IEnumerable<ShearPoint> GetSide(int axis)
+        {
+            var res = new List<ShearPoint>();
+            var subRes = new List<ShearPoint>();
+            
+            for (var i = 0; i < Dict[axis].Length - 1; i++)
+            {
+                subRes.Add(new ShearPoint { X = i, Brightness = Dict[axis][i] - Dict[axis][i + 1] });
+            }
+
+            var maxPos = subRes.Where(y=>y.Brightness==subRes.Max(x => x.Brightness)).Select(t=>t.X).FirstOrDefault();
+
+            for (var i = maxPos - 3; i < maxPos + 4; i++)
+            {
+                res.Add(new ShearPoint{X=i, Brightness = Dict[axis][i] });
+            }
+
+            return res;
+        }
+
+        public double AvgDiam =>
+            Dict.Keys.Select(ax => (new SimpleLinearRegression(GetSide(ax), Dict[ax].Skip(Math.Max(0, Dict[ax].Count() - 20)).Average()).Zero)).ToList().Average();
     }
 }

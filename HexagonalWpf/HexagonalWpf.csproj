@@ -109,6 +109,7 @@
     <Compile Include="RawCluster.cs" />
     <Compile Include="RelativePosition.cs" />
     <Compile Include="utils\Regress.cs" />
+    <Compile Include="utils\SimpleLinearRegression.cs" />
     <Compile Include="WindowCommands.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
